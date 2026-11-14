@@ -77,8 +77,10 @@ $O(X^{1-\sigma+\eps})$ with
 $\sigma=(8\min(x,y)+9\max(x,y)-8)/12$.  On the diagonal $x=y$ this allows
 $d,e$ up to $X^{9/17-\eps}$.  For comparison, the same reduction combined
 with the trilinear Kloosterman-fraction estimate of Bettin and Chandee
-reaches $X^{17/33-\eps}$.  The proof uses Poisson summation, a single
-application of Cauchy--Schwarz, the Heath-Brown identity, a
+reaches $X^{17/33-\eps}$.  The theorem controls a two-point correlation of
+$\mu$ along dilated progressions.  This family interpolates between the
+range handled by the Chinese remainder theorem and Chowla's conjecture.
+The proof uses Poisson summation, a single application of Cauchy--Schwarz, the Heath-Brown identity, a
 Korolev--Changa bilinear inequality averaged over the modulus, and the
 Bloom--Maynard bound for the additive energy of rationals with bounded
 denominators.  This manuscript was prepared with substantial AI assistance
@@ -176,6 +178,89 @@ $(7/16,1/2)$ to $(8/17,8/17)$.
 the exploratory notebook from which this paper is extracted.  It should be
 rechecked against~\cite{BC} before submission.)}
 \end{remark}
+
+\subsection{Why the result is meaningful}\label{sec:significance}
+
+\emph{A two-point correlation of $\mu$ along dilations.}  Put $n=ad$, so
+that $n+\kappa=be$.  Then~\eqref{eq:S} becomes
+\[
+ \cS_\kappa=\sum_{a,b\ \mathrm{odd}}\
+ \sum_{\substack{n\equiv0\ (\mathrm{mod}\ a)\\ n\equiv-\kappa\ (\mathrm{mod}\ b)}}
+ \mu\Bigl(\frac na\Bigr)\mu\Bigl(\frac{n+\kappa}b\Bigr)
+ W\Bigl(\frac aA,\frac bB,\frac n{aD},\frac{n+\kappa}{bE}\Bigr).
+\]
+Here $n/a$ and $(n+\kappa)/b$ are also required to be odd.  So $\cS_\kappa$
+measures how strongly $\mu$ correlates with itself along the
+pair of linear forms $n/a$ and $(n+\kappa)/b$, averaged over dilations
+$a\asymp A$ and $b\asymp B$.  The two extreme cases are classical.
+\begin{itemize}
+\item When $x+y>1$, so that $de\le X^{1-\eps}$, the Chinese remainder
+theorem and the zero-free region alone give cancellation.
+\item When $A=B=1$, the sum is essentially the binary correlation
+$\sum_n\mu(n)\mu(n+2)$ of Chowla's conjecture.  This remains open; only
+logarithmically averaged and shift-averaged versions are
+known~\cite{Tao16,MRT15}.
+\end{itemize}
+The hard square $x,y\le1/2$ lies between these two cases.  It meets the
+range handled by the Chinese remainder theorem only at the corner
+$x=y=1/2$.  Theorem~\ref{thm:main} extends the range in which cancellation
+is proved from that corner into the square.
+
+\emph{Beyond the square-root barrier.}  In terms of the M\"obius variables,
+the classical range $de\le X^{1-\eps}$ means $d,e\le X^{1/2-\eps}$ on the
+diagonal.  Going past this barrier requires cancellation in sums of
+Kloosterman fractions.  The situation is analogous to the need for the
+dispersion method and Kloosterman-sum technology to pass level $1/2$ in
+Bombieri--Vinogradov type theorems~\cite{BFI}.  For general coefficients,
+the strongest available tool for such sums is the trilinear estimate of
+Bettin and Chandee~\cite{BC}, building on Duke, Friedlander and
+Iwaniec~\cite{DFI}.  In the present problem it reaches
+$d,e\le X^{17/33}=X^{1/2+1/66}$ (Remark~\ref{rem:comparison}).
+Theorem~\ref{thm:main} reaches $X^{9/17}=X^{1/2+1/34}$, which roughly
+doubles the excess over the square-root barrier.  Equivalently, the
+Poisson-dual length of every box not covered by Theorem~\ref{thm:main}
+is at least $X^{1/17}$; on the comparison of Remark~\ref{rem:comparison}
+the corresponding bound was $X^{1/33}$.
+
+\emph{Using the arithmetic of $\mu$.}  General-coefficient estimates for
+Kloosterman fractions cannot tell $\mu$ apart from an arbitrary bounded
+sequence.  In the Bettin--Chandee argument, for instance, the coefficient
+on one side enters only through its $\ell^2$ norm.  The improvement here
+comes from three ingredients that do exploit the structure of the problem:
+\begin{itemize}
+\item the Heath-Brown identity, which factors $\mu(d)$ into balanced
+pieces;
+\item a Korolev--Changa bilinear inequality applied \emph{before} the
+reciprocal energies are bounded pointwise, so that those energies can be
+averaged over the varying modulus;
+\item the Bloom--Maynard theorem on the additive energy of rationals with
+bounded denominators.  It controls the energy of the fractions $h/u$ formed
+by joining the Poisson frequency to the shorter factor.
+\end{itemize}
+To our knowledge, the Bloom--Maynard energy bound has not previously been
+used for Kloosterman fractions.  The resulting mean-value theorem,
+Theorem~\ref{thm:meanvalue}, is uniform in the frequency coefficients and
+may be useful elsewhere.
+
+\emph{Potential applications.}  Sums of the shape~\eqref{eq:S} are the
+essential new input in correlations of truncated divisor sums such as
+$\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$.  These underlie the
+Goldston--Y\i ld\i r\i m and Goldston--Pintz--Y\i ld\i r\i m approach to
+gaps between primes~\cite{GY,GPY}.  Estimates for correlations of sieve
+weights beyond the square-root range have been used, for example, to
+derive conditional lower bounds for the variance of primes in short
+intervals and for the pair-correlation form factor of the zeros of the
+Riemann zeta function~\cite{Walker}.  Section~\ref{sec:remarks} explains
+why Theorem~\ref{thm:main} suggests an asymptotic formula for
+$\sum\Lambda_R(n)\Lambda_R(n+2)$ up to $R=N^{9/17-\eps}$, and lists what
+remains to be done; we do not claim that application here.
+
+\emph{Limits.}  The result says nothing directly about the twin-prime
+conjecture or Chowla's conjecture.  The region $\Omega$ is a neighbourhood
+of the corner $x=y=1/2$ and covers only a small part of the hard square.
+The power saving is confined to the nonzero frequencies.  The
+zero-frequency term is a smooth double M\"obius sum, so the overall saving
+in~\eqref{eq:main-log} is limited by the zero-free region of $\zeta$.
 
 \subsection{Method}
 Suppose $x\le y$, so that $D\ge E$.  Poisson summation in $a$ modulo $2e$
@@ -876,6 +961,11 @@ T.~F.~Bloom and J.~Maynard,
 \emph{A new upper bound for sets with no square differences},
 Compos. Math. \textbf{158} (2022).  arXiv:2011.13266.
 
+\bibitem{BFI}
+E.~Bombieri, J.~B.~Friedlander and H.~Iwaniec,
+\emph{Primes in arithmetic progressions to large moduli},
+Acta Math. \textbf{156} (1986), 203--251.
+
 \bibitem{CL}
 G.~Coppola and M.~Laporta,
 \emph{On the correlations, Selberg integral and symmetry of sieve functions
@@ -891,6 +981,17 @@ Invent. Math. \textbf{128} (1997), 23--43.
 T.~Estermann,
 \emph{On Kloosterman's sum},
 Mathematika \textbf{8} (1961), 83--86.
+
+\bibitem{GPY}
+D.~A.~Goldston, J.~Pintz and C.~Y.~Y\i ld\i r\i m,
+\emph{Primes in tuples I},
+Ann. of Math. (2) \textbf{170} (2009), 819--862.
+
+\bibitem{GY}
+D.~A.~Goldston and C.~Y.~Y\i ld\i r\i m,
+\emph{Higher correlations of divisor sums related to primes I: triple
+correlations},
+Integers \textbf{3} (2003), Paper A5.
 
 \bibitem{HB82}
 D.~R.~Heath-Brown,
@@ -908,10 +1009,21 @@ M.~A.~Korolev and M.~E.~Changa,
 \emph{New estimate for Kloosterman sums with primes},
 Math. Notes \textbf{108} (2020).
 
+\bibitem{MRT15}
+K.~Matom\"aki, M.~Radziwi\l\l{} and T.~Tao,
+\emph{An averaged form of Chowla's conjecture},
+Algebra Number Theory \textbf{9} (2015).
+
 \bibitem{MV}
 H.~L.~Montgomery and R.~C.~Vaughan,
 \emph{Multiplicative Number Theory I. Classical Theory},
 Cambridge Univ. Press, Cambridge, 2007.
+
+\bibitem{Tao16}
+T.~Tao,
+\emph{The logarithmically averaged Chowla and Elliott conjectures for
+two-point correlations},
+Forum Math. Pi \textbf{4} (2016).
 
 \bibitem{Walker}
 A.~Walker,
