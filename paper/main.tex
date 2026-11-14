@@ -1,0 +1,928 @@
+% Möbius cancellation on the determinant equation be - ad = 2.
+%
+% DRAFT.  This manuscript was prepared with extensive use of generative AI;
+% see the section "AI usage disclosure" at the end and AI_DISCLOSURE.md in
+% the repository root.  It has NOT yet been verified by a human expert.
+%
+% Add affiliation and contact details before any circulation.
+\documentclass[11pt]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[margin=1.15in]{geometry}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\e}{\mathrm e}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cW}{\mathcal W}
+\newcommand{\cX}{\mathcal X}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\inv}[1]{\overline{#1}}
+\newcommand{\sumstar}{\sideset{}{^*}\sum}
+
+\title[M\"obius cancellation on the determinant equation]
+{M\"obius cancellation on the determinant equation $be-ad=2$\\
+beyond the Bettin--Chandee range}
+
+\author{Zach Conn}
+\thanks{Zach Conn is the investigator responsible for this work.  The
+mathematical content was generated with extensive assistance from
+generative AI systems; see the AI usage disclosure at the end of the
+paper.  This is a draft that has not yet been checked by a human expert.}
+
+\date{Draft of 14 November 2026}
+
+\subjclass[2020]{Primary 11N37; Secondary 11L05, 11L07, 11B30}
+\keywords{M\"obius function, Kloosterman fractions, determinant equation,
+Heath-Brown identity, additive energy of rationals, correlations of divisor
+sums}
+
+\begin{document}
+
+\begin{abstract}
+For a fixed smooth weight $W$ and odd integers $a,b,d,e$, consider
+\[
+ \cS=\sum_{be-ad=2}\mu(d)\mu(e)\,
+ W\!\left(\frac aA,\frac bB,\frac dD,\frac eE\right),
+ \qquad AD=BE=X .
+\]
+The difficult range is the one in which both M\"obius variables exceed
+$\sqrt X$.  Write $A=X^{x}$ and $B=X^{y}$ with $x,y\le 1/2$.  We prove that
+\[
+ \cS\ll X\exp\bigl(-c\sqrt{\log X}\bigr)
+ \qquad\text{whenever}\qquad 8\min(x,y)+9\max(x,y)>8,
+\]
+and that, apart from an explicit zero-frequency term, $\cS$ is
+$O(X^{1-\sigma+\eps})$ with
+$\sigma=(8\min(x,y)+9\max(x,y)-8)/12$.  On the diagonal $x=y$ this allows
+$d,e$ up to $X^{9/17-\eps}$.  For comparison, the same reduction combined
+with the trilinear Kloosterman-fraction estimate of Bettin and Chandee
+reaches $X^{17/33-\eps}$.  The proof uses Poisson summation, a single
+application of Cauchy--Schwarz, the Heath-Brown identity, a
+Korolev--Changa bilinear inequality averaged over the modulus, and the
+Bloom--Maynard bound for the additive energy of rationals with bounded
+denominators.  This manuscript was prepared with substantial AI assistance
+and has not yet been verified by a human expert; see the disclosure at the
+end.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{The determinant sum}
+Correlations of truncated divisor sums attached to the M\"obius function
+lead to sums over the determinant equation.  If $\alpha,\beta$ are
+coefficient sequences, then
+\[
+ \sum_{n}\Bigl(\sum_{d\mid n}\mu(d)\alpha_d\Bigr)
+ \Bigl(\sum_{e\mid n+2}\mu(e)\beta_e\Bigr)f(n)
+ =\sum_{be-ad=2}\mu(d)\mu(e)\alpha_d\beta_e f(ad).
+\]
+When $de\le X^{1-\eps}$ the inner count is handled by the Chinese remainder
+theorem.  The genuine difficulty is the range $de>X$, where one needs
+cancellation in sums of Kloosterman fractions.  General-coefficient methods
+for such sums go back to Duke, Friedlander and Iwaniec~\cite{DFI} and were
+sharpened by Bettin and Chandee~\cite{BC}.  The purpose of this paper is to
+exploit the arithmetic structure of the M\"obius coefficients themselves.
+
+Let $W\colon\R^4\to\C$ be a fixed smooth function supported in $[1,2]^4$.
+Let $X\ge 3$, let $A,B\ge 1$, put $D=X/A$ and $E=X/B$, and let
+$\kappa\in\{2,-2\}$.  Define
+\begin{equation}\label{eq:S}
+ \cS_\kappa=\cS_\kappa(W;A,B,D,E)
+ =\sum_{\substack{a,b,d,e\ \mathrm{odd}\\ be-ad=\kappa}}
+ \mu(d)\mu(e)\,
+ W\!\left(\frac aA,\frac bB,\frac dD,\frac eE\right).
+\end{equation}
+Since $a,b,d,e$ are odd, every common divisor of $d$ and $e$ divides
+$\kappa$, so $(d,e)=1$.  Write
+\begin{equation}\label{eq:xy}
+ A=X^{x},\qquad B=X^{y},\qquad m=\min(x,y),\qquad M=\max(x,y).
+\end{equation}
+The ``hard square'' is $0<x,y\le 1/2$, in which $d$ and $e$ both have size
+at least $\sqrt X$.  Put
+\[
+ \Omega=\bigl\{(x,y)\in(0,1/2]^2:\ 8m+9M>8\bigr\},
+ \qquad
+ \sigma(x,y)=\frac{8m+9M-8}{12}.
+\]
+Since $M\le1/2$, every point of $\Omega$ has $m>7/16$.
+
+\begin{theorem}\label{thm:main}
+Let $K\subset\Omega$ be compact, let $\kappa\in\{2,-2\}$ and let $\eps>0$.
+There is an explicit term $\cS_\kappa^{0}$, given in
+\eqref{eq:zero-mode} below, such that, uniformly for $(x,y)\in K$,
+\begin{equation}\label{eq:main-power}
+ \cS_\kappa=\cS_\kappa^{0}
+ +O_{K,W,\eps}\bigl(X^{1-\sigma(x,y)+\eps}\bigr).
+\end{equation}
+Moreover there is an absolute constant $c>0$ such that
+$\cS_\kappa^{0}\ll_{W}X\exp(-c\sqrt{\log X})$.  Consequently
+\begin{equation}\label{eq:main-log}
+ \cS_\kappa\ll_{K,W}X\exp\bigl(-c\sqrt{\log X}\bigr).
+\end{equation}
+\end{theorem}
+
+The term $\cS_\kappa^0$ is the zero frequency after Poisson summation.  It
+is a smooth double sum of $\mu(d)\mu(e)/e$, so the classical zero-free
+region of $\zeta$ is the natural limit of the unconditional saving in
+\eqref{eq:main-log}.  The power saving \eqref{eq:main-power} concerns
+everything else.
+
+\begin{corollary}\label{cor:diagonal}
+If $x=y$, the conclusion \eqref{eq:main-log} holds whenever $x>8/17$, that
+is, whenever $D=E\le X^{9/17-\eps}$ for some fixed $\eps>0$.
+\end{corollary}
+
+\begin{remark}[Comparison]\label{rem:comparison}
+Insert the unconditional trilinear bound of Bettin and Chandee~\cite{BC}
+(the estimate displayed immediately before their Theorem~1) into the
+reduction of Section~\ref{sec:proof}, in place of
+Theorem~\ref{thm:meanvalue}.  A routine exponent computation, which we do
+not reproduce, then gives cancellation in the region
+\[
+ 16m+11M>13,\qquad 13m+20M>16 .
+\]
+On the diagonal this is $x>16/33$, that is, $D=E\le X^{17/33-\eps}$.  The
+region $\Omega$ strictly contains it, because
+\[
+ 8m+9M=\tfrac{43}{177}(16m+11M)+\tfrac{56}{177}(13m+20M)
+\]
+and $\tfrac{43}{177}\cdot 13+\tfrac{56}{177}\cdot16=\tfrac{1455}{177}>8$.
+The boundary of $\Omega$ inside the ordered half-square is the segment from
+$(7/16,1/2)$ to $(8/17,8/17)$.
+\emph{(Draft note: the Bettin--Chandee comparison region was computed in
+the exploratory notebook from which this paper is extracted.  It should be
+rechecked against~\cite{BC} before submission.)}
+\end{remark}
+
+\subsection{Method}
+Suppose $x\le y$, so that $D\ge E$.  Poisson summation in $a$ modulo $2e$
+turns $\cS_\kappa$ into a zero-frequency term plus a trilinear form
+\[
+ \frac AE\sum_{e\asymp E}\mu(e)\sum_{d\asymp D}\mu(d)
+ \sum_{0<|h|\lesssim T}\nu_h\, e_e(h\inv d),
+ \qquad T=\frac{E}{A}=X^{1-x-y}.
+\]
+A single application of Cauchy--Schwarz over $e$ removes $\mu(e)$.  It
+reduces Theorem~\ref{thm:main} to a mean-value estimate over moduli,
+Theorem~\ref{thm:meanvalue}, for
+\[
+ \cX=\Bigl(\sum_{E/2<e\le2E}\Bigl|\sum_{(d,2e)=1}\mu(d)V(d/D)
+ \sum_{|h|\le H}\nu_h\,e_e(h\inv d)\Bigr|^2\Bigr)^{1/2}.
+\]
+We decompose $\mu(d)$ by the Heath-Brown identity.  For balanced
+factorizations $d=uw$ with $D^{1/3}\ll u\ll D^{1/2}$, we join the frequency
+$h$ to the shorter factor $u$.  This produces a family of reduced fractions
+$h/u$ and the phase $e_q(\inv z\,\inv w)$ with $\inv z=h\inv u$.  We then
+apply a Korolev--Changa bilinear inequality~\cite{KC} \emph{before} the
+reciprocal energies are bounded pointwise, and average those energies over
+the modulus.  The energy of the integers $w$ is handled by divisor counting.
+The energy of the fractions $h/u$ is controlled by the theorem of Bloom and
+Maynard~\cite{BM} on additive energy of rationals with bounded
+denominators.  Boxes with a long smooth variable are handled by Poisson
+summation and Weil's bound.  The constraint $8m+9M>8$ is exactly the
+condition $T<D^{1/9}$, under which the balanced estimate beats the trivial
+scale.
+
+\subsection{Scope}
+We make no claim about the twin-prime conjecture or about any consequence of
+Theorem~\ref{thm:main} beyond its statement.  A potential application to
+correlations of truncated von Mangoldt functions is discussed, with explicit
+caveats, in Section~\ref{sec:remarks}.
+
+\section{Notation and standard lemmas}\label{sec:prelim}
+
+We write $e(t)=\e^{2\pi i t}$ and $e_q(t)=e(t/q)$.  For an integer $x$
+coprime to $q$, $\inv x$ denotes an inverse of $x$ modulo $q$; the modulus
+is always clear from context.  We write $\tau$ for the divisor function and
+$\tau_k$ for the $k$-fold divisor function.  We also use $(m,n)$ for the
+greatest common divisor and $\|\cdot\|_p$ for $\ell^p$ norms of finitely
+supported sequences.  A smooth dyadic partition of unity is a smooth
+$\rho_0$ supported in $[1/2,2]$ with $\sum_{k\in\Z}\rho_0(t/2^k)=1$ for all
+$t>0$.  For a smooth function $F$ on a compact set, $\|F\|_{C^k}$ is the
+maximum of the sup norms of its partial derivatives of order at most $k$.
+
+\begin{lemma}[Divisor bounds]\label{lem:divisor}
+For every $\eps>0$, $\tau(n)\ll_\eps n^\eps$.  For fixed $k\ge1$,
+$\sum_{n\le N}\tau_k(n)^2\ll_k N(\log 2N)^{k^2-1}$.
+\end{lemma}
+
+\begin{lemma}[Poisson summation in a residue class]\label{lem:poisson}
+Let $f\in C_c^\infty(\R)$, $q\ge1$ and $c\in\Z$.  Then
+\[
+ \sum_{n\equiv c\ (\mathrm{mod}\ q)}f(n)
+ =\frac1q\sum_{h\in\Z}\widehat f\Bigl(\frac hq\Bigr)e\Bigl(\frac{hc}{q}\Bigr),
+ \qquad \widehat f(\xi)=\int_\R f(t)e(-\xi t)\,dt .
+\]
+\end{lemma}
+
+\begin{lemma}[Weil--Estermann]\label{lem:weil}
+For $q\ge1$ and $m,n\in\Z$, the Kloosterman sum
+$S(m,n;q)=\sumstar_{x\bmod q}e_q(mx+n\inv x)$ satisfies
+$|S(m,n;q)|\le\tau(q)(m,n,q)^{1/2}q^{1/2}$.
+\end{lemma}
+
+This is Weil's bound~\cite{Weil} for prime moduli, extended to all moduli
+by Estermann~\cite{Est}; see also~\cite[Ch.~11]{IK}.
+
+\begin{lemma}[Incomplete Kloosterman sums]\label{lem:incomplete}
+Let $q\ge1$, let $(b,q)=1$, and let $f$ be smooth and supported in
+$[N,cN]$ with $|f^{(j)}|\le L N^{-j}$ for $0\le j\le2$.  Then
+\[
+ \sum_{(v,q)=1}f(v)\,e_q(b\inv v)\ll_c L\,\tau(q)\bigl(q^{1/2}+Nq^{-1/2}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Split $v$ into reduced residue classes $r$ modulo $q$ and apply
+Lemma~\ref{lem:poisson} in each class.  This gives
+$q^{-1}\sum_{\ell}\widehat f(\ell/q)S(\ell,b;q)$.  Since $(b,q)=1$,
+Lemma~\ref{lem:weil} gives $|S(\ell,b;q)|\le\tau(q)q^{1/2}$.  Two
+integrations by parts give
+$|\widehat f(\xi)|\ll LN\min(1,(N|\xi|)^{-2})$, so
+$\sum_\ell|\widehat f(\ell/q)|\ll LN(1+q/N)$.
+\end{proof}
+
+\begin{lemma}[M\"obius sums with a coprimality condition]\label{lem:mobius}
+There is an absolute constant $c>0$ such that, uniformly for $x\ge2$ and
+integers $1\le q\le x^{100}$,
+\[
+ M_q(x):=\sum_{\substack{n\le x\\(n,q)=1}}\mu(n)\ll x\exp\bigl(-c\sqrt{\log x}\bigr).
+\]
+Consequently, if $G$ is smooth and supported in a fixed compact subset of
+$(0,\infty)$, then uniformly for $1\le q\le N^{100}$
+\[
+ \sum_{(n,q)=1}\mu(n)G(n/N)\ll_G N\exp\bigl(-c\sqrt{\log N}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Comparing Euler products,
+$\sum_{(n,q)=1}\mu(n)n^{-s}=\zeta(s)^{-1}\sum_{k\mid q^\infty}k^{-s}$, where
+$k\mid q^\infty$ means that every prime factor of $k$ divides $q$.  Hence
+$M_q(x)=\sum_{k\mid q^\infty,\,k\le x}M(x/k)$, where
+$M(y)=\sum_{n\le y}\mu(n)$.  The classical prime number theorem for the
+M\"obius function gives $M(y)\ll y\exp(-c_0\sqrt{\log y})$ for $y\ge2$;
+see~\cite[Ch.~6]{MV}.  Also $|M(y)|\le y$ trivially.
+
+For $k\le\sqrt x$ we get a contribution
+$\ll x\exp(-c_0\sqrt{\tfrac12\log x})\sum_{k\mid q^\infty}k^{-1}$.  The sum
+equals $q/\varphi(q)\ll\log\log(q+2)$.  For $k>\sqrt x$ we use the trivial
+bound and Rankin's trick:
+\[
+ \sum_{\substack{k\mid q^\infty\\k>\sqrt x}}\frac xk
+ \le x^{3/4}\sum_{k\mid q^\infty}k^{-1/2}
+ =x^{3/4}\prod_{p\mid q}(1-p^{-1/2})^{-1}
+ \le x^{3/4}\exp\Bigl(4\sum_{p\mid q}p^{-1/2}\Bigr).
+\]
+Here $\sum_{p\mid q}p^{-1/2}\ll\sqrt{\omega(q)}\ll\sqrt{\log x}$, so this
+part is $\ll x^{3/4}\exp(O(\sqrt{\log x}))$.  The first claim follows.  The
+second follows by partial summation:
+$\sum_{(n,q)=1}\mu(n)G(n/N)=-\int M_q(t)G'(t/N)\,dt/N$, and the integrand
+is supported on $t\asymp N$.
+\end{proof}
+
+\begin{lemma}[Heath-Brown identity]\label{lem:HB}
+Let $J\ge1$, $Z\ge1$, and $1\le n\le Z^J$.  Then
+\[
+ \mu(n)=\sum_{j=1}^{J}(-1)^{j-1}\binom Jj
+ \sum_{\substack{m_1\cdots m_j n_1\cdots n_{j-1}=n\\ m_1,\dots,m_j\le Z}}
+ \mu(m_1)\cdots\mu(m_j).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $M_Z(s)=\sum_{m\le Z}\mu(m)m^{-s}$.  The Dirichlet coefficients of
+$1-\zeta(s)M_Z(s)$ vanish for $n\le Z$, so those of $(1-\zeta M_Z)^J$
+vanish for $n\le Z^J$, and so do those of $\zeta^{-1}(1-\zeta M_Z)^J$.
+Expand by the binomial theorem:
+\[
+ \zeta^{-1}(1-\zeta M_Z)^J
+ =\zeta^{-1}+\sum_{j\ge1}\binom Jj(-1)^j\zeta^{j-1}M_Z^j .
+\]
+Comparing coefficients of $n^{-s}$ for $n\le Z^J$ gives the identity
+(cf.~\cite{HB82}).
+\end{proof}
+
+\begin{lemma}[Separation of variables]\label{lem:separation}
+Let $k\ge1$ and let $F$ be smooth on $(0,\infty)^k$ and supported in
+$[c,C]^k$.  Define
+$F^\flat(\tau)=(2\pi)^{-k}\int_{(0,\infty)^k}F(s)\,s^{i\tau}\,ds/s$, where
+$s^{i\tau}=\prod_j s_j^{i\tau_j}$ and $ds/s=\prod_j ds_j/s_j$.  Then for all
+$t\in(0,\infty)^k$,
+\[
+ F(t)=\int_{\R^k}F^\flat(\tau)\,t^{-i\tau}\,d\tau ,
+ \qquad
+ |F^\flat(\tau)|\ll_{J,k,c,C}\|F\|_{C^{kJ}}\prod_{j=1}^k(1+|\tau_j|)^{-J}.
+\]
+In particular, if $\rho$ is smooth, supported in $[c/2,2C]$ and equal to
+$1$ on $[c,C]$, then
+$F(t)=\int F^\flat(\tau)\prod_j\rho(t_j)t_j^{-i\tau_j}\,d\tau$.
+\end{lemma}
+
+\begin{proof}
+Substitute $s_j=\e^{u_j}$.  This reduces the claim to Fourier inversion for
+the smooth compactly supported function $u\mapsto F(\e^{u})$, and the decay
+estimate follows by repeated integration by parts.
+\end{proof}
+
+\section{A bilinear inequality of Korolev--Changa type}\label{sec:KC}
+
+For a finite \emph{labelled} family $\mathcal Y$ of units modulo $q$ (residues
+may repeat), let
+\[
+ I(q;\mathcal Y)=\#\bigl\{(y_1,y_2,y_3,y_4)\in\mathcal Y^4:\
+ \inv{y_1}+\inv{y_2}\equiv\inv{y_3}+\inv{y_4}\ (\mathrm{mod}\ q)\bigr\}.
+\]
+
+\begin{lemma}\label{lem:KC}
+Let $q\ge2$, let $c$ be a unit modulo $q$, let $\mathcal Y,\mathcal Z$ be
+finite labelled families of units modulo $q$, and let $\gamma,\beta$ be
+complex coefficients on them.  Then
+\[
+ \Bigl|\sum_{z\in\mathcal Z}\sum_{w\in\mathcal Y}
+ \gamma_z\beta_w\,e_q(c\,\inv z\,\inv w)\Bigr|
+ \le\|\gamma\|_2\|\beta\|_2\,
+ \bigl\{q\,I(q;\mathcal Z)\,I(q;\mathcal Y)\bigr\}^{1/8}.
+\]
+\end{lemma}
+
+This is the case $k=s=2$ of~\cite[Lemma~1]{KC}, stated there for interval
+supports.  The proof uses the supports only to name the energies, and we
+include it for completeness.
+
+\begin{proof}
+Call the left side $|\cB|$.  Write $S(z)=\sum_w\beta_we_q(c\inv z\inv w)$.
+By Cauchy--Schwarz, $|\cB|^2\le\|\gamma\|_2^2\sum_z|S(z)|^2$.  Choose
+$\rho_z$ with $|\rho_z|=1$ and $|S(z)|^2=\rho_z S(z)^2$.  Then
+\[
+ \sum_z|S(z)|^2=\sum_{w_1,w_2}\beta_{w_1}\beta_{w_2}
+ G(\inv{w_1}+\inv{w_2}),
+ \qquad G(\lambda)=\sum_z\rho_z e_q(c\lambda\inv z).
+\]
+Let $j(\lambda)$ be the number of pairs $(w_1,w_2)$ with
+$\inv{w_1}+\inv{w_2}\equiv\lambda$.  Cauchy--Schwarz over $(w_1,w_2)$ gives
+\[
+ \sum_z|S(z)|^2\le\|\beta\|_2^2
+ \Bigl(\sum_{\lambda\bmod q}j(\lambda)|G(\lambda)|^2\Bigr)^{1/2}.
+\]
+Cauchy--Schwarz over $\lambda$ bounds the last sum by
+$(\sum_\lambda j(\lambda)^2)^{1/2}(\sum_\lambda|G(\lambda)|^4)^{1/2}$.  Here
+$\sum_\lambda j(\lambda)^2=I(q;\mathcal Y)$.  Expanding $|G(\lambda)|^4$ and
+using orthogonality over $\lambda$, with $c$ a unit, gives
+$\sum_\lambda|G(\lambda)|^4\le q\,I(q;\mathcal Z)$.  Combining,
+\[
+ |\cB|^4\le\|\gamma\|_2^4\|\beta\|_2^4\,
+ \bigl(q\,I(q;\mathcal Z)I(q;\mathcal Y)\bigr)^{1/2} .
+\]
+Taking fourth roots completes the proof.
+\end{proof}
+
+\section{Reciprocal energies averaged over the modulus}\label{sec:energy}
+
+\begin{lemma}[Integers]\label{lem:energy-integers}
+Let $N,Q\ge1$, let $\mathcal I\subset(N,CN]\cap\Z$, and for $q\ge1$ let
+$I_{\mathcal I}(q)$ be the energy $I(q;\cdot)$ of the units of $\mathcal I$
+modulo $q$.  Then for every $\eps>0$,
+\[
+ \sum_{Q<q\le2Q}I_{\mathcal I}(q)\ll_{C,\eps}(QN^2+N^4)(QN)^{\eps}.
+\]
+\end{lemma}
+
+\begin{proof}
+Clearing denominators, a counted quadruple satisfies $q\mid\Delta$, where
+\[
+ \Delta=(x_1+x_2)x_3x_4-(x_3+x_4)x_1x_2 .
+\]
+If $\Delta\ne0$, then $|\Delta|\ll N^3$, and such a quadruple contributes
+for at most $\tau(|\Delta|)\ll N^{\eps}$ moduli; this gives $N^{4+\eps}$.
+If $\Delta=0$, then $1/x_1+1/x_2=1/x_3+1/x_4$ in $\Q$.  Write the common
+value as $a/b$ in lowest terms.  Each representation
+$1/x+1/y=a/b$ satisfies $(ax-b)(ay-b)=b^2$, so there are at most
+$2\tau(b^2)\ll N^{\eps}$ representations, since $b\ll N^2$.  There are
+therefore $\ll N^{2+\eps}$ such quadruples, each counted for at most $Q+1$
+moduli.
+\end{proof}
+
+We use the theorem of Bloom and Maynard in the following form.  Let
+$\Q_{=u}$ be the set of reduced rationals in $[0,1]$ with denominator exactly
+$u$, and let $\Q_{\le Q_0}=\bigcup_{u\le Q_0}\Q_{=u}$.  For a finite set
+$\mathcal B\subset\Q$ let
+$E_4(\mathcal B)=\#\{(b_1,\dots,b_4)\in\mathcal B^4:\ b_1+b_2=b_3+b_4\}$,
+the equality being exact in $\Q$.
+
+\begin{lemma}[{Bloom--Maynard~\cite[Theorem~2]{BM}}]\label{lem:BM}
+There is an absolute constant $C_0>0$ with the following property.  Let
+$Q_0\ge4$ and $n\ge1$, and let $\mathcal B\subset\Q_{\le Q_0}$ satisfy
+$|\mathcal B\cap\Q_{=u}|\le n$ for every $u\le Q_0$.  Then
+$E_4(\mathcal B)\le(\log Q_0)^{C_0}(Q_0n)^2$.
+\end{lemma}
+
+Theorem~2 of~\cite{BM} is stated for all energies $E_{2m}$, $m\ge2$, with
+bound $(\log Q_0)^{C^m}(Q_0n)^m$; we use only $m=2$.
+
+\begin{lemma}[Reduced fractions]\label{lem:energy-fractions}
+Let $1\le M'\le U'$, and let $\cF$ be a set of reduced fractions $a/u$ with
+$1\le|a|\le M'$ and $U'<u\le CU'$.  Then
+$E_4(\cF)\ll_C(U'M')^2(\log 2U')^{C_0}$.  For $q\ge1$, let $I_\cF(q)$ count
+quadruples in $\cF^4$ whose numerators and denominators are units modulo
+$q$ and which satisfy
+$a_1\inv{u_1}+a_2\inv{u_2}\equiv a_3\inv{u_3}+a_4\inv{u_4}\pmod q$.  Then
+for every $\eps>0$ and $Q\ge1$,
+\[
+ \sum_{Q<q\le2Q}I_\cF(q)\ll_{C,\eps}
+ \bigl(Q(U'M')^2+(U'M')^4\bigr)(QU')^{\eps}.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $|a/u|<M'/U'\le1$, the set $\cF$ is covered by
+$\cF_{-1}=\cF\cap[-1,0]$ and $\cF_0=\cF\cap[0,1]$.  Translation by an
+integer preserves reduced denominators.  Each translate $\cF_k-k$ therefore
+lies in $\Q_{\le Q_0}$, $Q_0=\max(4,CU')$, and has at most $M'$ elements
+with any given exact denominator.  Lemma~\ref{lem:BM} gives
+$E_4(\cF_k)\ll(U'M')^2(\log 2U')^{C_0}$, since energy is invariant under
+translation.
+
+For finite sets $\mathcal A_1,\dots,\mathcal A_4\subset\Q$, two
+applications of Cauchy--Schwarz give the following, uniformly in
+$t\in\Q$:
+\[
+ \#\{a_i\in\mathcal A_i:\ a_1+a_2=a_3+a_4+t\}
+ \le\prod_i E_4(\mathcal A_i)^{1/4}.
+\]
+Summing over the $O(1)$ choices of pieces bounds $E_4(\cF)$.  For the second
+claim, a counted quadruple satisfies $q\mid\Delta$ with
+\[
+ \Delta=a_1u_2u_3u_4+a_2u_1u_3u_4-a_3u_1u_2u_4-a_4u_1u_2u_3 .
+\]
+Quadruples with $\Delta=0$ are exact rational solutions; there are at most
+$E_4(\cF)$ of them, each counted for at most $Q+1$ moduli.  Quadruples with
+$\Delta\neq0$ number at most $|\cF|^4\ll_C(U'M')^4$, and each is counted for
+at most $\tau(|\Delta|)\ll(U')^{\eps}$ moduli, since $0<|\Delta|\ll U'^4$.
+\end{proof}
+
+\section{An averaged bilinear estimate}\label{sec:bilinear}
+
+\begin{proposition}\label{prop:bilinear}
+Let $Q,W\ge1$ and $1\le M'\le U'$, and let $\cF$ be as in
+Lemma~\ref{lem:energy-fractions}.  Suppose that for each
+$q\in(Q,2Q]$ we are given:
+\begin{itemize}
+\item a unit $c_q$ modulo $q$;
+\item a subset $\cF_q\subset\cF$ of fractions whose numerator and
+denominator are units modulo $q$;
+\item a subset $\cW_q\subset(W,CW]\cap\Z$ of units modulo $q$;
+\item coefficients $\gamma_\rho$ on $\cF$ and $\beta_w$ on $(W,CW]$,
+independent of $q$, with $\sum_\rho|\gamma_\rho|^2\le\Gamma^2$ and
+$\sum_w|\beta_w|^2\le\mathrm B^2$.
+\end{itemize}
+For $\rho=a/u$ put
+\[
+ \cB_q=\sum_{\rho=a/u\in\cF_q}\ \sum_{w\in\cW_q}
+ \gamma_\rho\beta_w\,e_q(c_q\,a\inv u\,\inv w).
+\]
+Then for every $\eps>0$,
+\[
+ \Bigl(\sum_{Q<q\le2Q}|\cB_q|^2\Bigr)^{1/2}
+ \ll_{C,\eps}\Gamma\,\mathrm B\,Q^{3/8}(U'M')^{1/4}W^{1/4}
+ \bigl\{(Q+(U'M')^2)(Q+W^2)\bigr\}^{1/8}(QU'W)^{\eps}.
+\]
+\end{proposition}
+
+\begin{proof}
+For each $q$, apply Lemma~\ref{lem:KC} with $\mathcal Z$ the family of
+residues $z=u\inv a$, $\rho=a/u\in\cF_q$, so that $\inv z=a\inv u$, and
+$\mathcal Y=\cW_q$.  The energy of $\mathcal Z$ is at most $I_\cF(q)$, and
+that of $\cW_q$ at most $I_{\mathcal I}(q)$ with
+$\mathcal I=(W,CW]\cap\Z$.  Squaring the bound of Lemma~\ref{lem:KC} and
+summing over $q$, we apply H\"older's inequality with exponents $(4,4,2)$:
+\[
+ \sum_q|\cB_q|^2\le\Gamma^2\mathrm B^2(2Q)^{1/4}Q^{1/2}
+ \Bigl(\sum_qI_\cF(q)\Bigr)^{1/4}\Bigl(\sum_qI_{\mathcal I}(q)\Bigr)^{1/4}.
+\]
+Lemmas~\ref{lem:energy-integers} and~\ref{lem:energy-fractions} complete the
+proof.
+\end{proof}
+
+\section{A mean-value theorem for M\"obius--Kloosterman fractions}\label{sec:meanvalue}
+
+Let $D\ge2$, $1\le E\le D$ and $H\ge1$.  Let $V$ be smooth and supported in
+$[1,2]$.  Let $(\nu_h)$ be complex numbers supported on $1\le|h|\le H$ with
+$|\nu_h|\le1$.  For $e\ge1$ put
+\begin{equation}\label{eq:Pe}
+ P_e=\sum_{(d,2e)=1}\mu(d)V(d/D)\sum_h\nu_h\,e_e(h\inv d),
+ \qquad
+ \cX=\Bigl(\sum_{E/2<e\le2E}|P_e|^2\Bigr)^{1/2}.
+\end{equation}
+
+\begin{theorem}\label{thm:meanvalue}
+Assume $H\le D^{1/6}$ and $E\ge D^{2/3}H^2$.  Then for every $\eps>0$,
+\[
+ \cX\ll_\eps\|V\|_{C^4}\,D^{\eps}
+ \Bigl(D^{11/12}E^{1/2}H^{3/4}+D^{1/3}EH+DH\Bigr).
+\]
+\end{theorem}
+
+Note that the bound is uniform in the coefficients $\nu_h$.
+
+\begin{proof}
+We may assume that $D$ is large.  Throughout, $\eps$ denotes an arbitrarily
+small positive constant, and polylogarithmic factors are absorbed into
+$D^{\eps}$.
+
+\emph{Step 1: gcd strata.}  For a frequency $h$ put $g=(h,e)$, $h=ga$ and
+$e=gq$, so that $(a,q)=1$ and $e_e(h\inv d)=e_q(a\inv d)$.  Then
+$P_e=\sum_{g\mid e}P^{(g)}_{e/g}$, where
+\[
+ P^{(g)}_q=\sum_{(d,2gq)=1}\mu(d)V(d/D)
+ \sum_{\substack{1\le|a|\le H/g\\(a,q)=1}}\nu_{ga}\,e_q(a\inv d).
+\]
+By Minkowski's inequality in $\ell^2(e)$,
+$\cX\le\sum_{g\le H}\cX_g$ with
+$\cX_g=(\sum_{E/(2g)<q\le2E/g}|P^{(g)}_q|^2)^{1/2}$.  The range of $q$ is
+the union of the two dyadic ranges $(Q,2Q]$ with $Q=E/(2g)$ and $Q=E/g$,
+which we treat separately.  It therefore suffices to show that $\cX_g$ is
+$g^{-1}$ times the bound of the theorem.
+
+\emph{Step 2: Heath-Brown decomposition.}  Apply Lemma~\ref{lem:HB} with
+$J=5$ and $Z=(4D)^{1/5}$ to $\mu(d)$ for $d\le2D$.  Decompose every atom
+dyadically, using sharp dyadic intervals for the $m_i$ and a smooth dyadic
+partition of unity for the $n_i$.  Write
+$V(d/D)=\int V^\flat(\tau)(d/D)^{-i\tau}\,d\tau$ by
+Lemma~\ref{lem:separation}, with $\int|V^\flat(\tau)|(1+|\tau|)^2\,d\tau\ll
+\|V\|_{C^4}$.  The factor $(d/D)^{-i\tau}$ factors over the atoms.
+
+Discard the $O((\log D)^9)$ boxes whose product range does not meet $[D,2D]$.
+In every remaining box, the atoms have dyadic sizes whose product lies in
+$[2^{-9}D,4D]$.  The coefficient attached to an atom has modulus at most
+$1$, and $m_i\le Z\le D^{1/5+o(1)}$.
+
+The following dichotomy holds for every box.  Either
+\begin{enumerate}
+\item[(B)] some set of atoms has product of sizes $P$ with
+$D^{1/3}\le P<D^{2/3}$; or
+\item[(L)] some $n_i$-atom has size $N>D^{2/3}$.
+\end{enumerate}
+Indeed, if neither some atom size lies in $[D^{1/3},D^{2/3})$ nor (L)
+holds, then every atom size is below $D^{1/3}$.  The first partial product
+exceeding $D^{1/3}$ is then below $D^{2/3}$.
+
+\emph{Step 3: balanced boxes.}  In case (B), let $u$ be the product of the
+atoms in the chosen set or in its complement, whichever has the smaller
+size, and let $w$ be the product of the rest.  The size $U$ of $u$ satisfies
+$2^{-9}D^{1/3}\le U\le2D^{1/2}$, and the size of $w$ is
+$W\asymp D/U$.  Collapsing the atoms gives coefficients $\alpha_u,\beta_w$
+with $|\alpha_u|\le\tau_9(u)$ and $|\beta_w|\le\tau_9(w)$.  The masks
+$(uw,2gq)=1$ factor into $(u,2gq)=1$ and $(w,2gq)=1$, just as the mask
+$(d,2gq)=1$ factors over the atoms.  For a fixed
+$\tau$, the box contributes
+\[
+ \sum_{1\le|a|\le H/g}\ \sum_u\sum_w\nu_{ga}\alpha_u\beta_w\,
+ e_q(a\inv u\,\inv w).
+\]
+Now stratify by $g'=(a,u)$: write $a=g'a_0$ and $u=g'u_0$, so that
+$(a_0,u_0)=1$.  Since $g'$ is a unit modulo $q$,
+$e_q(a\inv u\,\inv w)=e_q(a_0\inv{u_0}\,\inv w)$.  For fixed $g'$ the
+fractions $\rho=a_0/u_0$ are distinct.  They satisfy $1\le|a_0|\le M'$ and
+$U'<u_0\le CU'$ with
+\[
+ M'=\frac{H}{gg'},\qquad U'=\frac U{g'},
+\]
+and $M'\le U'$ because $H\le D^{1/6}<2^{-9}D^{1/3}\le U$.  The coefficient
+$\gamma_\rho=\nu_{gg'a_0}\alpha_{g'u_0}$ satisfies
+\[
+ \sum_\rho|\gamma_\rho|^2\ll D^{\eps}U'M',
+ \qquad
+ \sum_w|\beta_w|^2\ll D^{\eps}W,
+\]
+by Lemma~\ref{lem:divisor}.  Proposition~\ref{prop:bilinear} with modulus
+range $Q=E/g$ therefore bounds the $\ell^2(q)$ norm of this piece by
+\[
+ D^{\eps}(U'M'W)^{3/4}Q^{3/8}\{(Q+(U'M')^2)(Q+W^2)\}^{1/8}
+ \le D^{\eps}g^{-5/4}g'^{-3/2}\,\Phi(U),
+\]
+where
+\[
+ \Phi(U)=(DH)^{3/4}E^{3/8}\{(E+(UH)^2)(E+W^2)\}^{1/8},
+ \qquad W=D/U.
+\]
+The sum over $g'$ converges.  We claim that
+$\Phi(U)\ll D^{11/12}E^{1/2}H^{3/4}$ for $2^{-9}D^{1/3}\le U\le2D^{1/2}$.
+There are four cases.
+\begin{enumerate}
+\item If $(UH)^2\le E\le W^2$, then
+$\Phi\ll(DH)^{3/4}E^{1/2}W^{1/4}\ll D^{11/12}E^{1/2}H^{3/4}$, because
+$W\ll D^{2/3}$.
+\item If $E<(UH)^2$ and $E\le W^2$, then $\Phi\ll(DH)^{3/4}E^{3/8}(DH)^{1/4}
+=DHE^{3/8}$.  This is $\le D^{11/12}E^{1/2}H^{3/4}$ exactly when
+$E\ge D^{2/3}H^2$.
+\item If $E<(UH)^2$ and $E>W^2$, then
+$\Phi\ll(DH)^{3/4}E^{1/2}(UH)^{1/4}\ll D^{7/8}HE^{1/2}$.  This is
+$\le D^{11/12}E^{1/2}H^{3/4}$ since $H\le D^{1/6}$.
+\item If $(UH)^2\le E$ and $E>W^2$, then
+$\Phi\ll(DH)^{3/4}E^{5/8}\le D^{11/12}E^{1/2}H^{3/4}$, since $E\le D$.
+\end{enumerate}
+
+\emph{Step 4: long boxes.}  In case (L), write $d=kn$, where $n$ is the long
+smooth atom, of size $N>D^{2/3}$, and $k$ is the product of the other
+atoms, of size $K\asymp D/N\ll D^{1/3}$.  The collapsed coefficient
+$\alpha_k$ satisfies $\sum_k|\alpha_k|\ll D^{\eps}K$.  Fix $a$, $k$ and
+$q$.  Detect $(n,2g)=1$ by $\sum_{\delta\mid(n,2g)}\mu(\delta)$; terms with
+$(\delta,q)>1$ are empty.  Lemma~\ref{lem:incomplete}, applied to the
+variable $v=n/\delta$ with $b=a\inv{k\delta}$ and $L\ll(1+|\tau|)^2$,
+gives
+\[
+ \sum_{(n,2gq)=1}\rho_0(n/N)n^{-i\tau}e_q(a\inv k\,\inv n)
+ \ll D^{\eps}(1+|\tau|)^2\bigl(q^{1/2}+Nq^{-1/2}\bigr).
+\]
+Summing absolutely over $k$ and over $|a|\le H/g$, and then taking the
+$\ell^2$ norm over $q\in(E/g,2E/g]$, bounds the contribution of the box to
+$\cX_g$ by
+\[
+ D^{\eps}(1+|\tau|)^2\frac Hg K\Bigl(\frac Eg+N\Bigr)
+ \ll D^{\eps}(1+|\tau|)^2g^{-1}\bigl(D^{1/3}EH+DH\bigr).
+\]
+
+\emph{Step 5: conclusion.}  Integrate over $\tau$ against $|V^\flat(\tau)|$
+and sum over the $O((\log D)^9)$ boxes and the $j\le5$ terms of
+Lemma~\ref{lem:HB}.  Then sum over $g\le H$, with the factors
+$g^{-5/4}$ and $g^{-1}$.  This proves the theorem.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+\subsection{Reduction to $x\le y$}
+The substitution $(a,b,d,e)\mapsto(b,a,e,d)$ maps solutions of
+$be-ad=\kappa$ to solutions of $be-ad=-\kappa$.  It interchanges the roles
+of $(A,D)$ and $(B,E)$ and replaces $W$ by a permuted weight.  It therefore
+suffices to treat $x\le y$, for both signs of $\kappa$.  Then $D\ge E$, and
+we put
+\[
+ T=\frac EA=X^{1-x-y},\qquad
+ \lambda=\frac{\log E}{\log D}=\frac{1-y}{1-x},\qquad
+ \vartheta=\frac{\log T}{\log D}=\frac{1-x-y}{1-x}.
+\]
+Since $y\le1/2$, we have $\lambda+\vartheta\ge1$.  The condition
+$8x+9y>8$ is equivalent to $\vartheta<1/9$.  On the compact set $K$ we
+therefore have $\vartheta\le1/9-\eta$ for some $\eta=\eta(K)>0$.
+
+\subsection{Poisson summation}
+For odd coprime $d,e$, let $a_0=a_0(d,e)$ be the residue class modulo $2e$
+determined by $a_0\equiv-\kappa\inv d\pmod e$ and $a_0\equiv1\pmod2$.  The
+solutions of $be-ad=\kappa$ in odd integers with given $d,e$ are exactly
+$a\equiv a_0\pmod{2e}$, $b=(ad+\kappa)/e$; for such $a$, $b$ is
+automatically an odd integer.  Since $AD=BE=X$,
+\[
+ W\Bigl(\frac aA,\frac bB,\frac dD,\frac eE\Bigr)
+ =F\Bigl(\frac aA;\frac dD,\frac eE\Bigr),
+ \qquad
+ F(\alpha;\delta,\epsilon)=W\Bigl(\alpha,\frac{\alpha\delta}{\epsilon}
+ +\frac{\kappa}{\epsilon X},\delta,\epsilon\Bigr).
+\]
+Here $F$ is smooth, supported in $\alpha,\delta,\epsilon\in[1,2]$, and has
+derivatives bounded independently of $X$.  Let
+$\Phi(\xi;\delta,\epsilon)=\int F(\alpha;\delta,\epsilon)e(-\alpha\xi)\,d\alpha$.
+Then for all $i,j,J\ge0$,
+\begin{equation}\label{eq:Phi-decay}
+ |\xi|^i\,\partial_\xi^i\partial_{\delta,\epsilon}^{j}
+ \Phi(\xi;\delta,\epsilon)\ll_{i,j,J,W}(1+|\xi|)^{-J}.
+\end{equation}
+By CRT, $a_0/(2e)\equiv-\tfrac\kappa2\,\inv d/e+\tfrac12\pmod1$.  So
+Lemma~\ref{lem:poisson} gives
+\begin{equation}\label{eq:after-poisson}
+ \cS_\kappa=\sum_{\substack{d,e\ \mathrm{odd}\\(d,e)=1}}\mu(d)\mu(e)
+ \frac A{2e}\sum_{h\in\Z}(-1)^h\,
+ \Phi\Bigl(\frac{hA}{2e};\frac dD,\frac eE\Bigr)\,
+ e_e\Bigl(-\frac\kappa2\,h\inv d\Bigr).
+\end{equation}
+
+\subsection{The zero frequency}
+The term $h=0$ is
+\begin{equation}\label{eq:zero-mode}
+ \cS_\kappa^0=\sum_{e\ \mathrm{odd}}\mu(e)\frac A{2e}
+ \sum_{(d,2e)=1}\mu(d)\,\Phi\Bigl(0;\frac dD,\frac eE\Bigr).
+\end{equation}
+For each $e\le2E\le2X$, Lemma~\ref{lem:mobius} with $q=2e$ and
+$G(\delta)=\Phi(0;\delta,e/E)$ bounds the inner sum by
+$D\exp(-c\sqrt{\log D})$.  Summing over $e\in[E,2E]$ gives
+$\cS_\kappa^0\ll AD\exp(-c\sqrt{\log D})\ll X\exp(-c'\sqrt{\log X})$,
+since $D\ge\sqrt X$.
+
+\subsection{Nonzero frequencies}
+By~\eqref{eq:Phi-decay}, the terms with $|h|>X^{\eps}T$ contribute
+$O(X^{-100})$.  Insert a smooth dyadic partition of unity in $|h|$ and treat
+$h>0$ and $h<0$ separately.  On a block $|h|\asymp H\le X^{\eps}T$, the
+function
+\[
+ (\eta,\delta,\epsilon)\mapsto\rho_0(\eta)\,
+ \Phi\Bigl(\pm\eta\,\frac{HA}{2E\epsilon};\delta,\epsilon\Bigr),
+ \qquad \eta=|h|/H,
+\]
+is smooth and supported in $[1/2,2]\times[1,2]^2$.  By~\eqref{eq:Phi-decay},
+its $C^k$ norms are $\ll_{k}1$ uniformly in $H$.  Lemma~\ref{lem:separation}
+writes it as an integral, against an $L^1$ density with rapid decay in
+$\tau$, of tensors
+\[
+ \nu_h\,V_\tau(d/D)\,w_\tau(e/E),\qquad
+ \nu_h=\mathbf 1_{\pm h>0}\,(-1)^h\rho(|h|/H)(|h|/H)^{-i\tau_1},
+\]
+with $V_\tau(\delta)=\rho(\delta)\delta^{-i\tau_2}$ and
+$w_\tau(\epsilon)=\rho(\epsilon)\epsilon^{-i\tau_3}$.  Here $0\le\rho\le1$,
+$|\nu_h|\le1$, $\nu$ is supported on $1\le|h|\le 4H$, and
+$\|V_\tau\|_{C^4}\ll(1+|\tau|)^4$.  Replacing $h$ by $-\tfrac\kappa2h$,
+which is $\pm h$, turns the phase in~\eqref{eq:after-poisson} into
+$e_e(h\inv d)$ at the cost of relabelling $\nu$.  For one tensor, Cauchy--Schwarz over $e$ gives
+\[
+ \Bigl|\sum_{e}\mu(e)w_\tau(e/E)\frac A{2e}P_e\Bigr|
+ \le\frac A{2E}(E+1)^{1/2}\cX,
+\]
+with $P_e$ and $\cX$ as in~\eqref{eq:Pe}, for $V=V_\tau$ and modes up to
+$4H\le4X^{\eps}T$.
+
+\subsection{Exponents}
+On $K$ we have $\vartheta\le1/9-\eta$ and $\lambda\ge1-\vartheta$.  Hence
+$4X^{\eps}T\le D^{1/6}$, and $E\ge D^{2/3}(4X^{\eps}T)^2$, because
+$\lambda-\tfrac23-2\vartheta\ge\tfrac13-3\vartheta\ge3\eta$ (for $\eps$
+small in terms of $\eta$).  Theorem~\ref{thm:meanvalue} therefore applies.
+After integrating over $\tau$ and summing over the $O(\log X)$ blocks, it
+gives
+\[
+ \cS_\kappa-\cS_\kappa^0\ll X^{1+3\eps}\Bigl(
+ D^{-1/12}T^{3/4}+D^{-2/3}E^{1/2}T+E^{-1/2}T\Bigr).
+\]
+Indeed, $AE^{-1/2}\cdot D^{11/12}E^{1/2}T^{3/4}=X\cdot D^{-1/12}T^{3/4}$,
+and similarly for the other two terms.  In powers of $X$, the three savings
+are
+\[
+ \frac{8x+9y-8}{12}=\sigma,\qquad
+ \frac{2x+9y-5}{6},\qquad
+ \frac{2x+y-1}{2}.
+\]
+On $\Omega$ with $x\le y$ we have $x>7/16$, and then the second and third
+savings exceed $\sigma$.  Indeed, their differences with $\sigma$ are
+$(9y-4x-2)/12\ge(5x-2)/12>0$ and $(4x-3y+2)/12>0$.  This proves
+\eqref{eq:main-power}.  Together with the bound for $\cS_\kappa^0$ it
+proves \eqref{eq:main-log}, and Theorem~\ref{thm:main} follows.
+Corollary~\ref{cor:diagonal} is the case $x=y$, where $8m+9M=17x$.
+\qed
+
+\section{Remarks}\label{sec:remarks}
+
+\subsection{The boundary of the method}
+The region $\Omega$ is exactly where the balanced estimate of
+Theorem~\ref{thm:meanvalue} beats the Cauchy--Schwarz target.  The target is
+$\cX\ll DE^{1/2}X^{-\delta}$ at $H\asymp T$, and the balanced bound meets it
+precisely when $T<D^{1/9}$.  The bottleneck is case~1 of Step~3, at
+$U\asymp D^{1/3}$, the shortest factor that the Heath-Brown decomposition
+can force on the balanced side.  A finer treatment of factors near
+$D^{1/3}$, or cancellation among the nonzero frequencies $h$ rather than
+their bounded multiplicity, would be needed to go further.
+
+\subsection{Correlations of truncated von Mangoldt functions}
+Let $\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$.  The
+correlation $\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)$ expands into sums of
+the shape~\eqref{eq:S} after smooth dyadic decomposition.  The range
+$de>N$ is exactly where Kloosterman-fraction input is needed.  Results
+beyond $R=N^{1/2}$ have previously been obtained by
+Duke--Friedlander--Iwaniec type estimates~\cite{CL} and by
+Bettin--Chandee type estimates~\cite{Walker}.  Our Corollary~\ref{cor:diagonal}
+suggests an asymptotic formula for $R=N^\theta$ with $\theta<9/17$.
+\emph{We have not proved this.}  Doing so requires, at least:
+\begin{enumerate}
+\item treating the boxes in which one of $d,e$ lies below $\sqrt N$ while
+$de>N$, which lie outside the hard square of Theorem~\ref{thm:main};
+\item handling the non-smooth cutoff $\log(R/d)$ at $d=R$;
+\item computing the main term.
+\end{enumerate}
+The precise exponents attributed to earlier work also need to be checked
+against the sources.
+
+\subsection{Provenance}
+The result was first obtained by a considerably longer route in an
+exploratory, AI-generated research notebook.  That route went through
+selected-class CRT expansions, a double Heath-Brown decomposition, and a
+modulus-averaged reciprocal-energy argument with pair-coprimality
+projectors.  The argument above is a streamlined reorganization.  Poisson
+summation in $a$ followed by a single Cauchy--Schwarz over $e$ reduces the
+problem directly to Theorem~\ref{thm:meanvalue}, which removes the need for
+the pair-coprimality projector.  The gcd stratification by $g'=(a,u)$ in
+Step~3 replaces a divisor projector used in the notebook.  These
+simplifications were made while drafting this manuscript and are among the
+points that most need independent verification.
+
+\section*{AI usage disclosure}
+
+This manuscript was produced with extensive use of generative AI, and this
+disclosure is intended to meet the policies of journals that require one.
+AI systems are not authors of this work.  The investigator, Zach Conn,
+directed the work and takes responsibility for it.
+
+\begin{itemize}
+\item \emph{Origin of the mathematics.}  The determinant-sum estimate, the
+key lemmas, and their first proofs were generated by AI research agents
+working in an exploratory notebook under the investigator's direction.
+[\emph{Investigator to specify the tools.}  The notebook's metadata indicates
+OpenAI ChatGPT for the initial handoff reports and an AI coding agent,
+apparently OpenAI Codex, for the notebook itself.]
+\item \emph{This manuscript.}  The present exposition was drafted on
+14 November 2026 by Claude Opus 5.5 (Anthropic) running in Claude Code.
+This includes the reorganization of the proof into the direct route
+described in Section~\ref{sec:remarks}, the statements and proofs of all
+lemmas as written, the literature search and the bibliography.
+Independent AI reviewer instances re-derived the central exponent
+computation.  Numerical checks were limited to finite sanity checks in the
+upstream notebook and are not part of the proof.
+\item \emph{Verification status.}  As of this draft, \textbf{no human
+expert has verified the proof}.  All bibliographic details and all
+statements attributed to the literature, especially
+Lemmas~\ref{lem:weil}, \ref{lem:mobius} and~\ref{lem:BM},
+Remark~\ref{rem:comparison} and Section~\ref{sec:remarks}, were assembled
+with AI assistance.  They must be checked against the original sources
+before submission or citation.
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem{BC}
+S.~Bettin and V.~Chandee,
+\emph{Trilinear forms with Kloosterman fractions},
+Adv. Math. \textbf{328} (2018).  arXiv:1502.00769.
+
+\bibitem{BM}
+T.~F.~Bloom and J.~Maynard,
+\emph{A new upper bound for sets with no square differences},
+Compos. Math. \textbf{158} (2022).  arXiv:2011.13266.
+
+\bibitem{CL}
+G.~Coppola and M.~Laporta,
+\emph{On the correlations, Selberg integral and symmetry of sieve functions
+in short intervals, III},
+Mosc. J. Comb. Number Theory \textbf{6} (2016), 3--24.  arXiv:1003.0302.
+
+\bibitem{DFI}
+W.~Duke, J.~Friedlander and H.~Iwaniec,
+\emph{Bilinear forms with Kloosterman fractions},
+Invent. Math. \textbf{128} (1997), 23--43.
+
+\bibitem{Est}
+T.~Estermann,
+\emph{On Kloosterman's sum},
+Mathematika \textbf{8} (1961), 83--86.
+
+\bibitem{HB82}
+D.~R.~Heath-Brown,
+\emph{Prime numbers in short intervals and a generalized Vaughan identity},
+Canad. J. Math. \textbf{34} (1982), 1365--1377.
+
+\bibitem{IK}
+H.~Iwaniec and E.~Kowalski,
+\emph{Analytic Number Theory},
+Amer. Math. Soc. Colloq. Publ. \textbf{53}, Amer. Math. Soc., Providence,
+RI, 2004.
+
+\bibitem{KC}
+M.~A.~Korolev and M.~E.~Changa,
+\emph{New estimate for Kloosterman sums with primes},
+Math. Notes \textbf{108} (2020).
+
+\bibitem{MV}
+H.~L.~Montgomery and R.~C.~Vaughan,
+\emph{Multiplicative Number Theory I. Classical Theory},
+Cambridge Univ. Press, Cambridge, 2007.
+
+\bibitem{Walker}
+A.~Walker,
+\emph{Correlations of sieve weights and distributions of zeros},
+arXiv:2101.04418.
+
+\bibitem{Weil}
+A.~Weil,
+\emph{On some exponential sums},
+Proc. Nat. Acad. Sci. U.S.A. \textbf{34} (1948), 204--207.
+
+\end{thebibliography}
+
+\end{document}
