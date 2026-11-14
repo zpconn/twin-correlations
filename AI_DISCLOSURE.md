@@ -30,7 +30,7 @@ authors.
      most significant standalone candidate;
    * reorganizing the proof into a shorter direct route (Poisson in `a`, one
      Cauchy–Schwarz over `e`, a single mean-value theorem), including
-     simplifications not present in the notebook (see §8.3 of the paper);
+     simplifications not present in the notebook (see §8.4 of the paper);
    * writing every lemma statement and proof as they appear in `paper/main.tex`;
    * the literature search and bibliography;
    * this repository's README, roadmap, and this disclosure.

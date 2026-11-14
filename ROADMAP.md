@@ -23,12 +23,13 @@
 - [ ] Search for prior results on Möbius cancellation along `be − ad = h`
   beyond `√X`, and on modulus-averaged Korolev–Changa estimates (e.g.
   Irving; Shparlinski; Kerr–Shparlinski–Wu–Xi).
-- [ ] Check the novelty claims in §1.3 of the paper ("Why the result is
-  meaningful"):
+- [ ] Check the novelty claims in §1.2 of the paper ("Why this matters"):
   - [ ] that Bloom–Maynard has not previously been used for Kloosterman
     fractions;
   - [ ] the 1/66 versus 1/34 comparison;
-  - [ ] the description of Walker's applications.
+  - [ ] the description of Walker's applications;
+  - [ ] that fixed-shift results past `θ = 1/2` use only general-coefficient
+    bounds.
 - [ ] Confirm the state of the art for `Σ Λ_R(n) Λ_R(n+2)` beyond
   `R = N^{1/2}` (Coppola–Laporta, Walker, anything newer).
 

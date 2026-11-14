@@ -77,10 +77,13 @@ $O(X^{1-\sigma+\eps})$ with
 $\sigma=(8\min(x,y)+9\max(x,y)-8)/12$.  On the diagonal $x=y$ this allows
 $d,e$ up to $X^{9/17-\eps}$.  For comparison, the same reduction combined
 with the trilinear Kloosterman-fraction estimate of Bettin and Chandee
-reaches $X^{17/33-\eps}$.  The theorem controls a two-point correlation of
-$\mu$ along dilated progressions.  This family interpolates between the
-range handled by the Chinese remainder theorem and Chowla's conjecture.
-The proof uses Poisson summation, a single application of Cauchy--Schwarz, the Heath-Brown identity, a
+reaches $X^{17/33-\eps}$.  Sums of this type are the obstruction to evaluating the correlation
+$\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)$ of truncated von Mangoldt
+functions beyond $R=N^{1/2}$; the case $R=N$ is the twin-prime conjecture.
+General-coefficient methods move this barrier only slightly.  By exploiting
+the structure of $\mu$, our estimate supplies the main input for $R$ up to
+$N^{9/17}$, although the full deduction is not carried out here.  The proof
+uses Poisson summation, a single application of Cauchy--Schwarz, the Heath-Brown identity, a
 Korolev--Changa bilinear inequality averaged over the modulus, and the
 Bloom--Maynard bound for the additive energy of rationals with bounded
 denominators.  This manuscript was prepared with substantial AI assistance
@@ -179,88 +182,77 @@ the exploratory notebook from which this paper is extracted.  It should be
 rechecked against~\cite{BC} before submission.)}
 \end{remark}
 
-\subsection{Why the result is meaningful}\label{sec:significance}
+\subsection{Why this matters}\label{sec:significance}
 
-\emph{A two-point correlation of $\mu$ along dilations.}  Put $n=ad$, so
-that $n+\kappa=be$.  Then~\eqref{eq:S} becomes
+\emph{The question.}  The twin-prime conjecture, in its quantitative
+Hardy--Littlewood form, asserts that
 \[
- \cS_\kappa=\sum_{a,b\ \mathrm{odd}}\
- \sum_{\substack{n\equiv0\ (\mathrm{mod}\ a)\\ n\equiv-\kappa\ (\mathrm{mod}\ b)}}
- \mu\Bigl(\frac na\Bigr)\mu\Bigl(\frac{n+\kappa}b\Bigr)
- W\Bigl(\frac aA,\frac bB,\frac n{aD},\frac{n+\kappa}{bE}\Bigr).
+ \sum_{n\le N}\Lambda(n)\Lambda(n+2)\sim\mathfrak S N,
+ \qquad \mathfrak S=2\prod_{p>2}\Bigl(1-\frac1{(p-1)^2}\Bigr).
 \]
-Here $n/a$ and $(n+\kappa)/b$ are also required to be odd.  So $\cS_\kappa$
-measures how strongly $\mu$ correlates with itself along the
-pair of linear forms $n/a$ and $(n+\kappa)/b$, averaged over dilations
-$a\asymp A$ and $b\asymp B$.  The two extreme cases are classical.
+Since $\Lambda(n)=\sum_{d\mid n}\mu(d)\log(n/d)$, a natural model is the
+truncated divisor sum
+\[
+ \Lambda_R(n)=\sum_{\substack{d\mid n\\ d\le R}}\mu(d)\log(R/d).
+\]
+It satisfies $\Lambda_N(n)=\Lambda(n)$ for $1<n\le N$.  The truncation
+level $R=N^\theta$ therefore acts as a dial on the correlation
+$\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)$:
 \begin{itemize}
-\item When $x+y>1$, so that $de\le X^{1-\eps}$, the Chinese remainder
-theorem and the zero-free region alone give cancellation.
-\item When $A=B=1$, the sum is essentially the binary correlation
-$\sum_n\mu(n)\mu(n+2)$ of Chowla's conjecture.  This remains open; only
-logarithmically averaged and shift-averaged versions are
-known~\cite{Tao16,MRT15}.
+\item at $\theta=1$ it is the twin-prime sum itself;
+\item for $\theta\le1/2$ it can be evaluated by the Chinese remainder
+theorem, because every pair of divisors involved has $de\le N$; see,
+e.g.,~\cite{GY}.
 \end{itemize}
-The hard square $x,y\le1/2$ lies between these two cases.  It meets the
-range handled by the Chinese remainder theorem only at the corner
-$x=y=1/2$.  Theorem~\ref{thm:main} extends the range in which cancellation
-is proved from that corner into the square.
+Truncated correlations of this kind are basic objects in the work of
+Goldston and Y\i ld\i r\i m and in the Goldston--Pintz--Y\i ld\i r\i m
+method~\cite{GY,GPY}.  Correlations of sieve weights beyond the square-root
+range have been used as inputs to conditional results on the variance of
+primes in short intervals and on the pair correlation of zeros of the
+Riemann zeta function~\cite{Walker}.
 
-\emph{Beyond the square-root barrier.}  In terms of the M\"obius variables,
-the classical range $de\le X^{1-\eps}$ means $d,e\le X^{1/2-\eps}$ on the
-diagonal.  Going past this barrier requires cancellation in sums of
-Kloosterman fractions.  The situation is analogous to the need for the
-dispersion method and Kloosterman-sum technology to pass level $1/2$ in
-Bombieri--Vinogradov type theorems~\cite{BFI}.  For general coefficients,
-the strongest available tool for such sums is the trilinear estimate of
-Bettin and Chandee~\cite{BC}, building on Duke, Friedlander and
-Iwaniec~\cite{DFI}.  In the present problem it reaches
-$d,e\le X^{17/33}=X^{1/2+1/66}$ (Remark~\ref{rem:comparison}).
-Theorem~\ref{thm:main} reaches $X^{9/17}=X^{1/2+1/34}$, which roughly
-doubles the excess over the square-root barrier.  Equivalently, the
-Poisson-dual length of every box not covered by Theorem~\ref{thm:main}
-is at least $X^{1/17}$; on the comparison of Remark~\ref{rem:comparison}
-the corresponding bound was $X^{1/33}$.
-
-\emph{Using the arithmetic of $\mu$.}  General-coefficient estimates for
-Kloosterman fractions cannot tell $\mu$ apart from an arbitrary bounded
-sequence.  In the Bettin--Chandee argument, for instance, the coefficient
-on one side enters only through its $\ell^2$ norm.  The improvement here
-comes from three ingredients that do exploit the structure of the problem:
+\emph{The barrier.}  For $\theta>1/2$, the new terms in this correlation
+are exactly the sums~\eqref{eq:S} with $de>N$, where Chinese-remainder
+arguments give nothing.  Moving the dial past $\theta=1/2$ is a binary
+analogue of passing level $1/2$ in theorems of Bombieri--Vinogradov
+type~\cite{BFI}.  The fixed-shift results past this point that we are
+aware of treat the M\"obius coefficients as an arbitrary bounded sequence.
+They then apply general bounds for sums of Kloosterman
+fractions~\cite{DFI,BC}, which move the dial only slightly:
 \begin{itemize}
-\item the Heath-Brown identity, which factors $\mu(d)$ into balanced
-pieces;
-\item a Korolev--Changa bilinear inequality applied \emph{before} the
-reciprocal energies are bounded pointwise, so that those energies can be
-averaged over the varying modulus;
-\item the Bloom--Maynard theorem on the additive energy of rationals with
-bounded denominators.  It controls the energy of the fractions $h/u$ formed
-by joining the Poisson frequency to the shorter factor.
+\item to $\theta=1/2+1/190$ in~\cite{CL}, via Duke--Friedlander--Iwaniec;
+\item for the sums~\eqref{eq:S}, to $1/2+1/66$ via Bettin--Chandee
+(Remark~\ref{rem:comparison}).
 \end{itemize}
-To our knowledge, the Bloom--Maynard energy bound has not previously been
-used for Kloosterman fractions.  The resulting mean-value theorem,
-Theorem~\ref{thm:meanvalue}, is uniform in the frequency coefficients and
-may be useful elsewhere.
 
-\emph{Potential applications.}  Sums of the shape~\eqref{eq:S} are the
-essential new input in correlations of truncated divisor sums such as
-$\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$.  These underlie the
-Goldston--Y\i ld\i r\i m and Goldston--Pintz--Y\i ld\i r\i m approach to
-gaps between primes~\cite{GY,GPY}.  Estimates for correlations of sieve
-weights beyond the square-root range have been used, for example, to
-derive conditional lower bounds for the variance of primes in short
-intervals and for the pair-correlation form factor of the zeros of the
-Riemann zeta function~\cite{Walker}.  Section~\ref{sec:remarks} explains
-why Theorem~\ref{thm:main} suggests an asymptotic formula for
-$\sum\Lambda_R(n)\Lambda_R(n+2)$ up to $R=N^{9/17-\eps}$, and lists what
-remains to be done; we do not claim that application here.
+\emph{What is new.}  The M\"obius function is not an arbitrary sequence,
+and this paper shows that its structure can be exploited here.  For the
+sums~\eqref{eq:S}, Theorem~\ref{thm:main} reaches $1/2+1/34$, roughly twice
+the excess over the barrier that general-coefficient methods give.  The
+mechanism has three steps:
+\begin{itemize}
+\item factor $\mu(d)$ by the Heath-Brown identity;
+\item join the Poisson frequency to the shorter factor;
+\item control the resulting fractions by the Bloom--Maynard energy bound,
+after averaging a Korolev--Changa inequality over the
+modulus~\cite{BM,KC}.
+\end{itemize}
+As far as we know, this mechanism is new.  It is isolated in a mean-value
+theorem, Theorem~\ref{thm:meanvalue}, which is uniform in the frequency
+coefficients and may apply to other problems with M\"obius-type
+coefficients.
 
-\emph{Limits.}  The result says nothing directly about the twin-prime
-conjecture or Chowla's conjecture.  The region $\Omega$ is a neighbourhood
-of the corner $x=y=1/2$ and covers only a small part of the hard square.
-The power saving is confined to the nonzero frequencies.  The
-zero-frequency term is a smooth double M\"obius sum, so the overall saving
-in~\eqref{eq:main-log} is limited by the zero-free region of $\zeta$.
+\emph{What this does not do.}  Theorem~\ref{thm:main} is the main new input
+needed to evaluate $\sum\Lambda_R(n)\Lambda_R(n+2)$ for $\theta<9/17$.
+Completing that deduction requires the further steps listed in
+Section~\ref{sec:remarks}, which we have not carried out.  Until they are,
+the contribution of this paper is the estimate and the method, not the
+correlation asymptotic.  Nor does it bring $\theta=1$ any closer in a
+qualitative sense: methods of this kind are subject to the parity problem,
+and the dial moves from $0.5$ to about $0.53$.
+\emph{(Draft note: the exponents attributed to~\cite{CL} and to
+Bettin--Chandee, and the claim that earlier fixed-shift results use only
+general-coefficient bounds, must be checked against the literature.)}
 
 \subsection{Method}
 Suppose $x\le y$, so that $D\ge E$.  Poisson summation in $a$ modulo $2e$
@@ -885,6 +877,27 @@ $U\asymp D^{1/3}$, the shortest factor that the Heath-Brown decomposition
 can force on the balanced side.  A finer treatment of factors near
 $D^{1/3}$, or cancellation among the nonzero frequencies $h$ rather than
 their bounded multiplicity, would be needed to go further.
+
+\subsection{Another view: correlations along dilations}
+Put $n=ad$, so that $n+\kappa=be$.  Then~\eqref{eq:S} becomes
+\[
+ \cS_\kappa=\sum_{a,b\ \mathrm{odd}}\
+ \sum_{\substack{n\equiv0\ (\mathrm{mod}\ a)\\ n\equiv-\kappa\ (\mathrm{mod}\ b)}}
+ \mu\Bigl(\frac na\Bigr)\mu\Bigl(\frac{n+\kappa}b\Bigr)
+ W\Bigl(\frac aA,\frac bB,\frac n{aD},\frac{n+\kappa}{bE}\Bigr),
+\]
+where $n/a$ and $(n+\kappa)/b$ are also required to be odd.  This is a
+two-point correlation of $\mu$ along the linear forms $n/a$ and
+$(n+\kappa)/b$, averaged over dilations $a\asymp A$ and $b\asymp B$.  The
+two extremes of the family are classical:
+\begin{itemize}
+\item when $x+y>1$, the Chinese remainder theorem suffices;
+\item when $A=B=1$, the sum is essentially $\sum_n\mu(n)\mu(n+2)$, the open
+binary case of Chowla's conjecture.  Only logarithmically averaged and
+shift-averaged versions of that case are known~\cite{Tao16,MRT15}.
+\end{itemize}
+Theorem~\ref{thm:main} extends the range where cancellation is proved from
+the first extreme into a small neighbourhood of the corner $x=y=1/2$.
 
 \subsection{Correlations of truncated von Mangoldt functions}
 Let $\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$.  The

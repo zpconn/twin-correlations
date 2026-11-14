@@ -44,34 +44,44 @@ The proof uses:
 
 ## Why it matters
 
-* **It is a two-point Möbius correlation averaged over dilations.**  With
-  `n = ad`, the sum is the correlation of `μ(n/a)` with `μ((n+2)/b)`,
-  averaged over `a ~ A` and `b ~ B`.  The family interpolates between two
-  classical cases:
-  * when `AB > X^{1+ε}`, the Chinese remainder theorem suffices;
-  * at `A = B = 1`, it is essentially the binary Chowla correlation
-    `Σ μ(n)μ(n+2)`, which is open.
+The twin-prime conjecture is the asymptotic `Σ_{n≤N} Λ(n)Λ(n+2) ~ 𝔖N`.  A
+standard model replaces `Λ` by the truncated divisor sum
 
-  The theorem extends the range where cancellation is proved from the
-  Chinese-remainder corner into the hard square.
-* **It goes beyond the square-root barrier.**  Here the problem needs
-  Kloosterman-fraction input, as passing level 1/2 does in
-  Bombieri–Friedlander–Iwaniec.  The general-coefficient Bettin–Chandee
-  bound reaches `d, e ≤ X^{1/2 + 1/66}`, a figure that still needs
-  rechecking.  This result reaches `X^{1/2 + 1/34}`, which roughly doubles
-  the excess.
-* **It uses the arithmetic of μ.**  General trilinear bounds cannot see the
-  Möbius coefficients.  Here three ingredients do:
-  * the Heath-Brown identity;
-  * a modulus-averaged Korolev–Changa inequality;
-  * the Bloom–Maynard rational-energy theorem, which to our knowledge is
-    new in this setting.
-* **It has possible applications, not yet established.**  Correlations of
-  `Λ_R` beyond `R = N^{1/2}` (the Goldston–Yıldırım / GPY setting), and
-  conditional results on primes in short intervals and on zeta-zero pair
-  correlation (Walker).  See `ROADMAP.md` §3.
-* **Limits.**  The region is a neighbourhood of the corner `x = y = 1/2`.
-  The result says nothing directly about twin primes or Chowla.
+```
+Λ_R(n) = Σ_{d | n, d ≤ R} μ(d) log(R/d),
+```
+
+and `Λ_N = Λ` on `(1, N]`.  So the level `R = N^θ` is a dial on the
+correlation `Σ Λ_R(n)Λ_R(n+2)`:
+
+* **θ ≤ 1/2:** classical; the Chinese remainder theorem suffices.
+* **θ = 1:** the twin-prime conjecture.
+* **θ > 1/2:** the only new difficulty is exactly the determinant sums
+  above, with `de > N`.
+
+Fixed-shift results past `θ = 1/2` treat μ as an arbitrary bounded sequence
+and apply general Kloosterman-fraction bounds.  These move the dial only a
+little:
+
+* `1/2 + 1/190` (Coppola–Laporta, via Duke–Friedlander–Iwaniec);
+* `1/2 + 1/66` for these sums via Bettin–Chandee.
+
+Both figures still need checking.
+
+**What is new:** using the structure of μ, the theorem reaches `1/2 + 1/34`
+for these sums, roughly twice the excess.  It does so through a mean-value
+theorem with Heath-Brown, modulus-averaged Korolev–Changa, and Bloom–Maynard
+as ingredients, which may be useful elsewhere.  Such correlations feed into
+Goldston–Yıldırım and GPY-type arguments, and into conditional results on
+primes in short intervals and zeta-zero pair correlation (Walker).
+
+**What it does not do (yet):**
+
+* The `Λ_R` asymptotic for `θ < 9/17` needs further steps not yet carried
+  out (`ROADMAP.md` §3).  Until then, the contribution is the estimate and
+  the method.
+* It does not bring twin primes qualitatively closer: the parity problem
+  remains, and the dial moves from 0.5 to about 0.53.
 
 ## Repository layout
 
@@ -116,7 +126,7 @@ in the investigator's `twin-primes` repository.  The main source notes are:
 * `research/2026-08-26-joint-mode-compression-hostile-audit.md` (mask repair)
 * `research/2026-08-15-selected-class-crt-spectrum.md` (zero-mode treatment)
 
-The manuscript follows a shorter route than the notebook; see §8.3 of the
+The manuscript follows a shorter route than the notebook; see §8.4 of the
 paper.  The streamlining steps are new in this write-up and are the highest
 priority for checking.
 
