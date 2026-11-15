@@ -39,25 +39,13 @@
 
 ## 3. Lean formalization
 
-Done (no `sorry`; only the standard axioms):
+Done.  `lambdaR_twin_correlation_unconditional` (Theorem 1.1) has no
+hypotheses: only the standard axioms, and no `sorry`.  Remaining items:
 
-- [x] The Λ_R deduction, from `MobiusPairLevel θ` and `PNTMobius`:
-  `lambdaR_twin_correlation`.
-- [x] Exponent ledger (`Exponents.lean`).
-- [x] Korolev–Changa, Heath-Brown, CRT phase, and energy counting (`Core/`).
-
-Next:
-
-- [ ] Human review that `Basic.lean` matches the paper's definitions.
-- [ ] Discharge `PNTMobius`, e.g. from PrimeNumberTheoremAnd or Math Inc's
-  `strongpnt`.  Each external repository must be built and audited with
-  `#print axioms`.
-- [ ] Formalize Theorem 1.2 itself.  It needs:
-  * Poisson summation with decay for smooth weights;
-  * separation of variables;
-  * the divisor bound `τ(n) ≪ n^ε`;
-  * Weil's bound (port from `charliedorsey/weil-bounds-toolkit` or LeanPool
-    PR #774; squarefree moduli suffice);
-  * Bloom–Maynard Theorem 2, a substantial standalone project.
-
-  Until then, Theorem 1.2 stays an explicit hypothesis.
+- [ ] Human review that `lean/MobiusDeterminant/Basic.lean` matches the
+  paper's definitions of Λ_R and 𝔖.
+- [ ] Optional: formalize the determinant form, Theorem 1.3, separately.
+- [ ] Optional: upstream the new general-purpose pieces:
+  * the prime number theorem for μ with classical error term (to PNT+);
+  * Bloom–Maynard's energy bound;
+  * the Korolev–Changa inequality.

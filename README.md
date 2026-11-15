@@ -53,22 +53,24 @@ problem remains, and nothing here bears on the twin-prime conjecture itself.
 
 ## Lean formalization (`lean/`)
 
-The deduction in step 3 is formalized in Lean 4 with Mathlib.  Every step
-is machine-checked, with two hypotheses stated as explicit `Prop`s:
+Theorem 1.1 is formalized in Lean 4 with Mathlib, **with no hypotheses**:
+`MobiusDeterminant.lambdaR_twin_correlation_unconditional`.  `#print
+axioms` reports only Lean's three standard axioms, and there is no `sorry`
+anywhere.  The project is about 15.5k lines.
 
-* `MobiusPairLevel θ`: Theorem 1.2;
-* `PNTMobius`: the classical prime number theorem for μ.
+It covers:
 
-The main formal theorem is `MobiusDeterminant.lambdaR_twin_correlation` in
-`lean/MobiusDeterminant/Main.lean`.  The project also machine-checks:
+* the level of distribution (Theorem 1.2);
+* the mean-value theorem (Theorem 6.1);
+* Bloom–Maynard's energy bound;
+* the prime number theorem for μ with classical error term;
+* the deduction of Theorem 1.1;
+* every exponent computation in the paper.
 
-* every exponent computation in the paper (`Exponents.lean`);
-* the Korolev–Changa inequality, the Heath-Brown identity, the CRT phase
-  identity, and the exact counting parts of the energy lemmas (`Core/`).
-
-There is no `sorry`, and the only axioms are Lean's standard three.  See
-[`lean/README.md`](lean/README.md) for the file map, build instructions, and
-exactly what is and is not formalized.
+It reuses Lean Pool (the Weil bound for Kloosterman sums, the divisor
+bound) and PNT+ (the zero-free region of ζ and its Mellin–Perron
+machinery).  See [`lean/README.md`](lean/README.md) for the file map and
+the trust boundary.
 
 ## Repository layout
 
@@ -76,7 +78,7 @@ exactly what is and is not formalized.
 |---|---|
 | `paper/main.tex` | The manuscript (amsart) |
 | `paper/Makefile` | `make` builds `main.pdf` with `latexmk` |
-| `lean/` | Lean 4 project (Lean v4.35.0, Mathlib `56a00585`) |
+| `lean/` | Lean 4 project (Lean v4.35.0, Mathlib `56a00585`; depends on Lean Pool and PNT+) |
 | `AI_DISCLOSURE.md` | How AI was used, by whom, and what is unverified |
 | `ROADMAP.md` | Verification checklist and open items |
 

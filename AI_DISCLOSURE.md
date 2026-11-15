@@ -37,7 +37,9 @@ authors.
      source;
    * writing every lemma statement and proof as they appear in `paper/main.tex`;
    * the Lean 4 formalization in `lean/`, written by Claude Opus 5.5 instances
-     and checked by the Lean kernel;
+     and checked by the Lean kernel.  It reuses Lean Pool and PNT+; Lean Pool's
+     Kloosterman–Weil development itself records substantial generative-AI
+     contribution;
    * the literature search and bibliography;
    * this repository's README, roadmap, and this disclosure.
 
@@ -53,11 +55,12 @@ authors.
   They are not part of the proof.
 * The LaTeX source has passed a structural check but has **not been
   compiled**.
-* The Lean kernel checks that the formal theorems follow from the formal
-  definitions and the two stated hypotheses (`MobiusPairLevel`, which is the
-  paper's Theorem 1.2, and `PNTMobius`).  It does **not** check that the
+* The Lean kernel checks Theorem 1.1 with no hypotheses.  The proof covers
+  Theorems 1.2 and 6.1, Bloom–Maynard, and the prime number theorem for μ.
+  Only the standard axioms are used.  The kernel does **not** check that the
   definitions in `lean/MobiusDeterminant/Basic.lean` match the mathematics.
-  It also does not check the unformalized Theorems 1.2, 1.3 and 6.1.
+  It also does not check the prose proofs in the paper; the determinant form
+  (Theorem 1.3) and Appendix A are not formalized.
 * Bibliographic data and every statement attributed to the literature were
   assembled with AI assistance.  They must be checked against the sources.
   In particular:

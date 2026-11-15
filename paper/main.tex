@@ -82,9 +82,9 @@ $\sum_{d\le K,\,e\le L}\mu(d)\mu(e)\bigl(\#\{n\le N: d\mid n,\ e\mid n+2\}
 prove it by exploiting the arithmetic of $\mu$: the Heath-Brown identity, a
 Korolev--Changa bilinear inequality averaged over moduli, and the
 Bloom--Maynard bound for the additive energy of rationals with bounded
-denominators.  The deduction of the correlation asymptotic from this level
-of distribution and the prime number theorem for $\mu$ is formalized in
-Lean~4.  This manuscript was prepared with substantial AI assistance and has
+denominators.  Theorem~\ref{thm:LambdaR} is formalized in Lean~4 with
+Mathlib.  The formal proof has no hypotheses and depends only on Lean's
+standard axioms.  This manuscript was prepared with substantial AI assistance and has
 not yet been verified by a human expert; see the disclosure at the end.
 \end{abstract}
 
@@ -303,14 +303,17 @@ by Abel summation and an evaluation of the main term
 (Section~\ref{sec:LambdaR}).
 
 \subsection{Formal verification}
-The deduction of Theorem~\ref{thm:LambdaR} from Theorem~\ref{thm:level} and
-the prime number theorem for $\mu$, given in Section~\ref{sec:LambdaR}, has
-been formalized in Lean~4 with Mathlib; see Section~\ref{sec:lean}.  In that
-formalization, Theorem~\ref{thm:level} and the prime number theorem for
-$\mu$ appear as explicitly stated hypotheses, and every other step is
-machine-checked.  Theorem~\ref{thm:level} itself is proved here on paper.
-Its exponent bookkeeping, and several of its elementary ingredients, are
-also machine-checked.
+Theorem~\ref{thm:LambdaR} has been formalized in Lean~4 with Mathlib, with
+no hypotheses; see Section~\ref{sec:lean}.  The formal proof covers:
+\begin{itemize}
+\item the level of distribution (Theorem~\ref{thm:level});
+\item the mean-value theorem (Theorem~\ref{thm:meanvalue});
+\item the Bloom--Maynard energy bound;
+\item the prime number theorem for $\mu$ with classical error term;
+\item the deduction of Section~\ref{sec:LambdaR}.
+\end{itemize}
+It reuses existing formalizations of the Weil bound for Kloosterman sums,
+the divisor bound, and the zero-free region of~$\zeta$.
 
 \subsection{Scope}
 We make no claim about the twin-prime conjecture itself.
@@ -1269,73 +1272,83 @@ $N^{-\delta}(\log R)^2\le R^{-\delta/\theta}(\log R)^2\ll_\theta
 \section{Formalization}\label{sec:lean}
 
 The repository accompanying this paper contains a Lean~4 project
-(\texttt{lean/}, Lean v4.35.0, Mathlib commit \texttt{56a00585}).  It
-formalizes the deduction of Section~\ref{sec:LambdaR} together with several
-supporting results.  All results below are proved without \texttt{sorry}.
-They depend only on Lean's standard axioms (\texttt{propext},
-\texttt{Classical.choice}, \texttt{Quot.sound}).
+(\texttt{lean/}, Lean v4.35.0, Mathlib commit \texttt{56a00585}).  In it,
+Theorem~\ref{thm:LambdaR} is proved with no hypotheses:
+\begin{center}
+\texttt{MobiusDeterminant.lambdaR\_twin\_correlation\_unconditional}.
+\end{center}
+The command \texttt{\#print axioms} reports only Lean's standard axioms
+(\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}) for this
+theorem and its entire dependency cone, including the external libraries
+below.  No \texttt{sorry} appears anywhere.
 
 \emph{Definitions.}  The file \texttt{Basic.lean} defines the objects of
-Section~\ref{sec:LambdaR} directly: $\Lambda_R$, $\varrho(d,e)$,
-$C_N(d,e)$, $r_N(d,e)$, $M(R)$ and $S_g(y)$.  It also defines the
-twin-prime constant as the Euler product $\prod_p\mathfrak S_p$, with
-$\mathfrak S_2=2$ and $\mathfrak S_p=1-(p-1)^{-2}$ for odd $p$.  Two
-hypotheses are recorded as propositions, not as axioms:
-\begin{itemize}
-\item \texttt{PNTMobius}, the bound~\eqref{eq:PNTmu};
-\item \texttt{MobiusPairLevel}~$\theta$, the conclusion of
-Theorem~\ref{thm:level} at level $\theta$.
-\end{itemize}
+Section~\ref{sec:LambdaR} directly: $\Lambda_R$, $\varrho(d,e)$, $r_N(d,e)$,
+$M(R)$ and $S_g(y)$.  It defines the twin-prime constant as the Euler
+product $\prod_p\mathfrak S_p$, with $\mathfrak S_2=2$ and
+$\mathfrak S_p=1-(p-1)^{-2}$ for odd $p$.
 
-\emph{Main formal theorem.}  \texttt{lambdaR\_twin\_correlation} states:
-for every $\theta>0$, \texttt{MobiusPairLevel}~$\theta$ and
-\texttt{PNTMobius} together imply the conclusion of
-Theorem~\ref{thm:LambdaR} for $2\le R\le N^\theta$.  Its proof assembles
-the following formal results.
+\emph{Structure.}  The proof is split into components with fixed formal
+interfaces (\texttt{Unconditional/Interfaces.lean}):
 
 \medskip
 \begin{center}
 \begin{tabular}{ll}
 Paper & Lean \\ \hline
-Lemma~\ref{lem:expansion} & \texttt{sum\_LambdaR\_mul\_eq}\\
-Lemma~\ref{lem:abel} & \texttt{abs\_sum\_mul\_log\_log\_le}\\
-Lemmas~\ref{lem:S1}, \ref{lem:Sg} & \texttt{sgAsymp\_of\_PNT}\\
-Lemma~\ref{lem:gcd} & \texttt{Reduction.mainSum\_eq\_sum\_Sg}\\
-$\mathfrak S=\sum_g\mu^2h/\varphi^2$ & \texttt{Reduction.twinConstant\_eq\_tsum\_sfun}\\
-Proposition~\ref{prop:mainterm} & \texttt{mainTermAsymp\_of\_PNT}\\
-Section~9.2 assembly & \texttt{lambdaR\_twin\_of\_level\_of\_mainTerm}
+Theorem~\ref{thm:LambdaR} & \texttt{lambdaR\_twin\_correlation\_unconditional}\\
+Theorem~\ref{thm:level} ($\theta<9/17$) & \texttt{mobiusPairLevel}\\
+Theorem~\ref{thm:meanvalue} & \texttt{meanValueThm}\\
+Proposition~\ref{prop:bilinear} and Steps~1, 3 & \texttt{balancedBoxBound\_of\_BM}\\
+Lemma~\ref{lem:BM} ($m=2$, loss $Q^\eps$) & \texttt{bloomMaynardE4}\\
+Lemmas~\ref{lem:poisson}, \ref{lem:separation} & \texttt{poissonAPDecay}, \texttt{mellinSeparation}\\
+\eqref{eq:PNTmu} & \texttt{pntMobius}\\
+Section~\ref{sec:LambdaR} & \texttt{lambdaR\_twin\_correlation}\\
+Lemmas~\ref{lem:HB}, \ref{lem:KC}, \ref{lem:energy-integers}, \ref{lem:energy-fractions} & \texttt{Core/}\\
+all exponent computations & \texttt{Exponents.lean}
 \end{tabular}
 \end{center}
 \medskip
 
-\emph{Supporting results for Theorems~\ref{thm:level} and~\ref{thm:main}.}
+\emph{External formalizations used.}  The following are imported, not
+re-proved:
 \begin{itemize}
-\item \texttt{Exponents.lean} checks every exponent computation in the
-paper.  This covers the equivalence of $8x+9y>8$ with $T<D^{1/9}$, the case
-analysis of Step~3 of Theorem~\ref{thm:meanvalue}, the long-box condition,
-and the three savings and their comparison.  It also covers the geometry of
-$\Omega$, the Bettin--Chandee region and its strict inclusion in $\Omega$,
-the thresholds $16/33$, $8/17$, $17/33$, $9/17$ and $48/95$, and the
-exponent hypotheses used in Proposition~\ref{prop:smooth-level}.
-\item \texttt{Core/KorolevChanga.lean} proves Lemma~\ref{lem:KC} for an
-arbitrary primitive additive character of $\Z/q\Z$.
-\item \texttt{Core/HeathBrown.lean} proves Lemma~\ref{lem:HB}.
-\item \texttt{Core/CRT.lean} proves the phase identity and the description
-of solutions used in Section~\ref{sec:proof}.
-\item \texttt{Core/Energy.lean} proves the exact counting statements behind
-Lemmas~\ref{lem:energy-integers} and~\ref{lem:energy-fractions}.
+\item from Lean Pool: the Weil bound for Kloosterman sums to squarefree
+moduli (adapted there from C.~Dorsey's Weil Bounds Toolkit), and the
+divisor bound $\tau(n)\le n^{\eps}$;
+\item from PNT+ (Kontorovich, Tao and contributors): the classical
+zero-free region of $\zeta$ and bounds for $\zeta'/\zeta$ and $1/\zeta$;
+\item also from PNT+: the smoothed Mellin--Perron pipeline, which is adapted
+here from $-\zeta'/\zeta$ to $1/\zeta$.
 \end{itemize}
+To our knowledge, the formal proofs of the Bloom--Maynard energy bound and
+of the prime number theorem for $\mu$ with error term
+$x\exp(-c\sqrt{\log x})$ are new.
 
-\emph{What is not formalized.}  The analytic assembly of
-Theorems~\ref{thm:meanvalue}, \ref{thm:level} and~\ref{thm:main} is not
-formalized.  This comprises Poisson summation with decay estimates,
-separation of variables, the divisor-bound bookkeeping, and the external
-inputs: the Weil--Estermann bound, the Bloom--Maynard theorem and the
-prime number theorem for $\mu$.  The formal statement of
-Theorem~\ref{thm:LambdaR} is therefore conditional on
-Theorem~\ref{thm:level} and on the prime number theorem for $\mu$, exactly
-as stated in \texttt{lambdaR\_twin\_correlation}.  A human reader should
-check that the definitions in \texttt{Basic.lean} match those of this paper.
+\emph{Differences from the written proof.}  None of these affects the
+statements.
+\begin{enumerate}
+\item In the balanced boxes, the formal Korolev--Changa inequality is
+applied to arbitrary residues $h\inv u$ modulo $e$, grouped by the reduced
+fraction $h/u$.  This makes the gcd strata $g=(h,e)$ of Step~1 of
+Theorem~\ref{thm:meanvalue} unnecessary.
+\item In the long boxes, sharp dyadic intervals and completion over
+$\Z/q\Z$, together with the Weil bound, replace the smooth Poisson step of
+Lemma~\ref{lem:incomplete}.  The resulting $\log q$ loss is absorbed.
+\item In Proposition~\ref{prop:smooth-level}, the coupled weight depends on
+$(h,d',e')$ only through $h/(d'e')$.  One-variable Mellin separation
+therefore suffices.
+\item The formal prime number theorem for $\mu$ uses a bound
+$1/\zeta(\sigma+it)\ll(1+|t|)^{1/2}$ in the zero-free region, obtained by
+integrating $\zeta'/\zeta$ (Gr\"onwall).  This is weaker than the classical
+$(\log|t|)^A$ but suffices.
+\item The determinant-form Theorem~\ref{thm:main} is not formalized
+separately.  The formal route goes through the correlation form,
+Theorem~\ref{thm:level}, which is what Theorem~\ref{thm:LambdaR} needs.
+\end{enumerate}
+
+\emph{Trust.}  The Lean kernel guarantees that the formal theorem follows
+from the formal definitions.  A human reader should still check that the
+definitions in \texttt{Basic.lean} encode the objects of this paper.
 
 \section{Remarks}\label{sec:remarks}
 
@@ -1477,16 +1490,21 @@ computation.  Finite numerical checks supplement the proofs but are not
 part of them.  The checks covered the identity~\eqref{eq:pair-phase}, the
 gcd expansion of Lemma~\ref{lem:gcd}, the convolution identity in
 Lemma~\ref{lem:Sg}, and the convergence $M(R)\to\mathfrak S$.
-\item \emph{Lean formalization.}  The Lean code described in
-Section~\ref{sec:lean} was written by Claude Opus 5.5 instances and checked
-by the Lean kernel.  Machine checking guarantees that the formal theorems
-follow from the formal definitions and hypotheses.  It does not guarantee
+\item \emph{Lean formalization.}  The Lean code of this project
+(Section~\ref{sec:lean}) was written by Claude Opus 5.5 instances on 15
+November 2026 and checked by the Lean kernel.  It imports Lean Pool and
+PNT+.  Lean Pool's Kloosterman--Weil development states that generative AI
+contributed substantially to it.  Machine checking guarantees that the
+formal theorem follows from the formal definitions.  It does not guarantee
 that those definitions match the mathematics; that correspondence still
 requires human review.
 \item \emph{Verification status.}  As of this draft, \textbf{no human
-expert has verified the proof}.  This applies in particular to
-Theorems~\ref{thm:meanvalue}, \ref{thm:level} and~\ref{thm:main}, which
-are not formalized.  All bibliographic details and all statements
+expert has verified the proof}.  The formalization covers
+Theorems~\ref{thm:LambdaR}, \ref{thm:level} and~\ref{thm:meanvalue}, but
+not the prose of this paper.  Not formalized are the determinant-form
+Theorem~\ref{thm:main}, the comparison in Appendix~\ref{app:BC}, and the
+correspondence between the Lean definitions and the paper's.  All
+bibliographic details and all statements
 attributed to the literature were assembled with AI assistance, especially
 Lemmas~\ref{lem:weil}, \ref{lem:mobius} and~\ref{lem:BM},
 Remark~\ref{rem:comparison} and Appendix~\ref{app:BC}.  They must be checked

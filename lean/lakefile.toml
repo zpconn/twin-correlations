@@ -12,3 +12,17 @@ rev = "56a005855ea17e0b0958f73ec801ae140b0a1679"
 
 [[lean_lib]]
 name = "MobiusDeterminant"
+
+# External formalizations reused (same Mathlib commit as ours).
+# Lean Pool: Kloosterman–Weil bounds (KloostermanWeil), divisor bound (BGS).
+[[require]]
+name = "LeanPool"
+git = "https://github.com/LeanPool/lean-pool.git"
+rev = "595ff877b1d44314072d4baa9a6008ad4bef218d"
+
+# PNT+ (Kontorovich–Tao): prime number theorem, zero-free region, 1/ζ bounds,
+# Perron formula, Möbius consequences.
+[[require]]
+name = "PrimeNumberTheoremAnd"
+git = "https://github.com/AlexKontorovich/PrimeNumberTheoremAnd.git"
+rev = "a4fb6989b07e9c76b511807ae93e33e25b820e9b"

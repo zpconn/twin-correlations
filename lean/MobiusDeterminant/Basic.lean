@@ -3,21 +3,19 @@ import Mathlib
 /-!
 # Shared definitions
 
-This file fixes the objects and the hypotheses used by the formalization of
-the deduction
+This file fixes the objects of the paper's Section 9 and two statements used as
+interfaces:
 
-  (level of distribution for Möbius-weighted divisor pairs)
-  + (prime number theorem for μ)
-  ⟹  ∑_{n ≤ N} Λ_R(n) Λ_R(n+2) = 𝔖 N + O(N exp(-c √(log R)))   (R ≤ N^θ).
+* `PNTMobius`: the prime number theorem for the Möbius function with classical
+  error term; proved in `Unconditional/PNTMobius.lean` (`pntMobius`);
+* `MobiusPairLevel θ`: Theorem 1.2 of the paper (level of distribution for
+  Möbius-weighted divisor pairs); proved for every `θ < 9/17` in
+  `Unconditional/` (`mobiusPairLevel`).
 
-Hypotheses are recorded as `Prop`s, never as axioms:
-
-* `PNTMobius`: the classical prime number theorem for the Möbius function
-  with de la Vallée Poussin–Landau error term (a standard published theorem);
-* `MobiusPairLevel θ`: Theorem 1.2 of the accompanying paper (proved there
-  for every θ < 9/17; its own formalization is staged separately).
-
-Everything else in the deduction is proved in Lean.
+`MobiusDeterminant.lambdaR_twin_correlation` deduces Theorem 1.1 from these two
+statements.  `MobiusDeterminant.lambdaR_twin_correlation_unconditional`
+(`Unconditional/Main.lean`) discharges both, giving Theorem 1.1 with no
+hypotheses.
 -/
 
 open Finset Real
