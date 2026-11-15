@@ -1,4 +1,4 @@
-# Correlations of truncated von Mangoldt functions beyond `N^{1/2}`
+# Twin correlations of truncated von Mangoldt functions up to level 9/17
 
 **Investigator:** Zach Conn
 
