@@ -60,60 +60,125 @@ sums}
 \begin{document}
 
 \begin{abstract}
-For a fixed smooth weight $W$ and odd integers $a,b,d,e$, consider
+Let $\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$ be the truncated
+von Mangoldt function, so that $\Lambda_N(n)=\Lambda(n)$ for $1<n\le N$.  We
+prove that
 \[
- \cS=\sum_{be-ad=2}\mu(d)\mu(e)\,
- W\!\left(\frac aA,\frac bB,\frac dD,\frac eE\right),
- \qquad AD=BE=X .
+ \sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)
+ =\mathfrak S\,N+O\bigl(N\exp(-c\sqrt{\log R})\bigr)
 \]
-The difficult range is the one in which both M\"obius variables exceed
-$\sqrt X$.  Write $A=X^{x}$ and $B=X^{y}$ with $x,y\le 1/2$.  We prove that
-\[
- \cS\ll X\exp\bigl(-c\sqrt{\log X}\bigr)
- \qquad\text{whenever}\qquad 8\min(x,y)+9\max(x,y)>8,
-\]
-and that, apart from an explicit zero-frequency term, $\cS$ is
-$O(X^{1-\sigma+\eps})$ with
-$\sigma=(8\min(x,y)+9\max(x,y)-8)/12$.  On the diagonal $x=y$ this allows
-$d,e$ up to $X^{9/17-\eps}$.  For comparison, the same reduction combined
-with the trilinear Kloosterman-fraction estimate of Bettin and Chandee
-reaches $X^{17/33-\eps}$.  Sums of this type are the obstruction to evaluating the correlation
-$\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)$ of truncated von Mangoldt
-functions beyond $R=N^{1/2}$; the case $R=N$ is the twin-prime conjecture.
-General-coefficient methods move this barrier only slightly.  By exploiting
-the structure of $\mu$, our estimate supplies the main input for $R$ up to
-$N^{9/17}$, although the full deduction is not carried out here.  The proof
-uses Poisson summation, a single application of Cauchy--Schwarz, the Heath-Brown identity, a
-Korolev--Changa bilinear inequality averaged over the modulus, and the
+uniformly for $2\le R\le N^{\theta}$, for every fixed $\theta<9/17$.  Here
+$\mathfrak S$ is the twin-prime constant.
+\begin{itemize}
+\item For $\theta\le1/2$ this is classical.
+\item General bounds for bilinear forms with Kloosterman fractions reach
+$\theta<48/95$ (Coppola--Laporta).
+\item The trilinear bound of Bettin and Chandee reaches $17/33$ in the
+critical range.
+\end{itemize}
+The new input is a level of distribution for divisor pairs of $(n,n+2)$
+weighted by $\mu(d)\mu(e)$: the sums
+$\sum_{d\le K,\,e\le L}\mu(d)\mu(e)\bigl(\#\{n\le N: d\mid n,\ e\mid n+2\}
+-N\varrho(d,e)\bigr)$ have a power saving for $K,L\le N^{9/17-\eps}$.  We
+prove it by exploiting the arithmetic of $\mu$: the Heath-Brown identity, a
+Korolev--Changa bilinear inequality averaged over moduli, and the
 Bloom--Maynard bound for the additive energy of rationals with bounded
-denominators.  This manuscript was prepared with substantial AI assistance
-and has not yet been verified by a human expert; see the disclosure at the
-end.
+denominators.  The deduction of the correlation asymptotic from this level
+of distribution and the prime number theorem for $\mu$ is formalized in
+Lean~4.  This manuscript was prepared with substantial AI assistance and has
+not yet been verified by a human expert; see the disclosure at the end.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}\label{sec:intro}
 
-\subsection{The determinant sum}
-Correlations of truncated divisor sums attached to the M\"obius function
-lead to sums over the determinant equation.  If $\alpha,\beta$ are
-coefficient sequences, then
+\subsection{Correlations of truncated von Mangoldt functions}
+The twin-prime conjecture, in its quantitative Hardy--Littlewood form,
+asserts that
 \[
- \sum_{n}\Bigl(\sum_{d\mid n}\mu(d)\alpha_d\Bigr)
- \Bigl(\sum_{e\mid n+2}\mu(e)\beta_e\Bigr)f(n)
- =\sum_{be-ad=2}\mu(d)\mu(e)\alpha_d\beta_e f(ad).
+ \sum_{n\le N}\Lambda(n)\Lambda(n+2)\sim\mathfrak S N,
+ \qquad
+ \mathfrak S=2\prod_{p>2}\Bigl(1-\frac1{(p-1)^2}\Bigr)=1.3203\ldots.
 \]
-When $de\le X^{1-\eps}$ the inner count is handled by the Chinese remainder
-theorem.  The genuine difficulty is the range $de>X$, where one needs
-cancellation in sums of Kloosterman fractions.  General-coefficient methods
-for such sums go back to Duke, Friedlander and Iwaniec~\cite{DFI} and were
-sharpened by Bettin and Chandee~\cite{BC}.  The purpose of this paper is to
-exploit the arithmetic structure of the M\"obius coefficients themselves.
+Since $\Lambda(n)=\sum_{d\mid n}\mu(d)\log(n/d)$, a natural model for
+$\Lambda$ is the truncated divisor sum
+\[
+ \Lambda_R(n)=\sum_{\substack{d\mid n\\ d\le R}}\mu(d)\log(R/d),
+\]
+which satisfies $\Lambda_N(n)=\Lambda(n)$ for $1<n\le N$.  The truncation
+level $R=N^\theta$ therefore acts as a dial on the correlation
+\[
+ \mathcal C(N,R)=\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2):
+\]
+at $\theta=1$ it is the twin-prime sum itself.  For $\theta\le1/2$, every
+pair of divisors $d,e\le R$ involved has $de\le N$.  The Chinese remainder
+theorem then gives $\mathcal C(N,R)\sim\mathfrak SN$; see, e.g.,~\cite{GY}.
+Truncated correlations of this kind are basic objects in the work of
+Goldston and Y\i ld\i r\i m and in the Goldston--Pintz--Y\i ld\i r\i m
+method~\cite{GY,GPY}.  Correlations of sieve weights beyond the square-root
+range have been used as inputs to conditional results on the variance of
+primes in short intervals and on the pair correlation of zeros of the
+Riemann zeta function~\cite{Walker}.
 
-Let $W\colon\R^4\to\C$ be a fixed smooth function supported in $[1,2]^4$.
-Let $X\ge 3$, let $A,B\ge 1$, put $D=X/A$ and $E=X/B$, and let
-$\kappa\in\{2,-2\}$.  Define
+Past $\theta=1/2$ one meets pairs with $de>N$, and the problem becomes one
+about sums of Kloosterman fractions.  It is a binary analogue of passing
+level $1/2$ in theorems of Bombieri--Vinogradov type~\cite{BFI}.
+\begin{itemize}
+\item Coppola and Laporta~\cite{CL} treat the fixed-shift autocorrelation of
+an arbitrary sieve function of level $\theta$, using the bilinear
+Kloosterman-fraction estimate of Duke, Friedlander and Iwaniec~\cite{DFI}.
+They obtain an asymptotic formula for $\theta<48/95=1/2+1/190$; $\Lambda_R$
+is a special case.
+\item Inserting the stronger trilinear estimate of Bettin and
+Chandee~\cite{BC} into the same reduction gives
+$\theta<17/33=1/2+1/66$ in the critical range (Appendix~\ref{app:BC}).
+\end{itemize}
+Both arguments treat the coefficients $\mu(d)\log(R/d)$ as an arbitrary
+bounded sequence.  Our main result exploits their arithmetic structure.
+
+\begin{theorem}\label{thm:LambdaR}
+Let $0<\theta<9/17$.  There are an absolute constant $c>0$ and a constant
+$C_\theta$ such that, for all $N\ge2$ and $2\le R\le N^\theta$,
+\[
+ \Bigl|\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)-\mathfrak S N\Bigr|
+ \le C_\theta\,N\exp\bigl(-c\sqrt{\log R}\bigr).
+\]
+\end{theorem}
+
+Thus the dial moves from $1/2+1/190$ to $9/17=1/2+1/34$.  The excess over
+the square-root barrier is roughly twice what the Bettin--Chandee estimate
+gives and more than five times what Duke--Friedlander--Iwaniec gives.
+
+\subsection{M\"obius-weighted divisor pairs}
+For $d,e\ge1$ let
+\[
+ \varrho(d,e)=\begin{cases}1/[d,e],&(d,e)\mid 2,\\0,&\text{otherwise},\end{cases}
+ \qquad
+ r_N(d,e)=\#\{1\le n\le N:\ d\mid n,\ e\mid n+2\}-N\varrho(d,e).
+\]
+Here $\varrho(d,e)$ is the density of the integers $n$ with $d\mid n$ and
+$e\mid n+2$, and $|r_N(d,e)|\le1$.  Theorem~\ref{thm:LambdaR} is deduced
+in Section~\ref{sec:LambdaR} from the following estimate together with the
+prime number theorem for $\mu$.
+
+\begin{theorem}\label{thm:level}
+For every $\theta<9/17$ there is $\delta=\delta(\theta)>0$ such that, for all
+$N\ge2$ and all integers $1\le K,L\le N^\theta$,
+\[
+ \sum_{d\le K}\sum_{e\le L}\mu(d)\mu(e)\,r_N(d,e)\ll_\theta N^{1-\delta}.
+\]
+\end{theorem}
+
+The trivial bound is $KL$, so the content of Theorem~\ref{thm:level} lies
+in the range $KL>N$.  There it is a level of distribution beyond $1$ for the
+products $de$, which may be as large as $N^{18/17-\eps}$.
+
+\subsection{The determinant sum}
+Theorem~\ref{thm:level} rests on an estimate for the determinant sums that
+arise when $n=ad$ and $n+2=be$.  Let $W\colon\R^4\to\C$ be a fixed smooth
+function supported in $[1,2]^4$.  Let $X\ge 3$ and $A,B\ge 1$, put $D=X/A$
+and $E=X/B$, and let $\kappa\in\{2,-2\}$.  Define
 \begin{equation}\label{eq:S}
  \cS_\kappa=\cS_\kappa(W;A,B,D,E)
  =\sum_{\substack{a,b,d,e\ \mathrm{odd}\\ be-ad=\kappa}}
@@ -149,11 +214,12 @@ $\cS_\kappa^{0}\ll_{W}X\exp(-c\sqrt{\log X})$.  Consequently
 \end{equation}
 \end{theorem}
 
-The term $\cS_\kappa^0$ is the zero frequency after Poisson summation.  It
-is a smooth double sum of $\mu(d)\mu(e)/e$, so the classical zero-free
-region of $\zeta$ is the natural limit of the unconditional saving in
-\eqref{eq:main-log}.  The power saving \eqref{eq:main-power} concerns
-everything else.
+The term $\cS_\kappa^0$ is the zero frequency after Poisson summation, a
+smooth double sum of $\mu(d)\mu(e)/e$.  The power saving
+\eqref{eq:main-power} concerns everything else.  In the correlation problem
+of Theorem~\ref{thm:level}, the zero frequency is exactly the expected count
+$N\varrho(d,e)$ and is subtracted; this is why Theorem~\ref{thm:level} has a
+power saving.
 
 \begin{corollary}\label{cor:diagonal}
 If $x=y$, the conclusion \eqref{eq:main-log} holds whenever $x>8/17$, that
@@ -161,11 +227,10 @@ is, whenever $D=E\le X^{9/17-\eps}$ for some fixed $\eps>0$.
 \end{corollary}
 
 \begin{remark}[Comparison]\label{rem:comparison}
-Insert the unconditional trilinear bound of Bettin and Chandee~\cite{BC}
-(the estimate displayed immediately before their Theorem~1) into the
-reduction of Section~\ref{sec:proof}, in place of
-Theorem~\ref{thm:meanvalue}.  A routine exponent computation, which we do
-not reproduce, then gives cancellation in the region
+In Appendix~\ref{app:BC} we insert the unconditional trilinear bound of
+Bettin and Chandee~\cite{BC} into the reduction of Section~\ref{sec:proof},
+in place of Theorem~\ref{thm:meanvalue}.  This gives cancellation in the
+region
 \[
  16m+11M>13,\qquad 13m+20M>16 .
 \]
@@ -177,82 +242,31 @@ region $\Omega$ strictly contains it, because
 and $\tfrac{43}{177}\cdot 13+\tfrac{56}{177}\cdot16=\tfrac{1455}{177}>8$.
 The boundary of $\Omega$ inside the ordered half-square is the segment from
 $(7/16,1/2)$ to $(8/17,8/17)$.
-\emph{(Draft note: the Bettin--Chandee comparison region was computed in
-the exploratory notebook from which this paper is extracted.  It should be
-rechecked against~\cite{BC} before submission.)}
 \end{remark}
 
 \subsection{Why this matters}\label{sec:significance}
-
-\emph{The question.}  The twin-prime conjecture, in its quantitative
-Hardy--Littlewood form, asserts that
-\[
- \sum_{n\le N}\Lambda(n)\Lambda(n+2)\sim\mathfrak S N,
- \qquad \mathfrak S=2\prod_{p>2}\Bigl(1-\frac1{(p-1)^2}\Bigr).
-\]
-Since $\Lambda(n)=\sum_{d\mid n}\mu(d)\log(n/d)$, a natural model is the
-truncated divisor sum
-\[
- \Lambda_R(n)=\sum_{\substack{d\mid n\\ d\le R}}\mu(d)\log(R/d).
-\]
-It satisfies $\Lambda_N(n)=\Lambda(n)$ for $1<n\le N$.  The truncation
-level $R=N^\theta$ therefore acts as a dial on the correlation
-$\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)$:
-\begin{itemize}
-\item at $\theta=1$ it is the twin-prime sum itself;
-\item for $\theta\le1/2$ it can be evaluated by the Chinese remainder
-theorem, because every pair of divisors involved has $de\le N$; see,
-e.g.,~\cite{GY}.
-\end{itemize}
-Truncated correlations of this kind are basic objects in the work of
-Goldston and Y\i ld\i r\i m and in the Goldston--Pintz--Y\i ld\i r\i m
-method~\cite{GY,GPY}.  Correlations of sieve weights beyond the square-root
-range have been used as inputs to conditional results on the variance of
-primes in short intervals and on the pair correlation of zeros of the
-Riemann zeta function~\cite{Walker}.
-
-\emph{The barrier.}  For $\theta>1/2$, the new terms in this correlation
-are exactly the sums~\eqref{eq:S} with $de>N$, where Chinese-remainder
-arguments give nothing.  Moving the dial past $\theta=1/2$ is a binary
-analogue of passing level $1/2$ in theorems of Bombieri--Vinogradov
-type~\cite{BFI}.  The fixed-shift results past this point that we are
-aware of treat the M\"obius coefficients as an arbitrary bounded sequence.
-They then apply general bounds for sums of Kloosterman
-fractions~\cite{DFI,BC}, which move the dial only slightly:
-\begin{itemize}
-\item to $\theta=1/2+1/190$ in~\cite{CL}, via Duke--Friedlander--Iwaniec;
-\item for the sums~\eqref{eq:S}, to $1/2+1/66$ via Bettin--Chandee
-(Remark~\ref{rem:comparison}).
-\end{itemize}
-
-\emph{What is new.}  The M\"obius function is not an arbitrary sequence,
-and this paper shows that its structure can be exploited here.  For the
-sums~\eqref{eq:S}, Theorem~\ref{thm:main} reaches $1/2+1/34$, roughly twice
-the excess over the barrier that general-coefficient methods give.  The
-mechanism has three steps:
+Theorem~\ref{thm:LambdaR} moves the dial on the best-studied model of the
+twin-prime correlation substantially further past the square-root barrier
+than general-coefficient methods do.  The point is that the M\"obius function
+is not an arbitrary sequence, and its structure can be used.  The mechanism
+has three steps:
 \begin{itemize}
 \item factor $\mu(d)$ by the Heath-Brown identity;
 \item join the Poisson frequency to the shorter factor;
 \item control the resulting fractions by the Bloom--Maynard energy bound,
-after averaging a Korolev--Changa inequality over the
-modulus~\cite{BM,KC}.
+after averaging a Korolev--Changa inequality over the modulus.
 \end{itemize}
 As far as we know, this mechanism is new.  It is isolated in a mean-value
 theorem, Theorem~\ref{thm:meanvalue}, which is uniform in the frequency
 coefficients and may apply to other problems with M\"obius-type
 coefficients.
 
-\emph{What this does not do.}  Theorem~\ref{thm:main} is the main new input
-needed to evaluate $\sum\Lambda_R(n)\Lambda_R(n+2)$ for $\theta<9/17$.
-Completing that deduction requires the further steps listed in
-Section~\ref{sec:remarks}, which we have not carried out.  Until they are,
-the contribution of this paper is the estimate and the method, not the
-correlation asymptotic.  Nor does it bring $\theta=1$ any closer in a
-qualitative sense: methods of this kind are subject to the parity problem,
-and the dial moves from $0.5$ to about $0.53$.
-\emph{(Draft note: the exponents attributed to~\cite{CL} and to
-Bettin--Chandee, and the claim that earlier fixed-shift results use only
-general-coefficient bounds, must be checked against the literature.)}
+The limits should be stated equally clearly.  Methods of this kind are
+subject to the parity problem.  The dial moves from $0.5$ to about $0.53$,
+and the twin-prime case $\theta=1$ is no closer in any qualitative sense.
+\emph{(Draft note: the claim that earlier fixed-shift results past
+$\theta=1/2$ use only general-coefficient bounds reflects our literature
+search and should be confirmed.)}
 
 \subsection{Method}
 Suppose $x\le y$, so that $D\ge E$.  Poisson summation in $a$ modulo $2e$
@@ -262,7 +276,7 @@ turns $\cS_\kappa$ into a zero-frequency term plus a trilinear form
  \sum_{0<|h|\lesssim T}\nu_h\, e_e(h\inv d),
  \qquad T=\frac{E}{A}=X^{1-x-y}.
 \]
-A single application of Cauchy--Schwarz over $e$ removes $\mu(e)$.  It
+A single application of Cauchy--Schwarz over $e$ removes $\mu(e)$.  This
 reduces Theorem~\ref{thm:main} to a mean-value estimate over moduli,
 Theorem~\ref{thm:meanvalue}, for
 \[
@@ -283,11 +297,24 @@ summation and Weil's bound.  The constraint $8m+9M>8$ is exactly the
 condition $T<D^{1/9}$, under which the balanced estimate beats the trivial
 scale.
 
+The same mean-value theorem gives Theorem~\ref{thm:level}.  Poisson
+summation in $n$ modulo $[d,e]$ produces the same Kloosterman fractions
+directly (Section~\ref{sec:level}).  Theorem~\ref{thm:LambdaR} then follows
+by Abel summation and an evaluation of the main term
+(Section~\ref{sec:LambdaR}).
+
+\subsection{Formal verification}
+The deduction of Theorem~\ref{thm:LambdaR} from Theorem~\ref{thm:level} and
+the prime number theorem for $\mu$, given in Section~\ref{sec:LambdaR}, has
+been formalized in Lean~4 with Mathlib; see Section~\ref{sec:lean}.  In that
+formalization, Theorem~\ref{thm:level} and the prime number theorem for
+$\mu$ appear as explicitly stated hypotheses, and every other step is
+machine-checked.  Theorem~\ref{thm:level} itself is proved here on paper.
+Its exponent bookkeeping, and several of its elementary ingredients, are
+also machine-checked.
+
 \subsection{Scope}
-We make no claim about the twin-prime conjecture or about any consequence of
-Theorem~\ref{thm:main} beyond its statement.  A potential application to
-correlations of truncated von Mangoldt functions is discussed, with explicit
-caveats, in Section~\ref{sec:remarks}.
+We make no claim about the twin-prime conjecture itself.
 
 \section{Notation and standard lemmas}\label{sec:prelim}
 
@@ -708,20 +735,17 @@ where
 \]
 The sum over $g'$ converges.  We claim that
 $\Phi(U)\ll D^{11/12}E^{1/2}H^{3/4}$ for $2^{-9}D^{1/3}\le U\le2D^{1/2}$.
-There are four cases.
+Since $U\le2D^{1/2}$, we have $W^2\asymp D^2/U^2\gg D\ge E$.  So only
+$E\ll W^2$ can occur, and there are two cases.
 \begin{enumerate}
-\item If $(UH)^2\le E\le W^2$, then
+\item If $(UH)^2\le E$, then
 $\Phi\ll(DH)^{3/4}E^{1/2}W^{1/4}\ll D^{11/12}E^{1/2}H^{3/4}$, because
 $W\ll D^{2/3}$.
-\item If $E<(UH)^2$ and $E\le W^2$, then $\Phi\ll(DH)^{3/4}E^{3/8}(DH)^{1/4}
+\item If $E<(UH)^2$, then $\Phi\ll(DH)^{3/4}E^{3/8}(DH)^{1/4}
 =DHE^{3/8}$.  This is $\le D^{11/12}E^{1/2}H^{3/4}$ exactly when
 $E\ge D^{2/3}H^2$.
-\item If $E<(UH)^2$ and $E>W^2$, then
-$\Phi\ll(DH)^{3/4}E^{1/2}(UH)^{1/4}\ll D^{7/8}HE^{1/2}$.  This is
-$\le D^{11/12}E^{1/2}H^{3/4}$ since $H\le D^{1/6}$.
-\item If $(UH)^2\le E$ and $E>W^2$, then
-$\Phi\ll(DH)^{3/4}E^{5/8}\le D^{11/12}E^{1/2}H^{3/4}$, since $E\le D$.
 \end{enumerate}
+(In Step~3 the hypothesis $H\le D^{1/6}$ is used only to ensure $M'\le U'$.)
 
 \emph{Step 4: long boxes.}  In case (L), write $d=kn$, where $n$ is the long
 smooth atom, of size $N>D^{2/3}$, and $k$ is the product of the other
@@ -866,6 +890,454 @@ proves \eqref{eq:main-log}, and Theorem~\ref{thm:main} follows.
 Corollary~\ref{cor:diagonal} is the case $x=y$, where $8m+9M=17x$.
 \qed
 
+\section{Divisor pairs: proof of Theorem~\ref{thm:level}}\label{sec:level}
+
+For $P\ge1$ and an integer $k\ge0$, we call a function $\phi\colon\R\to\C$
+\emph{$(P,k)$-tempered} if it is smooth, supported in $[1/4,4]$, and
+satisfies $\|\phi^{(j)}\|_\infty\le P^j$ for $0\le j\le k$.  For such $\phi$,
+$k$ integrations by parts give $|\widehat\phi(\xi)|\le 8P^k(2\pi|\xi|)^{-k}$.
+
+By splitting into $O(1)$ dyadic pieces, Theorem~\ref{thm:meanvalue}
+applies, with a constant depending only on the support, to weights $V$
+supported in any fixed compact subset of $(0,\infty)$ and to moduli $e$ in
+any range $[E/c,cE]$.  Its constant depends polynomially on finitely many
+derivatives of $V$.  The constant in Lemma~\ref{lem:separation} depends on
+finitely many derivatives of $F$ in the same way.
+
+\subsection{A smooth version}
+
+\begin{proposition}\label{prop:smooth-level}
+Let $0<\eta\le1/100$.  There is $k=k(\eta)$ such that the following holds.
+Let $N_0\ge2$, let $1\le D,E\le N_0^{9/17-\eta}$, let $P\ge1$, and let
+$\psi,\phi_1,\phi_2$ be $(P,k)$-tempered.  Then
+\[
+ \Delta:=\sum_{d,e}\mu(d)\mu(e)\phi_1\Bigl(\frac dD\Bigr)\phi_2\Bigl(\frac eE\Bigr)
+ \Bigl[\sum_{\substack{d\mid n\\ e\mid n+2}}\psi\Bigl(\frac n{N_0}\Bigr)
+ -N_0\widehat\psi(0)\varrho(d,e)\Bigr]
+ \ll_\eta P^{k}N_0^{1-\eta}.
+\]
+\end{proposition}
+
+\begin{proof}
+Throughout, $\eps_0=\eta/48$, and $P^{O(1)}$ denotes a power of $P$ with an
+exponent depending only on $\eta$.
+
+\emph{Step 1: Poisson summation in $n$.}  Fix $d,e$ with
+$\mu(d)\mu(e)\ne0$.  If $(d,e)\nmid2$, there is no $n$ and
+$\varrho(d,e)=0$.  Otherwise the conditions $d\mid n$, $e\mid n+2$ define
+one residue class $n_0$ modulo $q=[d,e]$.  Lemma~\ref{lem:poisson} gives
+\[
+ \sum_{n\equiv n_0\ (\mathrm{mod}\ q)}\psi\Bigl(\frac n{N_0}\Bigr)
+ =\frac{N_0}q\sum_{h\in\Z}\widehat\psi\Bigl(\frac{hN_0}q\Bigr)
+ e\Bigl(\frac{hn_0}q\Bigr).
+\]
+The term $h=0$ is $N_0\widehat\psi(0)\varrho(d,e)$, which cancels.
+
+\emph{Step 2: the phases.}  Write $d=2^id'$ and $e=2^je'$ with $d',e'$ odd
+and $i,j\in\{0,1\}$; then $(d',e')=1$.  Let $\inv{d'}$ be an inverse of $d'$
+modulo $e'$.  Put $\ell=1$ and $c=2$ if $i=j=0$, and $\ell=2$ and $c=1$
+otherwise.  Then $q=\ell d'e'$, and
+\begin{equation}\label{eq:pair-phase}
+ \frac{n_0}q\equiv-\frac{c\,\inv{d'}}{e'}\pmod 1 .
+\end{equation}
+For instance, if $i=j=0$, then $n_0=dt$ with $t\equiv-2\inv d\pmod e$, so
+$n_0/(de)\equiv-2\inv d/e$.  If $i=0$ and $j=1$, then $n_0=dt$ with
+$dt\equiv-2\pmod{2e'}$.  This forces $t=2t'$ with $t'\equiv-\inv d\pmod{e'}$,
+so $n_0/(2de')\equiv-\inv d/e'$.  The cases $i=1$ are identical.
+
+Since $\mu(2d')=-\mu(d')$ for odd $d'$, we get
+$\Delta=\sum_{i,j}(-1)^{i+j}\Delta_{ij}$, where
+\[
+ \Delta_{ij}=\sum_{\substack{d',e'\ \mathrm{odd}\\(d',e')=1}}
+ \mu(d')\mu(e')\phi_1\Bigl(\frac{d'}{D'}\Bigr)\phi_2\Bigl(\frac{e'}{E'}\Bigr)
+ \frac{N_0}{\ell d'e'}\sum_{h\neq0}
+ \widehat\psi\Bigl(\frac{hN_0}{\ell d'e'}\Bigr)
+ e\Bigl(-\frac{c\,h\inv{d'}}{e'}\Bigr),
+\]
+with $D'=D/2^i$ and $E'=E/2^j$.
+
+\emph{Step 3: orientation.}  By the reciprocity law
+$\inv{d'}/e'+\inv{e'}/d'\equiv1/(d'e')\pmod 1$, where $\inv{e'}$ is an
+inverse modulo $d'$, we have
+$e(-ch\inv{d'}/e')=e(ch\inv{e'}/d')\,e(-ch/(d'e'))$.  On the relevant range
+$|h|\le N_0^{\eps_0}T$, defined below, the second factor is a smooth
+function of $(h/H,d'/D',e'/E')$ with bounded derivatives.  We may therefore
+interchange the roles of $d'$ and $e'$ when $D'<E'$.  So assume $D'\ge E'$,
+and put
+\[
+ T=\frac{\ell D'E'}{N_0},\qquad
+ x=1-\frac{\log D'}{\log N_0},\qquad
+ y=1-\frac{\log E'}{\log N_0},
+\]
+so that $x\le y$ and $x\ge8/17+\eta$.
+
+\emph{Step 4: truncation.}  Since $|\widehat\psi(\xi)|\le8P^k(2\pi|\xi|)^{-k}$,
+frequencies with $|h|>N_0^{\eps_0}T$ contribute $O(P^kN_0^{-10})$ once
+$k\ge20/\eps_0$.  In particular, if $T\le N_0^{-\eps_0}$, then $\Delta_{ij}$
+is negligible.  Assume from now on that $T>N_0^{-\eps_0}$, so that
+$x+y\le1+2\eps_0$.
+
+\emph{Step 5: separation and Cauchy--Schwarz.}  Insert a smooth dyadic
+partition of unity in $|h|$, with blocks $|h|\asymp H\le N_0^{\eps_0}T$,
+and treat each sign of $h$ separately.  Writing $\delta=d'/D'$ and
+$\epsilon=e'/E'$, the weight is
+\[
+ \frac{N_0}{\ell d'e'}\widehat\psi\Bigl(\frac{hN_0}{\ell d'e'}\Bigr)
+ \phi_1(\delta)\phi_2(\epsilon)
+ =\frac1T\cdot\frac{1}{\delta\epsilon}\,
+ \widehat\psi\Bigl(\pm\frac{|h|/H}{\delta\epsilon}\cdot\frac HT\Bigr)
+ \phi_1(\delta)\phi_2(\epsilon).
+\]
+After multiplication by $\rho_0(|h|/H)$, it is $T^{-1}$ times a smooth
+function of $(|h|/H,\delta,\epsilon)$ supported in a fixed box, with $C^m$
+norms $\ll_m P^{O(m)}$.  Lemma~\ref{lem:separation} writes it as an integral
+of tensors $\nu_h V_\tau(\delta)w_\tau(\epsilon)$, as in
+Section~\ref{sec:proof}, against a density whose $L^1$ norm, weighted by
+$(1+|\tau|)^4$, is $P^{O(1)}$.  Replacing $h$ by $-ch$ turns the phase into
+$e_{e'}(h\inv{d'})$, with $\nu$ now supported on $|h|\le8H$ and still bounded
+by $1$.
+
+For one tensor, Cauchy--Schwarz over $e'\asymp E'$ bounds the contribution
+by $T^{-1}(8E')^{1/2}\cX$, where $\cX$ is as in~\eqref{eq:Pe} with
+$(D,E,H)$ replaced by $(D',E',8H)$.
+
+\emph{Step 6: applying Theorem~\ref{thm:meanvalue}.}  Its hypotheses
+$8H\le D'^{1/6}$ and $E'\ge D'^{2/3}(8H)^2$ read, in exponents,
+\[
+ 5x+6y>5+O(\eps_0),\qquad 8x+3y>5+O(\eps_0).
+\]
+Both hold, since $y\ge x\ge8/17+\eta$ gives $5x+6y\ge11x>5.17$ and
+$8x+3y\ge11x>5.17$.  Theorem~\ref{thm:meanvalue}, the identity
+$T^{-1}=N_0/(\ell D'E')$ and $H\le N_0^{\eps_0}T$ give
+\[
+ \Delta_{ij}\ll P^{O(1)}N_0^{1+3\eps_0}\Bigl(D'^{-1/12}T^{3/4}
+ +D'^{-2/3}E'^{1/2}T+E'^{-1/2}T\Bigr),
+\]
+as in Section~\ref{sec:proof}.  In powers of $N_0$, the three savings are
+$\sigma_1=(8x+9y-8)/12$, $\sigma_2=(2x+9y-5)/6$ and $\sigma_3=(2x+y-1)/2$.
+\begin{itemize}
+\item Since $y\ge x$, we have $\sigma_1\ge(17x-8)/12\ge17\eta/12$.
+\item $\sigma_2-\sigma_1=(9y-4x-2)/12\ge(5x-2)/12>0$.
+\item Since $y\le1+2\eps_0-x$, we have
+$\sigma_3-\sigma_1=(4x-3y+2)/12\ge(7x-1-6\eps_0)/12>0$.
+\end{itemize}
+Hence $\Delta_{ij}\ll P^{O(1)}N_0^{1-17\eta/12+3\eps_0}$.  Summing over the
+$O(\log N_0)$ blocks, the two signs and the four parity cases gives the
+claim, because $17\eta/12-4\eps_0\ge\eta$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:level}}
+Let $\theta<9/17$, and fix $\eta\in(0,1/100]$ with $\theta\le9/17-3\eta$.
+Let $k=k(\eta)$ be as in Proposition~\ref{prop:smooth-level}.  Put
+$\delta'=\eta/(2k)$ and $\nu=N^{-\delta'}$.  Write $\Sigma(K,L)$ for the sum
+in Theorem~\ref{thm:level} and
+$C_N(d,e)=\#\{1\le n\le N:\ d\mid n,\ e\mid n+2\}$.
+
+\emph{Trivial range.}  Since $|r_N(d,e)|\le1$, we have $|\Sigma(K,L)|\le KL$.
+So we may assume $KL>N^{1-\delta'}$.  Then $K,L\ge N^{1-\delta'-\theta}\ge
+N^{2/5}$, so that $\nu K,\nu L\ge N^{1/3}$.
+
+\emph{Smoothing.}  Choose smooth functions $\chi_K,\chi_L$ and $\Psi$ with
+the following properties.
+\begin{itemize}
+\item $\chi_K=1$ on $[1,(1-\nu)K]$ and $\chi_K=0$ on $[K,\infty)$, with
+$\chi_K^{(j)}\ll_j(\nu K)^{-j}$; $\chi_L$ is defined in the same way.
+\item $\Psi=1$ on $[2N^{1-\delta'},(1-\nu)N]$ and $\Psi=0$ outside
+$[N^{1-\delta'},N]$, with $\Psi^{(j)}\ll_j(\nu N)^{-j}$.
+\end{itemize}
+Multiplying by a smooth dyadic partition of unity writes
+\[
+ \chi_K(d)=\sum_D\phi_D(d/D),\qquad
+ \chi_L(e)=\sum_E\phi'_E(e/E),\qquad
+ \Psi(n)=\sum_{N_0}\psi_{N_0}(n/N_0).
+\]
+These are sums of $O(\log N)$ functions, each $(P,k)$-tempered with
+$P\ll\nu^{-1}$; here $D\le2K$, $E\le2L$ and $N^{1-\delta'}/2\le N_0\le N$.
+
+Replacing $\mathbf 1_{d\le K}$ by $\chi_K(d)$ changes $\Sigma(K,L)$ by at most
+$\sum_{d\in I}\sum_{e\le L}(C_N(d,e)+N\varrho(d,e))$, where
+$I=((1-\nu)K,K]$.  By the divisor bound,
+\[
+ \sum_{d\in I}\sum_{e\le L}C_N(d,e)
+ \le\sum_{n\le N}\tau(n+2)\,\#\{d\in I:\ d\mid n\}
+ \ll N^{\eps}\sum_{d\in I}\frac Nd\ll N^{1+\eps}\nu.
+\]
+Since $\varrho(d,e)\le2(d,e)/(de)$, we have
+$\sum_{e\le L}\varrho(d,e)\le2\tau(d)(1+\log L)/d$, so that
+$N\sum_{d\in I}\sum_{e\le L}\varrho(d,e)\ll N^{1+\eps}\nu$.  The same holds
+for $e$.
+
+Next replace $\mathbf 1_{[1,N]}(n)$ by $\Psi(n)$ and $N$ by
+$\int\Psi=\sum_{N_0}N_0\widehat{\psi_{N_0}}(0)$.  The two functions differ
+only for $n\le2N^{1-\delta'}$ or $n\in[(1-\nu)N,N]$.  The first change
+costs at most
+$\sum_{n\text{ in these ranges}}\tau(n)\tau(n+2)\ll N^{1+\eps}(\nu+N^{-\delta'})$.
+The second costs
+$|N-\int\Psi|\sum_{d,e\le N}\varrho(d,e)\ll N^{1-\delta'}(\log N)^3$, using
+$\sum_{d,e\le N}(d,e)/(de)\ll(\log N)^3$.
+
+What remains is a sum of $O((\log N)^3)$ expressions $\Delta$ as in
+Proposition~\ref{prop:smooth-level}.  Each has $D,E\le2N^\theta\le
+N_0^{9/17-\eta}$, since $N_0\ge N^{1-\delta'}/2$ and $\delta'\le\eta$.  Each
+is therefore $\ll\nu^{-k}N^{1-\eta}=N^{1-\eta/2}$.  Altogether
+\[
+ \Sigma(K,L)\ll N^{1-\eta/2}(\log N)^3+N^{1-\delta'+\eps},
+\]
+and Theorem~\ref{thm:level} follows with $\delta=\delta'/2$.
+\qed
+
+\section{Correlations of $\Lambda_R$: proof of Theorem~\ref{thm:LambdaR}}\label{sec:LambdaR}
+
+Throughout this section $L(d)=\log(R/d)$, and
+\[
+ M(R)=\sum_{d,e\le R}\mu(d)\mu(e)L(d)L(e)\varrho(d,e).
+\]
+
+\begin{lemma}[Expansion]\label{lem:expansion}
+For every integer $N\ge1$ and real $R$,
+\[
+ \sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)
+ =N\,M(R)+\sum_{d,e\le R}\mu(d)\mu(e)L(d)L(e)\,r_N(d,e).
+\]
+\end{lemma}
+
+\begin{proof}
+Expand both factors and interchange summations.  The inner count is
+$C_N(d,e)=N\varrho(d,e)+r_N(d,e)$.
+\end{proof}
+
+\begin{lemma}[Abel summation]\label{lem:abel}
+Let $R\ge1$ and $K=\lfloor R\rfloor$, and let $a(d,e)$ be complex numbers for
+$1\le d,e\le K$.  Suppose
+$|\sum_{d\le k}\sum_{e\le l}a(d,e)|\le B$ for all $1\le k,l\le K$.  Then
+\[
+ \Bigl|\sum_{d,e\le K}a(d,e)L(d)L(e)\Bigr|\le B(\log R)^2.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $w_k=\log((k+1)/k)$ for $1\le k<K$ and $w_K=\log(R/K)$.  Then
+$w_k\ge0$, $L(d)=\sum_{k=d}^Kw_k$ for $1\le d\le K$, and
+$\sum_{k=1}^Kw_k=\log R$.  Hence
+\[
+ \sum_{d,e\le K}a(d,e)L(d)L(e)
+ =\sum_{k,l\le K}w_kw_l\sum_{d\le k}\sum_{e\le l}a(d,e),
+\]
+which is at most $B(\sum_kw_k)^2$ in absolute value.
+\end{proof}
+
+\subsection{The main term}
+We use the prime number theorem for the M\"obius function with the
+classical error term~\cite[Ch.~6]{MV}: for some $c_0>0$,
+\begin{equation}\label{eq:PNTmu}
+ M_\mu(x):=\sum_{n\le x}\mu(n)\ll x\exp\bigl(-c_0\sqrt{\log x}\bigr)
+ \qquad(x\ge2).
+\end{equation}
+Below, $c_1,c_2,\dots$ denote positive absolute constants.
+
+\begin{lemma}\label{lem:S1}
+Put $m(t)=\sum_{n\le t}\mu(n)/n$ and
+$S_1(z)=\sum_{n\le z}\mu(n)\log(z/n)/n$.  Then:
+\begin{enumerate}
+\item $m(t)\ll\exp(-c_1\sqrt{\log t})$ for $t\ge2$;
+\item $S_1(z)=1+O(\exp(-c_2\sqrt{\log z}))$ for $z\ge1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For real $\sigma>1$, partial summation gives
+$\sum_n\mu(n)n^{-\sigma}=\sigma\int_1^\infty M_\mu(u)u^{-\sigma-1}\,du$.
+This equals $1/\zeta(\sigma)$, which tends to $0$ as $\sigma\to1^+$.  By
+\eqref{eq:PNTmu}, $|M_\mu(u)|u^{-2}$ is integrable on $[1,\infty)$, so
+dominated convergence gives $\int_1^\infty M_\mu(u)u^{-2}\,du=0$.  Partial
+summation then gives
+\[
+ m(t)=\frac{M_\mu(t)}t-\int_t^\infty\frac{M_\mu(u)}{u^2}\,du .
+\]
+Since
+$\int_t^\infty\exp(-c_0\sqrt{\log u})\,du/u=\int_{\log t}^\infty
+\e^{-c_0\sqrt v}\,dv\ll(1+\sqrt{\log t})\exp(-c_0\sqrt{\log t})$, this
+proves~(1).
+
+For~(2), $S_1(z)=\int_1^zm(t)\,dt/t$.  For $s>0$, absolute convergence
+justifies interchanging sum and integral:
+\[
+ \int_1^\infty m(t)t^{-1-s}\,dt
+ =\sum_n\frac{\mu(n)}n\int_n^\infty t^{-1-s}\,dt
+ =\frac1{s\,\zeta(1+s)} .
+\]
+This tends to $1$ as $s\to0^+$.  By~(1) and dominated convergence,
+$\int_1^\infty m(t)\,dt/t=1$.  Hence
+$S_1(z)=1-\int_z^\infty m(t)\,dt/t$, which gives~(2) for $z\ge2$.  For
+$1\le z<2$ we have $S_1(z)=\log z\in[0,1)$.
+\end{proof}
+
+\begin{lemma}\label{lem:Sg}
+For $g\ge1$ and $y\ge2$, let
+$S_g(y)=\sum_{d\le y,\ (d,g)=1}\mu(d)\log(y/d)/d$.  Then
+\[
+ S_g(y)=\frac g{\varphi(g)}+O\bigl(g^3\exp(-c_3\sqrt{\log y})\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+As in the proof of Lemma~\ref{lem:mobius}, we have
+$\mu(n)\mathbf 1_{(n,g)=1}=\sum_{km=n,\ k\mid g^\infty}\mu(m)$, and hence
+\[
+ S_g(y)=\sum_{\substack{k\le y\\ k\mid g^\infty}}\frac{S_1(y/k)}k .
+\]
+Also $\sum_{k\mid g^\infty}1/k=\prod_{p\mid g}(1-1/p)^{-1}=g/\varphi(g)\le g$.
+By Rankin's trick, for $Y\ge1$,
+\[
+ \sum_{\substack{k\mid g^\infty\\ k>Y}}\frac1k\le
+ Y^{-1/2}\prod_{p\mid g}(1-p^{-1/2})^{-1}\le Y^{-1/2}4^{\omega(g)}\le
+ Y^{-1/2}g^2 .
+\]
+Write
+$S_g(y)-g/\varphi(g)=\sum_{k\le y,\,k\mid g^\infty}(S_1(y/k)-1)/k
+-\sum_{k\mid g^\infty,\,k>y}1/k$.  Use Lemma~\ref{lem:S1}(2) for
+$k\le\sqrt y$, and the bound $|S_1-1|\le1+\log2$ together with Rankin's
+trick for $k>\sqrt y$.  This gives
+$|S_g(y)-g/\varphi(g)|\ll g\exp(-c_2\sqrt{\tfrac12\log y})+g^2y^{-1/4}$,
+which is acceptable.
+\end{proof}
+
+\begin{lemma}[gcd expansion]\label{lem:gcd}
+Let $h$ be the multiplicative function on squarefree integers with
+$h(2)=1$ and $h(p)=-1$ for odd primes $p$.  For squarefree $d,e$,
+$\varrho(d,e)=(de)^{-1}\sum_{g\mid(d,e)}h(g)$.  Consequently
+\[
+ M(R)=\sum_{g\le R}\frac{\mu(g)^2h(g)}{g^2}\,S_g(R/g)^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+The sum $\sum_{g\mid(d,e)}h(g)=\prod_{p\mid(d,e)}(1+h(p))$ equals
+$(d,e)$ if $(d,e)\mid2$ and $0$ otherwise.  This is $de\,\varrho(d,e)$.
+Inserting this into $M(R)$ and writing $d=gd'$, $e=ge'$, we use
+$\mu(gd')=\mu(g)\mu(d')\mathbf 1_{(g,d')=1}$ and
+$L(gd')=\log((R/g)/d')$.  This gives the formula.
+\end{proof}
+
+\begin{proposition}\label{prop:mainterm}
+For $R\ge2$, $M(R)=\mathfrak S+O(\exp(-c_4\sqrt{\log R}))$.
+\end{proposition}
+
+\begin{proof}
+The function $f(g)=\mu(g)^2h(g)/\varphi(g)^2$ is multiplicative and
+supported on squarefree $g$.  It satisfies $f(2)=1$ and
+$f(p)=-1/(p-1)^2$ for odd $p$, and $\sum_g|f(g)|<\infty$.  Hence
+$\sum_gf(g)=\prod_p(1+f(p))=\mathfrak S$.  Let $G=\exp(\beta\sqrt{\log R})$
+with $\beta=c_3/10$, and assume that $R$ is large; for bounded $R$ the claim
+is trivial.  By Lemma~\ref{lem:gcd},
+\[
+ M(R)-\mathfrak S=
+ \sum_{g\le G}\frac{\mu^2h}{g^2}\Bigl(S_g(R/g)^2-\frac{g^2}{\varphi(g)^2}\Bigr)
+ +\sum_{G<g\le R}\frac{\mu^2h}{g^2}S_g(R/g)^2
+ -\sum_{g>G}f(g).
+\]
+We bound the three sums in turn.
+\begin{itemize}
+\item For $g\le G$ we have $R/g\ge2$, and Lemma~\ref{lem:Sg} gives
+$|S_g^2-g^2/\varphi(g)^2|\ll g^6\exp(-c_3\sqrt{\log(R/g)})$.  Since
+$\sqrt{u-\beta\sqrt u}\ge\sqrt u-\beta$, the first sum is
+$\ll G^5\exp(-c_3\sqrt{\log R})\le\exp(-\tfrac{c_3}2\sqrt{\log R})$.
+\item The trivial bound $|S_g(y)|\le(1+\log y)^2$ shows that the second sum
+is $\ll(\log R)^4/G$.
+\item By Rankin's trick, the third sum is at most
+$G^{-1/2}\sum_g\mu(g)^2g^{1/2}/\varphi(g)^2\ll G^{-1/2}$.
+\end{itemize}
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:LambdaR}}
+Let $\theta<9/17$, $N\ge2$ and $2\le R\le N^\theta$.  By
+Lemma~\ref{lem:expansion},
+\[
+ \sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)-\mathfrak SN
+ =N\bigl(M(R)-\mathfrak S\bigr)
+ +\sum_{d,e\le R}\mu(d)\mu(e)L(d)L(e)\,r_N(d,e).
+\]
+Proposition~\ref{prop:mainterm} bounds the first term by
+$N\exp(-c_4\sqrt{\log R})$.  For the second, apply Lemma~\ref{lem:abel} with
+$a(d,e)=\mu(d)\mu(e)r_N(d,e)$.  The box sums are bounded by
+Theorem~\ref{thm:level}, since $k,l\le\lfloor R\rfloor\le N^\theta$, so the
+second term is at most $C_\theta N^{1-\delta}(\log R)^2$.  Finally, $\log
+R\le\theta\log N$ gives
+$N^{-\delta}(\log R)^2\le R^{-\delta/\theta}(\log R)^2\ll_\theta
+\exp(-c_4\sqrt{\log R})$.
+\qed
+
+\section{Formalization}\label{sec:lean}
+
+The repository accompanying this paper contains a Lean~4 project
+(\texttt{lean/}, Lean v4.35.0, Mathlib commit \texttt{56a00585}).  It
+formalizes the deduction of Section~\ref{sec:LambdaR} together with several
+supporting results.  All results below are proved without \texttt{sorry}.
+They depend only on Lean's standard axioms (\texttt{propext},
+\texttt{Classical.choice}, \texttt{Quot.sound}).
+
+\emph{Definitions.}  The file \texttt{Basic.lean} defines the objects of
+Section~\ref{sec:LambdaR} directly: $\Lambda_R$, $\varrho(d,e)$,
+$C_N(d,e)$, $r_N(d,e)$, $M(R)$ and $S_g(y)$.  It also defines the
+twin-prime constant as the Euler product $\prod_p\mathfrak S_p$, with
+$\mathfrak S_2=2$ and $\mathfrak S_p=1-(p-1)^{-2}$ for odd $p$.  Two
+hypotheses are recorded as propositions, not as axioms:
+\begin{itemize}
+\item \texttt{PNTMobius}, the bound~\eqref{eq:PNTmu};
+\item \texttt{MobiusPairLevel}~$\theta$, the conclusion of
+Theorem~\ref{thm:level} at level $\theta$.
+\end{itemize}
+
+\emph{Main formal theorem.}  \texttt{lambdaR\_twin\_correlation} states:
+for every $\theta>0$, \texttt{MobiusPairLevel}~$\theta$ and
+\texttt{PNTMobius} together imply the conclusion of
+Theorem~\ref{thm:LambdaR} for $2\le R\le N^\theta$.  Its proof assembles
+the following formal results.
+
+\medskip
+\begin{center}
+\begin{tabular}{ll}
+Paper & Lean \\ \hline
+Lemma~\ref{lem:expansion} & \texttt{sum\_LambdaR\_mul\_eq}\\
+Lemma~\ref{lem:abel} & \texttt{abs\_sum\_mul\_log\_log\_le}\\
+Lemmas~\ref{lem:S1}, \ref{lem:Sg} & \texttt{sgAsymp\_of\_PNT}\\
+Lemma~\ref{lem:gcd} & \texttt{Reduction.mainSum\_eq\_sum\_Sg}\\
+$\mathfrak S=\sum_g\mu^2h/\varphi^2$ & \texttt{Reduction.twinConstant\_eq\_tsum\_sfun}\\
+Proposition~\ref{prop:mainterm} & \texttt{mainTermAsymp\_of\_PNT}\\
+Section~9.2 assembly & \texttt{lambdaR\_twin\_of\_level\_of\_mainTerm}
+\end{tabular}
+\end{center}
+\medskip
+
+\emph{Supporting results for Theorems~\ref{thm:level} and~\ref{thm:main}.}
+\begin{itemize}
+\item \texttt{Exponents.lean} checks every exponent computation in the
+paper.  This covers the equivalence of $8x+9y>8$ with $T<D^{1/9}$, the case
+analysis of Step~3 of Theorem~\ref{thm:meanvalue}, the long-box condition,
+and the three savings and their comparison.  It also covers the geometry of
+$\Omega$, the Bettin--Chandee region and its strict inclusion in $\Omega$,
+the thresholds $16/33$, $8/17$, $17/33$, $9/17$ and $48/95$, and the
+exponent hypotheses used in Proposition~\ref{prop:smooth-level}.
+\item \texttt{Core/KorolevChanga.lean} proves Lemma~\ref{lem:KC} for an
+arbitrary primitive additive character of $\Z/q\Z$.
+\item \texttt{Core/HeathBrown.lean} proves Lemma~\ref{lem:HB}.
+\item \texttt{Core/CRT.lean} proves the phase identity and the description
+of solutions used in Section~\ref{sec:proof}.
+\item \texttt{Core/Energy.lean} proves the exact counting statements behind
+Lemmas~\ref{lem:energy-integers} and~\ref{lem:energy-fractions}.
+\end{itemize}
+
+\emph{What is not formalized.}  The analytic assembly of
+Theorems~\ref{thm:meanvalue}, \ref{thm:level} and~\ref{thm:main} is not
+formalized.  This comprises Poisson summation with decay estimates,
+separation of variables, the divisor-bound bookkeeping, and the external
+inputs: the Weil--Estermann bound, the Bloom--Maynard theorem and the
+prime number theorem for $\mu$.  The formal statement of
+Theorem~\ref{thm:LambdaR} is therefore conditional on
+Theorem~\ref{thm:level} and on the prime number theorem for $\mu$, exactly
+as stated in \texttt{lambdaR\_twin\_correlation}.  A human reader should
+check that the definitions in \texttt{Basic.lean} match those of this paper.
+
 \section{Remarks}\label{sec:remarks}
 
 \subsection{The boundary of the method}
@@ -899,37 +1371,80 @@ shift-averaged versions of that case are known~\cite{Tao16,MRT15}.
 Theorem~\ref{thm:main} extends the range where cancellation is proved from
 the first extreme into a small neighbourhood of the corner $x=y=1/2$.
 
-\subsection{Correlations of truncated von Mangoldt functions}
-Let $\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$.  The
-correlation $\sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)$ expands into sums of
-the shape~\eqref{eq:S} after smooth dyadic decomposition.  The range
-$de>N$ is exactly where Kloosterman-fraction input is needed.  Results
-beyond $R=N^{1/2}$ have previously been obtained by
-Duke--Friedlander--Iwaniec type estimates~\cite{CL} and by
-Bettin--Chandee type estimates~\cite{Walker}.  Our Corollary~\ref{cor:diagonal}
-suggests an asymptotic formula for $R=N^\theta$ with $\theta<9/17$.
-\emph{We have not proved this.}  Doing so requires, at least:
-\begin{enumerate}
-\item treating the boxes in which one of $d,e$ lies below $\sqrt N$ while
-$de>N$, which lie outside the hard square of Theorem~\ref{thm:main};
-\item handling the non-smooth cutoff $\log(R/d)$ at $d=R$;
-\item computing the main term.
-\end{enumerate}
-The precise exponents attributed to earlier work also need to be checked
-against the sources.
-
 \subsection{Provenance}
-The result was first obtained by a considerably longer route in an
-exploratory, AI-generated research notebook.  That route went through
-selected-class CRT expansions, a double Heath-Brown decomposition, and a
-modulus-averaged reciprocal-energy argument with pair-coprimality
-projectors.  The argument above is a streamlined reorganization.  Poisson
-summation in $a$ followed by a single Cauchy--Schwarz over $e$ reduces the
-problem directly to Theorem~\ref{thm:meanvalue}, which removes the need for
-the pair-coprimality projector.  The gcd stratification by $g'=(a,u)$ in
-Step~3 replaces a divisor projector used in the notebook.  These
-simplifications were made while drafting this manuscript and are among the
-points that most need independent verification.
+The determinant-sum estimate was first obtained by a considerably longer
+route in an exploratory, AI-generated research notebook.  That route went
+through selected-class CRT expansions, a double Heath-Brown decomposition,
+and a modulus-averaged reciprocal-energy argument with pair-coprimality
+projectors.
+
+The argument above is a streamlined reorganization.  Poisson summation
+followed by a single Cauchy--Schwarz over the shorter M\"obius variable
+reduces the problem directly to Theorem~\ref{thm:meanvalue}.  This removes
+the need for the pair-coprimality projector.  The gcd stratification by
+$g'=(a,u)$ in Step~3 replaces a divisor projector used in the notebook.
+
+Sections~\ref{sec:level} and~\ref{sec:LambdaR} are new in this manuscript:
+the correlation form, the parity and orientation reduction, the smoothing
+argument and the main-term evaluation.  These are among the points that
+most need independent verification.
+
+\appendix
+
+\section{The Bettin--Chandee range}\label{app:BC}
+
+For coefficient sequences $\alpha,\beta,\nu$ supported on $[M/2,M]$,
+$[N/2,N]$ and $[A_0/2,A_0]$, and $\vartheta\ne0$, let
+\[
+ \cB(M,N,A_0)=\sum_{\substack{a,m,n\\(m,n)=1}}\alpha_m\beta_n\nu_a\,
+ e\Bigl(\vartheta\frac{a\inv m}{n}\Bigr),
+\]
+where $\inv m$ is an inverse of $m$ modulo $n$.  The bound below is the one
+from which Bettin and Chandee deduce their Theorem~1.  It is displayed at
+the start of the section ``Completion of the proof of Theorem~1''
+of~\cite{BC} (arXiv:1502.00769):
+\begin{equation}\label{eq:BC}
+\begin{split}
+ \cB(M,N,A_0)\ll{}&\|\alpha\|\|\beta\|\|\nu\|(A_0MN)^{\eps}
+ \Bigl(1+\frac{|\vartheta|A_0}{MN}\Bigr)^{1/4}\\
+ &\times\bigl(A_0^{1/2}M^{1/2}N^{3/8}+A_0^{1/2}N^{7/8}
+ +A_0^{1/5}M^{3/5}N^{7/20}+A_0^{7/20}M^{3/10}N^{13/20}\bigr).
+\end{split}
+\end{equation}
+
+Apply this to the nonzero frequencies in~\eqref{eq:after-poisson}, for
+$x\le y$ in the hard square, after the separation of variables of
+Section~\ref{sec:proof}.  Take
+\[
+ m=d,\quad n=e,\quad a=h,\quad M=D,\quad N=E,\quad A_0=H,\quad
+ \vartheta=-\kappa/2 .
+\]
+The coefficient norms are $\|\alpha\|\ll D^{1/2}$, $\|\beta\|\ll E^{1/2}$ and
+$\|\nu\|\ll H^{1/2}$.  The Poisson prefactor is $A/E$, and
+$|\vartheta|H/(DE)\ll T/(DE)\asymp X^{-1}$.  Since $AD=X$, the frequency
+block $|h|\asymp H$ is bounded by
+\[
+ X^{1+\eps}\bigl(HE^{-1/8}+HE^{3/8}D^{-1/2}
+ +H^{7/10}D^{1/10}E^{-3/20}+H^{17/20}D^{-1/5}E^{3/20}\bigr).
+\]
+Every power of $H$ is positive, so the worst block is $H=TX^{\eps}$.
+\begin{itemize}
+\item At $H=T$, the four terms are $X^{-\delta}$ for some fixed $\delta>0$
+precisely when, respectively,
+\[
+ 8x+7y>7,\qquad 4x+11y>7,\qquad 16x+11y>13,\qquad 13x+20y>16 .
+\]
+\item In the ordered half-square, the first two conditions follow from the
+third.
+\item The opposite Poisson orientation adds nothing.  This verification is
+routine and was also carried out in the exploratory notebook.
+\end{itemize}
+This gives the region of Remark~\ref{rem:comparison}; on the diagonal it is
+$x>16/33$.  The argument uses no property of $\mu$ beyond $|\mu|\le1$.  It
+is therefore what the general-coefficient trilinear estimate gives for
+these sums.  The same pair of exponents, $17/33$ from~\eqref{eq:BC} against
+$48/95$ from Duke--Friedlander--Iwaniec, appears in Bettin and Chandee's own
+application to the twisted second moment of the zeta function~\cite{BC}.
 
 \section*{AI usage disclosure}
 
@@ -946,20 +1461,37 @@ working in an exploratory notebook under the investigator's direction.
 OpenAI ChatGPT for the initial handoff reports and an AI coding agent,
 apparently OpenAI Codex, for the notebook itself.]
 \item \emph{This manuscript.}  The present exposition was drafted on
-14 November 2026 by Claude Opus 5.5 (Anthropic) running in Claude Code.
-This includes the reorganization of the proof into the direct route
-described in Section~\ref{sec:remarks}, the statements and proofs of all
-lemmas as written, the literature search and the bibliography.
+14--15 November 2026 by Claude Opus 5.5 (Anthropic) running in Claude Code.
+This includes:
+\begin{itemize}
+\item the reorganization of the proof into the direct route described in
+Section~\ref{sec:remarks};
+\item Sections~\ref{sec:level} and~\ref{sec:LambdaR} and
+Appendix~\ref{app:BC};
+\item the statements and proofs of all lemmas as written;
+\item the literature search and the bibliography.
+\end{itemize}
+The Bettin--Chandee bound~\eqref{eq:BC} and the exponent $48/95$ of
+Coppola--Laporta were checked against the authors' arXiv sources.
 Independent AI reviewer instances re-derived the central exponent
-computation.  Numerical checks were limited to finite sanity checks in the
-upstream notebook and are not part of the proof.
+computation.  Finite numerical checks supplement the proofs but are not
+part of them.  The checks covered the identity~\eqref{eq:pair-phase}, the
+gcd expansion of Lemma~\ref{lem:gcd}, the convolution identity in
+Lemma~\ref{lem:Sg}, and the convergence $M(R)\to\mathfrak S$.
+\item \emph{Lean formalization.}  The Lean code described in
+Section~\ref{sec:lean} was written by Claude Opus 5.5 instances and checked
+by the Lean kernel.  Machine checking guarantees that the formal theorems
+follow from the formal definitions and hypotheses.  It does not guarantee
+that those definitions match the mathematics; that correspondence still
+requires human review.
 \item \emph{Verification status.}  As of this draft, \textbf{no human
-expert has verified the proof}.  All bibliographic details and all
-statements attributed to the literature, especially
+expert has verified the proof}.  This applies in particular to
+Theorems~\ref{thm:meanvalue}, \ref{thm:level} and~\ref{thm:main}, which
+are not formalized.  All bibliographic details and all statements
+attributed to the literature were assembled with AI assistance, especially
 Lemmas~\ref{lem:weil}, \ref{lem:mobius} and~\ref{lem:BM},
-Remark~\ref{rem:comparison} and Section~\ref{sec:remarks}, were assembled
-with AI assistance.  They must be checked against the original sources
-before submission or citation.
+Remark~\ref{rem:comparison} and Appendix~\ref{app:BC}.  They must be checked
+against the original sources before submission or citation.
 \end{itemize}
 
 \begin{thebibliography}{99}

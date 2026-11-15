@@ -23,15 +23,21 @@ authors.
    OpenAI ChatGPT produced the initial handoff reports.  An AI coding agent,
    apparently OpenAI Codex, produced the notebook.
 
-2. **This manuscript (14 November 2026).**  Drafted by **Claude Opus 5.5
-   (Anthropic)** running in Claude Code, at the investigator's request.  This
-   included:
+2. **This manuscript and formalization (14–15 November 2026).**  Drafted by
+   **Claude Opus 5.5 (Anthropic)** running in Claude Code, at the
+   investigator's request.  This included:
    * surveying the notebook (about 380 notes) and choosing this result as the
      most significant standalone candidate;
    * reorganizing the proof into a shorter direct route (Poisson in `a`, one
      Cauchy–Schwarz over `e`, a single mean-value theorem), including
-     simplifications not present in the notebook (see §8.4 of the paper);
+     simplifications not present in the notebook (see §11.3 of the paper);
+   * Sections 8 and 9 of the paper: the level-of-distribution theorem and the
+     Λ_R deduction, which are new in this manuscript;
+   * Appendix A, the Bettin–Chandee comparison, checked against the arXiv
+     source;
    * writing every lemma statement and proof as they appear in `paper/main.tex`;
+   * the Lean 4 formalization in `lean/`, written by Claude Opus 5.5 instances
+     and checked by the Lean kernel;
    * the literature search and bibliography;
    * this repository's README, roadmap, and this disclosure.
 
@@ -47,18 +53,26 @@ authors.
   They are not part of the proof.
 * The LaTeX source has passed a structural check but has **not been
   compiled**.
+* The Lean kernel checks that the formal theorems follow from the formal
+  definitions and the two stated hypotheses (`MobiusPairLevel`, which is the
+  paper's Theorem 1.2, and `PNTMobius`).  It does **not** check that the
+  definitions in `lean/MobiusDeterminant/Basic.lean` match the mathematics.
+  It also does not check the unformalized Theorems 1.2, 1.3 and 6.1.
 * Bibliographic data and every statement attributed to the literature were
   assembled with AI assistance.  They must be checked against the sources.
   In particular:
   * the exact statement of Bloom–Maynard Theorem 2;
   * the Korolev–Changa citation;
-  * the Bettin–Chandee comparison region;
-  * the exponents attributed to Coppola–Laporta and Walker.
+  * the description of Walker's applications.
+
+  The Bettin–Chandee bound and the Coppola–Laporta exponent 48/95 have been
+  checked against the authors' arXiv sources.
 
 ## Before any submission or circulation
 
 * A human expert in analytic number theory should check every step,
-  especially Section 6 (the mean-value theorem) and Section 7.
+  especially Sections 6–8 (the mean-value theorem, the determinant estimate,
+  and the level of distribution).
 * Fill in tool names in item 1 above and in the paper's disclosure section.
 * Add affiliation and contact details to `paper/main.tex`.
 * Keep the disclosure section in the paper, adapted to the target venue's

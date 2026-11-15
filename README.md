@@ -1,4 +1,4 @@
-# Möbius cancellation on the determinant equation `be − ad = 2`
+# Correlations of truncated von Mangoldt functions beyond `N^{1/2}`
 
 **Investigator:** Zach Conn
 
@@ -6,128 +6,118 @@
 > here was generated with extensive AI assistance.  See
 > [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md).
 
-## The result
+## Main result
 
-For a fixed smooth weight `W` supported in `[1,2]^4`, odd integers
-`a, b, d, e`, and `AD = BE = X`, consider
+Let `Λ_R(n) = Σ_{d | n, d ≤ R} μ(d) log(R/d)`, so that `Λ_N = Λ` on
+`(1, N]`.  Let `𝔖 = 2 ∏_{p>2} (1 − 1/(p−1)²)` be the twin-prime constant.
+
+**Theorem 1.1.** For every fixed `θ < 9/17`,
 
 ```
-S = Σ_{be − ad = ±2}  μ(d) μ(e)  W(a/A, b/B, d/D, e/E).
+Σ_{n ≤ N} Λ_R(n) Λ_R(n+2) = 𝔖 N + O(N exp(−c √log R))   uniformly for 2 ≤ R ≤ N^θ.
 ```
 
-Write `A = X^x`, `B = X^y` with `0 < x, y ≤ 1/2`.  This is the range where
-both Möbius variables exceed `√X`, beyond the reach of the Chinese remainder
-theorem.  Put `m = min(x, y)` and `M = max(x, y)`.
+The truncation level `R = N^θ` is a dial between two cases:
 
-**Theorem.** On every compact subset of the region `8m + 9M > 8`:
+* `θ ≤ 1/2`: classical, by the Chinese remainder theorem;
+* `θ = 1`: the twin-prime conjecture.
 
-* `S = S⁰ + O(X^{1 − σ + ε})` with `σ = (8m + 9M − 8)/12`, where `S⁰` is
-  an explicit zero-frequency term;
-* `S⁰ ≪ X exp(−c √log X)`, and hence `S ≪ X exp(−c √log X)`.
+Past `1/2`, general bounds for Kloosterman fractions give:
 
-On the diagonal `x = y` the region allows `d, e ≤ X^{9/17 − ε}`.  The same
-reduction combined with the Bettin–Chandee trilinear Kloosterman-fraction
-bound reaches `X^{17/33 − ε}`; that comparison still needs rechecking.
+* `48/95 = 1/2 + 1/190` (Coppola–Laporta, via Duke–Friedlander–Iwaniec);
+* `17/33 = 1/2 + 1/66` (the Bettin–Chandee trilinear bound; see Appendix A
+  of the paper).
 
-The proof uses:
+Both figures were checked against the authors' arXiv sources.  This result
+reaches `9/17 = 1/2 + 1/34` by exploiting the arithmetic of μ.  The parity
+problem remains, and nothing here bears on the twin-prime conjecture itself.
 
-1. Poisson summation in `a` modulo `2e`;
-2. a single Cauchy–Schwarz step over `e`;
-3. a new-in-form mean-value theorem for Möbius–Kloosterman fractions
-   averaged over moduli, proved by:
+## Structure of the proof
+
+1. **Theorem 1.3 (determinant sums).**  This is cancellation in
+   `Σ_{be−ad=2} μ(d)μ(e) W(...)` on `8 min(x,y) + 9 max(x,y) > 8`, with power
+   saving `(8m + 9M − 8)/12` off the zero frequency.  It uses a mean-value
+   theorem (Theorem 6.1) built from:
    * the Heath-Brown identity;
-   * a Korolev–Changa bilinear inequality applied *before* pointwise energy
-     bounds, with energies averaged over the modulus;
-   * the Bloom–Maynard theorem on additive energy of rationals with bounded
-     denominators;
-   * Weil's bound, for boxes with a long smooth variable.
+   * a Korolev–Changa inequality averaged over moduli;
+   * the Bloom–Maynard rational-energy bound;
+   * Weil's bound.
+2. **Theorem 1.2 (level of distribution).**  For `K, L ≤ N^θ` with
+   `θ < 9/17`, the box sums `Σ_{d≤K, e≤L} μ(d)μ(e) r_N(d,e)` are
+   `≪ N^{1−δ}`.  Here `r_N(d,e) = #{n ≤ N : d | n, e | n+2} − N ϱ(d,e)`.
+   The proof is Poisson summation in `n` modulo `[d,e]`, a parity and
+   orientation reduction, and then Theorem 6.1 (paper §8).
+3. **Theorem 1.1 (Λ_R correlations).**  Deduced from Theorem 1.2 and the
+   prime number theorem for μ by an exact expansion, Abel summation, and the
+   main-term evaluation `M(R) = 𝔖 + O(exp(−c√log R))` (paper §9).
 
-## Why it matters
+## Lean formalization (`lean/`)
 
-The twin-prime conjecture is the asymptotic `Σ_{n≤N} Λ(n)Λ(n+2) ~ 𝔖N`.  A
-standard model replaces `Λ` by the truncated divisor sum
+The deduction in step 3 is formalized in Lean 4 with Mathlib.  Every step
+is machine-checked, with two hypotheses stated as explicit `Prop`s:
 
-```
-Λ_R(n) = Σ_{d | n, d ≤ R} μ(d) log(R/d),
-```
+* `MobiusPairLevel θ`: Theorem 1.2;
+* `PNTMobius`: the classical prime number theorem for μ.
 
-and `Λ_N = Λ` on `(1, N]`.  So the level `R = N^θ` is a dial on the
-correlation `Σ Λ_R(n)Λ_R(n+2)`:
+The main formal theorem is `MobiusDeterminant.lambdaR_twin_correlation` in
+`lean/MobiusDeterminant/Main.lean`.  The project also machine-checks:
 
-* **θ ≤ 1/2:** classical; the Chinese remainder theorem suffices.
-* **θ = 1:** the twin-prime conjecture.
-* **θ > 1/2:** the only new difficulty is exactly the determinant sums
-  above, with `de > N`.
+* every exponent computation in the paper (`Exponents.lean`);
+* the Korolev–Changa inequality, the Heath-Brown identity, the CRT phase
+  identity, and the exact counting parts of the energy lemmas (`Core/`).
 
-Fixed-shift results past `θ = 1/2` treat μ as an arbitrary bounded sequence
-and apply general Kloosterman-fraction bounds.  These move the dial only a
-little:
-
-* `1/2 + 1/190` (Coppola–Laporta, via Duke–Friedlander–Iwaniec);
-* `1/2 + 1/66` for these sums via Bettin–Chandee.
-
-Both figures still need checking.
-
-**What is new:** using the structure of μ, the theorem reaches `1/2 + 1/34`
-for these sums, roughly twice the excess.  It does so through a mean-value
-theorem with Heath-Brown, modulus-averaged Korolev–Changa, and Bloom–Maynard
-as ingredients, which may be useful elsewhere.  Such correlations feed into
-Goldston–Yıldırım and GPY-type arguments, and into conditional results on
-primes in short intervals and zeta-zero pair correlation (Walker).
-
-**What it does not do (yet):**
-
-* The `Λ_R` asymptotic for `θ < 9/17` needs further steps not yet carried
-  out (`ROADMAP.md` §3).  Until then, the contribution is the estimate and
-  the method.
-* It does not bring twin primes qualitatively closer: the parity problem
-  remains, and the dial moves from 0.5 to about 0.53.
+There is no `sorry`, and the only axioms are Lean's standard three.  See
+[`lean/README.md`](lean/README.md) for the file map, build instructions, and
+exactly what is and is not formalized.
 
 ## Repository layout
 
 | Path | Contents |
 |---|---|
-| `paper/main.tex` | Self-contained LaTeX manuscript (amsart) |
+| `paper/main.tex` | The manuscript (amsart) |
 | `paper/Makefile` | `make` builds `main.pdf` with `latexmk` |
+| `lean/` | Lean 4 project (Lean v4.35.0, Mathlib `56a00585`) |
 | `AI_DISCLOSURE.md` | How AI was used, by whom, and what is unverified |
-| `ROADMAP.md` | Verification checklist, open items, and Lean formalization plan |
+| `ROADMAP.md` | Verification checklist and open items |
 
 ## Building
 
 ```sh
-cd paper && make        # requires a TeX distribution with latexmk
+cd paper && make                  # needs a TeX distribution with latexmk
+cd lean && lake exe cache get && lake build
 ```
 
-The source has not yet been compiled: no TeX distribution was available
-when it was drafted.  It passed a structural check (balanced braces and
-environments, all references and citations resolved), but expect to fix
-minor typesetting issues on first build.
+The LaTeX source passes a structural check but has not yet been compiled,
+because no TeX distribution was available when it was drafted.
 
 ## External inputs
 
-The proof relies on these published results, which are not reproved here:
+The paper relies on the following published results:
 
 * the Weil–Estermann bound for Kloosterman sums;
 * the prime number theorem for μ with classical error term;
 * Bloom–Maynard, *A new upper bound for sets with no square differences*,
   Theorem 2.
 
-The Korolev–Changa inequality, the Heath-Brown identity, and all energy
-lemmas are proved in the manuscript.
+The Korolev–Changa inequality and the Heath-Brown identity are proved in
+the paper, and also in Lean.
 
 ## Provenance
 
-The result was extracted from an exploratory, AI-generated research notebook
-in the investigator's `twin-primes` repository.  The main source notes are:
+The determinant-sum estimate was extracted from an exploratory,
+AI-generated research notebook in the investigator's `twin-primes`
+repository.  The main source notes are in its `research/` folder:
 
-* `research/2026-08-15-direct-bettin-chandee-refinement.md` (setup, Poisson reduction, Bettin–Chandee region)
-* `research/2026-08-26-averaged-reciprocal-energy-endpoint.md` (modulus-averaged Korolev–Changa argument)
-* `research/2026-08-26-joint-mode-rational-energy-boundary.md` (Bloom–Maynard step and the `8x+9y>8` chamber)
-* `research/2026-08-26-joint-mode-compression-hostile-audit.md` (mask repair)
-* `research/2026-08-15-selected-class-crt-spectrum.md` (zero-mode treatment)
+* `2026-08-15-direct-bettin-chandee-refinement.md`
+* `2026-08-26-averaged-reciprocal-energy-endpoint.md`
+* `2026-08-26-joint-mode-rational-energy-boundary.md`
+* `2026-08-26-joint-mode-compression-hostile-audit.md`
 
-The manuscript follows a shorter route than the notebook; see §8.4 of the
-paper.  The streamlining steps are new in this write-up and are the highest
-priority for checking.
+The manuscript follows a shorter route than the notebook.  The following
+parts are new in this write-up and are the highest priority for checking:
 
-No claim is made about the twin-prime conjecture.
+* the direct-route reorganization;
+* the level-of-distribution theorem;
+* the Λ_R deduction.
+
+See §11.3 of the paper.
