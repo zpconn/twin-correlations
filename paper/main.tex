@@ -1,4 +1,5 @@
-% Möbius cancellation on the determinant equation be - ad = 2.
+% Twin correlations of truncated von Mangoldt functions up to level 9/17:
+% a formalized proof and the barrier at 4/7.
 %
 % DRAFT.  This manuscript was prepared with extensive use of generative AI;
 % see the section "AI usage disclosure" at the end and AI_DISCLOSURE.md in
@@ -22,6 +23,7 @@
 \newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{claim}[theorem]{Claim}
 
 \numberwithin{equation}{section}
 
@@ -40,8 +42,9 @@
 \newcommand{\inv}[1]{\overline{#1}}
 \newcommand{\sumstar}{\sideset{}{^*}\sum}
 
-\title[Twin correlations of $\Lambda_R$ up to level $9/17$]
-{Twin correlations of truncated von Mangoldt functions\\ up to level $9/17$}
+\title[Twin correlations of $\Lambda_R$: a formalized proof and the $4/7$ barrier]
+{Twin correlations of truncated von Mangoldt functions\\ up to level $9/17$:\\
+a formalized proof and the barrier at $4/7$}
 
 \author{Zach Conn}
 \thanks{Zach Conn is the investigator responsible for this work.  The
@@ -49,43 +52,51 @@ mathematical content was generated with extensive assistance from
 generative AI systems; see the AI usage disclosure at the end of the
 paper.  This is a draft that has not yet been checked by a human expert.}
 
-\date{Draft of 14 November 2026}
+\date{Draft of 15 November 2026}
 
 \subjclass[2020]{Primary 11N37; Secondary 11L05, 11L07, 11B30}
 \keywords{M\"obius function, Kloosterman fractions, determinant equation,
 Heath-Brown identity, additive energy of rationals, correlations of divisor
-sums}
+sums, formal verification, Lean, additive divisor problem}
 
 \begin{document}
 
 \begin{abstract}
 Let $\Lambda_R(n)=\sum_{d\mid n,\,d\le R}\mu(d)\log(R/d)$ be the truncated
 von Mangoldt function, so that $\Lambda_N(n)=\Lambda(n)$ for $1<n\le N$.  We
-prove that
+give a proof, formalized in Lean~4 with Mathlib, that
 \[
  \sum_{n\le N}\Lambda_R(n)\Lambda_R(n+2)
  =\mathfrak S\,N+O\bigl(N\exp(-c\sqrt{\log R})\bigr)
 \]
 uniformly for $2\le R\le N^{\theta}$, for every fixed $\theta<9/17$.  Here
-$\mathfrak S$ is the twin-prime constant.
+$\mathfrak S$ is the twin-prime constant.  The formal proof has no hypotheses
+and depends only on Lean's standard axioms.  It includes formal proofs of
+the Bloom--Maynard bound for the additive energy of rationals and of the
+prime number theorem for $\mu$ with classical error term.
+
+The exponent $9/17$ is not the best that existing methods give.  The
+estimates of Deshouillers and Iwaniec, used as in Conrey's work on
+mollifiers, appear to reach $\theta<4/7$.  Our proof is of a different kind.
+It uses no spectral theory: its inputs are Weil's bound, the Heath-Brown
+identity, a Korolev--Changa bilinear inequality averaged over moduli, and the
+Bloom--Maynard bound.  This is what made a complete formalization feasible.
+
+The second part of the paper is a synthesis of what is known for this
+problem past level $1/2$, and a report on an attempt to pass $4/7$.
 \begin{itemize}
-\item For $\theta\le1/2$ this is classical.
-\item General bounds for bilinear forms with Kloosterman fractions reach
-$\theta<48/95$ (Coppola--Laporta).
-\item The trilinear bound of Bettin and Chandee reaches $17/33$ in the
-critical range.
+\item We reduce the problem of passing $4/7$ to one estimate, a restricted
+additive divisor problem for $d_3\times d_3$.
+\item We give equivalent forms of that estimate: a mean square of
+exponential sums at a single level, a second moment of automorphic
+$L$-functions twisted by an Atkin--Lehner sign, and Weyl sums over roots of
+a quadratic congruence.
+\item We show that three different methods are tight at exactly $4/7$, and
+report numerical experiments.
 \end{itemize}
-The new input is a level of distribution for divisor pairs of $(n,n+2)$
-weighted by $\mu(d)\mu(e)$: the sums
-$\sum_{d\le K,\,e\le L}\mu(d)\mu(e)\bigl(\#\{n\le N: d\mid n,\ e\mid n+2\}
--N\varrho(d,e)\bigr)$ have a power saving for $K,L\le N^{9/17-\eps}$.  We
-prove it by exploiting the arithmetic of $\mu$: the Heath-Brown identity, a
-Korolev--Changa bilinear inequality averaged over moduli, and the
-Bloom--Maynard bound for the additive energy of rationals with bounded
-denominators.  Theorems~\ref{thm:LambdaR} and~\ref{thm:main} are formalized
-in Lean~4 with Mathlib.  The formal proofs have no hypotheses and depend
-only on Lean's standard axioms.  This manuscript was prepared with substantial AI assistance and has
-not yet been verified by a human expert; see the disclosure at the end.
+We do not pass $4/7$.  This manuscript was prepared with substantial AI
+assistance and has not yet been verified by a human expert; see the
+disclosure at the end.
 \end{abstract}
 
 \maketitle
@@ -169,16 +180,43 @@ $C_\theta$ such that, for all $N\ge2$ and $2\le R\le N^\theta$,
 \]
 \end{theorem}
 
-This improves the exponents previously recorded for this fixed-shift
-problem: $48/95=1/2+1/190$ for $\Lambda_R$~\cite{CL} and $27/53$ for Selberg
-weights~\cite{Walker}.
+\emph{Status of the exponent.}  The exponents recorded explicitly for this
+fixed-shift problem are $48/95=1/2+1/190$ for $\Lambda_R$~\cite{CL} and
+$27/53$ for Selberg weights~\cite{Walker}.  Theorem~\ref{thm:LambdaR}
+exceeds both, but $9/17$ is not the best exponent that existing methods
+give:
+\begin{itemize}
+\item Irving's estimate~\cite[Theorem~1.3]{Irv14}, transposed from $\Lambda$
+to $\mu$, appears to give Theorems~\ref{thm:LambdaR} and~\ref{thm:level} for
+$\theta<8/15$ (Remark~\ref{rem:comparison});
+\item Conrey's method~\cite{Con89}, through the estimates of Deshouillers
+and Iwaniec~\cite{DI82}, appears to give them for $\theta<4/7$
+(Claim~\ref{claim:conrey}).
+\end{itemize}
+Neither transposition has been checked by a human, and neither is
+formalized.  We therefore do not present $9/17$ as a record.
 
-\emph{(Draft note: see Remark~\ref{rem:comparison}.  Irving's
-estimate~\cite[Theorem~1.3]{Irv14}, transposed from $\Lambda$ to $\mu$,
-appears to give Theorems~\ref{thm:LambdaR} and~\ref{thm:level} for
-$\theta<8/15$.  Conrey's method~\cite{Con89} may give $\theta<4/7$.  If
-either is confirmed, $9/17$ is not the best exponent available, and the
-paper must be repositioned before circulation.)}
+\subsection{What this paper contributes}\label{sec:contrib}
+\begin{itemize}
+\item \emph{A formalized proof.}  Theorems~\ref{thm:LambdaR},
+\ref{thm:level} and~\ref{thm:main} are proved in Lean~4 with no hypotheses
+(Section~\ref{sec:lean}).  To our knowledge this is the first machine-checked
+asymptotic for a correlation of truncated divisor sums past the level $1/2$
+at which the Chinese remainder theorem stops.  The proof was chosen for
+this: it avoids the spectral theory of automorphic forms, none of which is
+available in a proof assistant at present.
+\item \emph{A different mechanism.}  The proof joins the Poisson frequency
+to the shorter factor of $\mu$ and controls the resulting fractions by the
+Bloom--Maynard energy bound, after averaging a Korolev--Changa inequality
+over the modulus (Theorem~\ref{thm:meanvalue}).  It is weaker than the
+spectral method on the diagonal and incomparable with Irving's estimate off
+it (Remark~\ref{rem:comparison}).
+\item \emph{A synthesis of the problem past $1/2$.}
+Section~\ref{sec:barrier} collects what the literature gives, isolates the
+one estimate whose absence stops every method at $4/7$, gives equivalent
+forms of it, and reports numerical experiments and the estimates we examined
+that do not apply.  That section contains no new theorem about level $4/7$.
+\end{itemize}
 
 \subsection{M\"obius-weighted divisor pairs}
 For $d,e\ge1$ let
@@ -287,16 +325,16 @@ gives cancellation when
 On the diagonal this is $x>7/15$, which is better than $\Omega$; at
 $M=1/2$ it is $m>5/11$, which is worse than $m>7/16$.  The two boundaries
 cross at $(31/67,32/67)$.  In the correlation problem of
-Theorem~\ref{thm:level} the same input would give $\theta<8/15$.
-\emph{(Draft note: this transposition has not yet been checked in detail.)}
+Theorem~\ref{thm:level} the same input would give $\theta<8/15$.  This
+transposition is an exponent computation that has not been checked in
+detail; see Section~\ref{sec:barrier} for its place among the other
+exponents.
 \end{remark}
 
-\subsection{Why this matters}\label{sec:significance}
-Theorem~\ref{thm:LambdaR} moves the dial on the best-studied model of the
-twin-prime correlation substantially further past the square-root barrier
-than general-coefficient methods do.  The point is that the M\"obius function
-is not an arbitrary sequence, and its structure can be used, as in the
-mollifier problem~\cite{BCHB,Con89}.  Our mechanism has three steps:
+\subsection{What is and is not new}\label{sec:significance}
+The M\"obius function is not an arbitrary sequence, and its structure can be
+used to pass level $1/2$, as in the mollifier
+problem~\cite{BCHB,Con89}.  Our mechanism has three steps:
 \begin{itemize}
 \item factor $\mu(d)$ by the Heath-Brown identity;
 \item join the Poisson frequency to the shorter factor;
@@ -305,22 +343,25 @@ after averaging a Korolev--Changa inequality over the modulus.
 \end{itemize}
 Combining a combinatorial decomposition of $\mu$ with Kloosterman-fraction
 estimates averaged over the modulus is classical~\cite{Con89,FS11,Irv14,PR18}.
-What appears to be new is the use of the Bloom--Maynard energy bound for the
-fractions $h/u$, together with a two-sided Korolev--Changa inequality
-averaged over the modulus.  The mechanism is isolated in a mean-value
-theorem, Theorem~\ref{thm:meanvalue}, which is uniform in the frequency
-coefficients and may apply to other problems with M\"obius-type
-coefficients.
+What appears to be new in the proof is the use of the Bloom--Maynard energy
+bound for the fractions $h/u$, together with a two-sided Korolev--Changa
+inequality averaged over the modulus.  The mechanism is isolated in a
+mean-value theorem, Theorem~\ref{thm:meanvalue}, which is uniform in the
+frequency coefficients.
 
-The limits should be stated equally clearly.  Methods of this kind are
-subject to the parity problem.  The dial moves from $0.5$ to about $0.53$,
-and the twin-prime case $\theta=1$ is no closer in any qualitative sense.
-\emph{(Draft note: a literature check found no earlier fixed-shift result for
-$\Lambda_R$ past $48/95$.  The fixed-shift results we know of~\cite{CL,Walker}
-use general-coefficient bounds.  Bounds that exploit the structure of the
-coefficients exist for the same sums in the mollifier
-problem~\cite{BCHB,Con89,PR18}, and Irving's estimate~\cite{Irv14} appears to
-give a larger exponent here; see Remark~\ref{rem:comparison}.)}
+The limits should be stated equally clearly.
+\begin{itemize}
+\item The exponent is not a record; see the status paragraph after
+Theorem~\ref{thm:LambdaR}.
+\item Methods of this kind are subject to the parity problem.  The dial
+moves from $0.5$ to about $0.53$, or to about $0.57$ with the spectral
+method, and the twin-prime case $\theta=1$ is no closer in any qualitative
+sense.
+\item A literature check found no earlier fixed-shift result stated for
+$\Lambda_R$ past $48/95$; the results we know of~\cite{CL,Walker} use
+general-coefficient bounds.  The better exponents come from transposing
+methods built for other problems~\cite{BCHB,Con89,Irv14,PR18}.
+\end{itemize}
 
 \subsection{Method}
 Suppose $x\le y$, so that $D\ge E$.  Poisson summation in $a$ modulo $2e$
@@ -371,10 +412,13 @@ $\sigma(x,y)$;
 \item the deduction of Section~\ref{sec:LambdaR}.
 \end{itemize}
 It reuses existing formalizations of the Weil bound for Kloosterman sums,
-the divisor bound, and the zero-free region of~$\zeta$.
+the divisor bound, and the zero-free region of~$\zeta$.  The exponent
+arithmetic and the elementary identities of Section~\ref{sec:barrier} are
+also machine-checked; the analytic estimates quoted there are not.
 
 \subsection{Scope}
-We make no claim about the twin-prime conjecture itself.
+We make no claim about the twin-prime conjecture itself.  We do not claim
+that $9/17$ is the best exponent available, and we do not pass $4/7$.
 
 \section{Notation and standard lemmas}\label{sec:prelim}
 
@@ -1339,6 +1383,653 @@ $N^{-\delta}(\log R)^2\le R^{-\delta/\theta}(\log R)^2\ll_\theta
 \exp(-c_4\sqrt{\log R})$.
 \qed
 
+\section{The literature bar and the barrier at level $4/7$}\label{sec:barrier}
+
+This section records what we know about Theorem~\ref{thm:level} beyond the
+exponent $9/17$.  It is a synthesis, together with a report on an attempt to
+pass level $4/7$ that did not succeed.  Its status differs from that of the
+rest of the paper.
+\begin{itemize}
+\item A statement called a \emph{Claim} is an exponent computation: a
+published estimate is inserted into a reduction and the conditions are
+compared.  The Claims were produced by AI systems, have not been checked by
+a human, and are not formalized.  The hypotheses of the cited estimates have
+not been verified in detail.
+\item A statement called a \emph{Lemma} is elementary and is proved here.
+The Lemmas, and all exponent arithmetic of this section, are machine-checked
+(\texttt{Barrier.lean}; see Section~\ref{sec:lean}).
+\item The numerical experiments are finite computations.  The programs are
+in the repository (\texttt{notes/lab/}).  They are evidence about what is
+true, not about what can be proved.
+\end{itemize}
+Working notes with more detail are in \texttt{notes/} in the repository.
+
+\emph{Units.}  Sizes are powers of $N$.  For a level $\theta$ we write
+\[
+ q\asymp N^{\theta},\qquad L=N^{\theta/2},\qquad H=N^{2\theta-1},\qquad
+ K=N^{1-3\theta/2}.
+\]
+Here $q$ is a modulus, $H=q^2/N$ is the length of the dual sum after Poisson
+summation, and $K$ is the mean of the count in~\eqref{eq:nu} below.  At
+$\theta=4/7$ one has $H=K=L^{1/2}$.  All variables carry smooth dyadic
+weights, which we suppress.
+
+\subsection{From a saving to a level}\label{sec:dictionary}
+After Poisson summation in $n$ (Section~\ref{sec:level}),
+Theorem~\ref{thm:level} at level $\theta$ is a bound
+\begin{equation}\label{eq:barrier-T}
+ \sum_{0<|h|\le H}\ \sum_{d\asymp q}\ \sum_{e\asymp q}\alpha_d\lambda_e\,
+ e\Bigl(\frac{2h\inv d}{e}\Bigr)\ll q^{2}N^{-\delta},
+\end{equation}
+with coefficients $\alpha,\lambda$ of M\"obius type.  The trivial bound is
+$Hq^2$, so a saving of $HN^{\delta}$ is needed.
+
+\begin{lemma}[Dictionary]\label{lem:dictionary}
+Let $\kappa<2$.  A saving of $q^{\kappa}$ over the trivial bound
+in~\eqref{eq:barrier-T} exceeds $H$ exactly when $\theta<1/(2-\kappa)$.
+\end{lemma}
+\begin{proof}
+$H<q^{\kappa}$ means $2\theta-1<\kappa\theta$.
+\end{proof}
+
+\medskip
+\begin{center}
+\begin{tabular}{lll}
+$\kappa$ & level $\theta$ & source \\ \hline
+$1/48$ & $48/95$ & Duke--Friedlander--Iwaniec~\cite{DFI}, as in~\cite{CL}\\
+$1/17$ & $17/33$ & Bettin--Chandee~\cite{BC}; Appendix~\ref{app:BC}\\
+$1/9$ & $9/17$ & Theorem~\ref{thm:level};~\cite{BCHB} for mollifiers\\
+$1/8$ & $8/15$ & Irving~\cite{Irv14}, transposed; Remark~\ref{rem:comparison}\\
+$1/4$ & $4/7$ & Conrey~\cite{Con89} with~\cite{DI82}, transposed; Claim~\ref{claim:conrey}\\
+$1/3$ & $3/5$ & Maynard~\cite{May2}, given a flexible factor; Claim~\ref{claim:window}\\
+$2/5$ & $5/8$ & Pascadi~\cite{Pas25}, given a flexible factor; Claim~\ref{claim:window}
+\end{tabular}
+\end{center}
+\medskip
+
+\begin{claim}[The bar]\label{claim:conrey}
+For $K,L\le R$ the sum in Theorem~\ref{thm:level} is
+$\ll N^{\eps}(R^{7/4}+N^{1/2}R^{7/8})$.  In particular
+Theorems~\ref{thm:LambdaR} and~\ref{thm:level} hold for every
+$\theta<4/7$.
+\end{claim}
+
+\emph{Derivation.}  Conrey's treatment of the mollified second moment, in
+the form given by Pratt and Robles~\cite[\S3.2.6]{PR18}, bounds a trilinear
+form $\sum_a\nu(a)\sum_{u,v}\mu^\flat(u)r(v)e(-a\inv u/v)$ with $\nu$ and $r$
+arbitrary, $\mu^\flat$ of M\"obius type, and $a$ of length $UV/T$.  This is
+\eqref{eq:barrier-T}, with $H=DE/N$ in place of $UV/T$.  The Heath-Brown
+identity is applied to $\mu^\flat$; sums with a long smooth variable are
+treated by Weil's bound, and the remaining bilinear sums by the estimate of
+Deshouillers and Iwaniec~\cite{DI82}, which takes arbitrary coefficients
+inside and absolute values over the modulus.  Both terms of the resulting
+bound are $N^{1-\delta}$ exactly for $\theta<4/7$.
+
+\subsection{Using the structure of both variables}\label{sec:twosided}
+Claim~\ref{claim:conrey} uses the arithmetic of one variable only.  It is
+uniform in the shift, which is why it also serves the mollifier problem.
+For a fixed shift more is available.
+
+\emph{A fixed shift is a fixed residue class.}  The sum
+in~\eqref{eq:barrier-T} is the Poisson dual of
+\[
+ \sum_{e}\lambda_e\Bigl(\#\{n=ad\le N:\ n\equiv-2\ (\mathrm{mod}\ e)\}
+ -\text{expected}\Bigr),
+\]
+with $a$ smooth of length $N^{1-\theta}$.  This is the setting of Bombieri,
+Friedlander and Iwaniec~\cite{BFI}: a fixed residue class and factorable
+moduli.  Estimates of that kind are not uniform in the residue class and so
+are not available for mollifiers.
+
+\begin{claim}[One flexible side suffices]\label{claim:window}
+Suppose that $\lambda_e$ is a combination of products $e=rs$ in which $s$
+has size $N^{\sigma}$ with
+\[
+ 2\theta-1<\sigma<\min\Bigl(\frac{2(1-\theta)}3,\ 2-3\theta\Bigr).
+\]
+Then~\eqref{eq:barrier-T} holds for arbitrary bounded coefficients
+$\alpha_d$.  The interval is nonempty for $\theta<3/5$.  Without its last
+term it is nonempty for $\theta<5/8$.
+\end{claim}
+
+\emph{Derivation.}  Apply Cauchy--Schwarz over $(d,r)$ and then
+\cite[Theorem~12]{DI82} with modulus variable $r$, level $ss'$ and
+frequencies $hs'-h's$.  The lower bound on $\sigma$ comes from the diagonal.
+The bound $2(1-\theta)/3$ comes from the regular spectrum.  The bound
+$2-3\theta$ comes from the exceptional spectrum; Pascadi's
+refinement~\cite{Pas25} removes it for sequences of this structure.  The
+resulting exponents agree with the levels $3/5$ of Maynard~\cite{May2} and
+$5/8$ of Pascadi for triply well-factorable weights.  By the symmetry of
+$be-ad=2$ the roles of $d$ and $e$ can be exchanged.
+
+\medskip
+Now decompose both $\mu(d)$ and $\mu(e)$ by the Heath-Brown identity.  A
+piece is covered by Claim~\ref{claim:window} as soon as some sub-product of
+the factors of $d$, or of $e$, has size in the window.  Pieces with a smooth
+factor longer than $N^{5\theta/2-1}$ are covered by Weil's bound.
+
+\begin{lemma}\label{lem:balanced-window}
+For $0<\theta<1$, the size $\theta/2$ lies in
+$[2\theta-1,\min(2(1-\theta)/3,2-3\theta)]$ if and only if
+$\theta\le4/7$.  The same holds without the term $2-3\theta$.
+\end{lemma}
+\begin{proof}
+$\theta/2\le2-3\theta$ and $\theta/2\le2(1-\theta)/3$ are each equivalent
+to $\theta\le4/7$, and $2\theta-1\le\theta/2$ holds for $\theta\le2/3$.
+\end{proof}
+
+So for $\theta>4/7$ the balanced factorization $e=\ell_1\ell_2$,
+$\ell_i\asymp N^{\theta/2}$, with both factors smooth, is not covered, and
+removing the exceptional spectrum does not help it.  The Heath-Brown
+identity contains this piece with a nonzero coefficient.  The uncovered
+pieces are, up to factors of size $N^{O(\theta-4/7)}$:
+\begin{itemize}
+\item $e=\ell_1\ell_2$ with both factors smooth and of size near
+$N^{\theta/2}$;
+\item $e=\ell_1\ell_2$ with both factors smooth and of sizes near
+$N^{1-\theta}$ and $N^{2\theta-1}$.
+\end{itemize}
+When $d$ and $e$ are both of the first kind, all six variables are smooth.
+
+\medskip
+\noindent\textbf{The missing estimate (T).}  \emph{For some $\theta>4/7$
+and some $\delta>0$, the number of solutions of
+\begin{equation}\label{eq:T}
+ b\,\ell_1\ell_2-a\,n_1n_2=2,\qquad a,b\asymp N^{1-\theta},\quad
+ \ell_1,\ell_2,n_1,n_2\asymp L,
+\end{equation}
+counted with smooth weights, equals its expected main term up to a factor
+$1+O(N^{-\delta})$.}
+
+\medskip
+This is a restricted case of the additive divisor problem for
+$d_3\times d_3$.  At $\theta=4/7$ the box is $(3/7,2/7,2/7)$ on each side.
+An asymptotic formula for $\sum_{n\le x}d_3(n)d_3(n+h)$ is not known; the
+cube $(1/3,1/3,1/3)$ corresponds to $\theta=2/3$.  Equivalently, (T) asks
+for a level of distribution beyond $4/7$ for a restricted $d_3$, in a fixed
+residue class, on average over moduli $\ell_1\ell_2$ with two smooth
+factors.  For comparison:
+\begin{itemize}
+\item for $d_3$ and individual moduli the known levels are $1/2+1/82$
+(Heath-Brown~\cite{HB86}), $1/2+1/46$ for prime moduli
+(Fouvry--Kowalski--Michel~\cite{FKM3}) and $1/2+1/30$
+(Sharma~\cite{Sha});
+\item on average over moduli with a fixed residue class, \cite{FKM3} reach
+$9/17$;
+\item for moduli with a suitable factorization, the Type~III argument of
+Polymath8a~\cite{Polymath8a} reaches $4/7$ (Section~\ref{sec:why47}).
+\end{itemize}
+
+\begin{claim}[Conditional and partial results]\label{claim:conditional}
+\leavevmode
+\begin{itemize}
+\item If (T) and its analogues for the other uncovered pieces hold at
+level $\theta$, then Theorems~\ref{thm:LambdaR} and~\ref{thm:level} hold at
+that level, for $\theta<3/5$.
+\item Unconditionally, the analogue of Theorem~\ref{thm:level} for weights
+with no uncovered piece on at least one side holds for $\theta<3/5$.
+Examples are well-factorable sieve weights, or truncated divisor sums over
+$N^{\eta}$-smooth divisors.
+\item For the true $\Lambda_R$, bounding the uncovered pieces trivially
+extends Claim~\ref{claim:conrey} only to
+$R\le N^{4/7}\exp\bigl(o((\log N)^{2/3})\bigr)$.
+\end{itemize}
+\end{claim}
+
+The pieces that mix the two kinds above are a $d_3\times d_2$ problem with a
+linear twist of size $N^{1/7}$, and a quadratic divisor problem with
+coefficients of size $N^{1/7}$.  They may be within reach of existing
+spectral results; we have not examined them.
+
+\subsection{Equivalent forms of the missing estimate}\label{sec:forms}
+We list the forms of (T) that we found.  Each is obtained from the previous
+ones by Poisson summation, reciprocity, Cauchy--Schwarz or a spectral
+expansion.  In every form the known method gives exactly the bound that is
+needed with $\delta=0$.
+
+\medskip
+\noindent\textbf{(F1) Dual form.}
+\[
+ \sum_{0<|h|\le H}\ \sum_{n_1,n_2,\ell_1,\ell_2\asymp L}
+ e\Bigl(\frac{2h\,\inv{n_1n_2}}{\ell_1\ell_2}\Bigr)\ll L^{4}N^{-\delta}.
+\]
+The trivial bound is $HL^4$.  By reciprocity
+(Lemma~\ref{lem:roots}\,(iii)) the two sides $n_1n_2$ and $\ell_1\ell_2$
+can be exchanged.
+
+\medskip
+\noindent\textbf{(F2) Hyper-Kloosterman form.}  Poisson summation in $n_1$
+and $n_2$ gives
+\[
+ \sum_{h}\ \sum_{u,v\asymp L}\ \sum_{\ell_1,\ell_2\asymp L}
+ \mathrm{Kl}_3(2huv;\ell_1\ell_2),
+\]
+and a saving of $H^{1+\delta}$ over Deligne's bound is needed.  Every
+balanced variable has length equal to the square root of the modulus, so it
+is self-dual under Poisson summation.
+
+\medskip
+\noindent\textbf{(F3) Quadratic divisor problem.}  For coefficients
+$\ell_1,n_1\asymp L$ put
+\[
+ \mathcal D(\ell_1,n_1)=\sum_{\ell_1X-n_1Y=2}d^\flat(X)d^\flat(Y),
+\]
+where $X=b\ell_2$, $Y=an_2$ and $d^\flat$ counts factorizations in the
+prescribed ranges.  At $\theta=4/7$ the main term has size $L^{3/2}$.  The
+spectral method gives each $\mathcal D(\ell_1,n_1)$ with an error of size
+$L^{7/4}$.  Needed: an error $L^{3/2-\delta}$ on average over
+$(\ell_1,n_1)$.
+
+\medskip
+\noindent\textbf{(F4) Variance of the divisor function in thin classes.}
+For $d\asymp L^2$ and $r\asymp L$ let
+\begin{equation}\label{eq:nu}
+ \nu(d,r)=\#\{(a,b,s):\ brs-ad=2,\ s\asymp L,\ a\asymp N^{1-\theta}\}
+ =\sum_{k\le K}d_L(m_0+kd),
+\end{equation}
+where $d_L$ counts divisors in $[L,2L)$ and $m_0\equiv2\inv r$ modulo $d$.
+The mean of $\nu$ is of size $K$.  By Cauchy--Schwarz over $(d,r)$, (T)
+follows from
+\[
+ \operatorname{Var}_{(d,r)}\nu\ll K^{2-\delta}.
+\]
+The method of Deshouillers and Iwaniec gives $K^{2+\eps}$ at $\theta=4/7$.
+In words: the divisor function in progressions modulo $d$, at length
+$d^{5/4}$, has small variance over the thin set of classes
+$\{2\inv r:\ r\le\sqrt d\}$.  Over all classes this is elementary, because
+two solutions with the same $(r,d)$ satisfy
+\[
+ (bs-b's')\,r=(a-a')\,d ,
+\]
+so the pairs are parametrized by $bs-b's'=kd$; the difficulty is the
+condition that $2\,\inv{bs}$ has a representative of size $L$ modulo $d$.
+Bounding the variance over the thin set by the variance over all classes
+loses a factor $L^{1/2}$.
+
+\medskip
+\noindent\textbf{(F5) A mean square at one level.}  Expanding the variance
+in (F4), for a pair $s,s'\asymp L$ with $q=ss'$ one meets
+\begin{equation}\label{eq:G}
+ G_q(n)=\sum_{r\asymp L}\ \sum_{d\asymp L^2}
+ e\Bigl(\frac{2n\,\inv d}{rq}\Bigr),
+\end{equation}
+evaluated at the frequencies $n=hs'-h's$ with $0<|h|,|h'|\le H$.  These
+frequencies form a Bohr set $\mathcal N(s,s')$ of density $L^{-1/2}$ in
+$[-2HL,2HL]$.  Consider the full mean square
+\[
+ S(q)=\sum_{0<|n|\le 2HL}|G_q(n)|^2 .
+\]
+\begin{center}
+\begin{tabular}{ll}
+bound for $S(q)$ at $\theta=4/7$ & size \\ \hline
+Weil's bound, term by term & $L^{13/2}$\\
+Kuznetsov's formula and the dual large sieve~\cite{DI82} & $L^{5+\eps}$\\
+needed & $L^{5-\delta}$\\
+observed (Section~\ref{sec:numerics}) & $L^{9/2}$
+\end{tabular}
+\end{center}
+
+\noindent\textbf{(LS).}  \emph{$S(q)\ll L^{5-2\delta}$ for all but a
+negligible set of $q=ss'$.}
+
+\begin{claim}\label{claim:LS}
+(LS) implies (T) at $\theta=4/7$, and the corresponding statement for
+$\theta$ slightly larger implies (T) there.
+\end{claim}
+
+\emph{Derivation.}  Let $W$ be the sum in (F1), written as a sum over
+$r,s\asymp L$ and $d=n_1n_2$.  Cauchy--Schwarz over $(r,d)$ removes the
+divisor weight on $d$ and gives
+\[
+ |W|^2\le L^{3+\eps}\sum_{s,s'}\ \sum_{h,h'}G_{ss'}(hs'-h's).
+\]
+The terms with $hs'=h's$ contribute $L^{15/2}$ to the right-hand side,
+which is admissible.  For the others, the terms of $S(q)$ are non-negative
+and $\mathcal N(s,s')$ has $\asymp L$ elements, so
+\[
+ \Bigl|\sum_{n\in\mathcal N(s,s')}G_q(n)\Bigr|
+ \le L^{1/2}\Bigl(\sum_{n\in\mathcal N(s,s')}|G_q(n)|^2\Bigr)^{1/2}
+ \le L^{1/2}S(q)^{1/2}.
+\]
+With (LS) this is $L^{3-\delta}$, the sum over the $L^2$ pairs is
+$L^{5-\delta}$, and $W\ll L^{4-\delta/2}$.  The size $L^{5+\eps}$ in the
+table is our computation from the large sieve; the contribution of the
+exceptional spectrum has not been rechecked in this form.
+
+\medskip
+The point of (F5) is that the structure of the Bohr set is not needed.  The
+loss in the method of Deshouillers and Iwaniec is not the passage from the
+sparse set to all frequencies; it is already present in the bound for
+$S(q)$.
+
+\medskip
+\noindent\textbf{(F6) Bessel's inequality for one vector.}  Let $g$ run over
+an orthonormal basis of automorphic forms of level $q$ in a bounded spectral
+window, with Fourier coefficients $\rho_g(n)$ and spectral parameters $t_g$.
+Put $v_n=(\rho_g(n))_g$ and $a=\sum_{m\asymp\sqrt q}v_m$.  By Kuznetsov's
+formula,
+\[
+ G_q(n)\ \propto\ \langle D_Xa,\,v_{2n}\rangle,\qquad
+ (D_Xc)_g=X^{2it_g}c_g,\qquad X\approx q^{-7/8}.
+\]
+For $n\le q^{3/4}$ the vectors $v_n$ are almost orthonormal.  Let $V$ be
+their span, of dimension $q^{3/4}$ in a space of dimension $\asymp q$.  Then
+$S(q)\propto\|\Pi_VD_Xa\|^2$, and:
+\begin{itemize}
+\item Bessel's inequality $\|\Pi_VD_Xa\|^2\le\|a\|^2$ is the bound
+$L^{5+\eps}$, that is, level $4/7$;
+\item (LS) is the statement $\|\Pi_VD_Xa\|^2\le q^{-\delta}\|a\|^2$;
+\item a vector in general position would give $q^{-1/4}\|a\|^2$, which is
+what the experiments show.
+\end{itemize}
+A heuristic reading, which we have not made precise: $D_X$ is the wave
+propagator on $\Gamma_0(q)\backslash\mathbb H$ at time $2\log(1/X)\approx
+\tfrac74\log q$, the vector $a$ is a bump at the Fricke point $i/\sqrt q$,
+and $V$ consists of the first $q^{3/4}$ Fourier modes on a closed horocycle.
+At that time the wavefront covers the surface about $q^{3/4}$ times.
+Weil's bound controls each sheet; nothing known controls the interference
+between sheets.
+
+\medskip
+\noindent\textbf{(F7) A second moment with an Atkin--Lehner sign.}  Without
+Cauchy--Schwarz, apply Kuznetsov's formula in $(\ell_1,n_1)$ at level
+$q=\ell_2n_2$ for the pair of cusps $(\infty,1/\ell_2)$.  The dual sum of
+(F1) becomes
+\[
+ \sum_{\ell_2,n_2\asymp L}\ \sum_{f\in\mathcal B(\ell_2n_2)}
+ \omega_f\,h_X(t_f)\,\eta_f(n_2)\,L(\tfrac12,f)
+ \sum_{h\asymp q^{1/4}}\lambda_f(h),
+\]
+where $\eta_f(n_2)$ is the Atkin--Lehner eigenvalue and $h_X$ oscillates
+like $X^{2it}$.  The sum over $h$ is the dual half of an unbalanced
+approximate functional equation.  So this is a second moment of
+$L(\frac12,f)$ over the level $\ell_2n_2$, twisted by a partial
+Atkin--Lehner sign.  It is the spectral form of (F3).
+\begin{itemize}
+\item The trivial bound, a second moment of size $\log q$, is the error
+$L^{7/4}$ in (F3).
+\item Needed: a saving of $q^{1/8+\delta}$ on average over
+$(\ell_2,n_2)$.
+\item If $n_2$ were absent from the level, the same argument would succeed
+with room $L^{1/4}$.  It tolerates $n_2\le L^{1/2}$; the problem has
+$n_2\asymp L$.
+\end{itemize}
+
+\medskip
+\noindent\textbf{(F8) Roots of a quadratic congruence.}
+
+\begin{lemma}\label{lem:roots}
+Let $q,c,d$ be integers with $(d,cq)=1$ and put $D=qc^2+d^2$.  Let $x$ and
+$e$ be integers with $dx\equiv1$ modulo $cq$ and $de\equiv1$ modulo $D$,
+and put $\nu=ce$.  Then
+\begin{itemize}
+\item[(i)] $q\nu^2+1\equiv0\pmod D$;
+\item[(ii)] $\dfrac{x}{cq}\equiv\dfrac{\nu}{D}+\dfrac{d}{cqD}\pmod 1$.
+\item[(iii)] (Reciprocity.)  If $(k,m)=1$, $kx'\equiv1$ modulo $m$ and
+$my'\equiv1$ modulo $k$, then
+$\dfrac{x'}{m}+\dfrac{y'}{k}\equiv\dfrac1{km}\pmod1$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+(i) $q\nu^2+1=De^2-(de-1)(de+1)$.
+
+(ii) The integer $xD-c^2qe-d$ equals $cq(cx-ce)+d(dx-1)$, so it is divisible
+by $cq$.  It also equals $D(x-e)+d(de-1)$, so it is divisible by $D$.  Since
+$(cq,D)=(cq,d^2)=1$, it is divisible by $cqD$.
+
+(iii) The integer $kx'+my'-1$ is divisible by $m$ and by $k$, which are
+coprime.
+\end{proof}
+
+In~\eqref{eq:G}, with $c=r\asymp L$, $d\asymp L^2$ and $q\asymp L^2$, one has
+$D\asymp L^4$ and the correction in (ii) is of size $L^{-5}$.  Since
+$n\le L^{3/2}$,
+\[
+ G_q(n)=\sum_{c\asymp L}\ \sum_{d\asymp L^2}
+ e\Bigl(\frac{2n\,\nu(c,d)}{qc^2+d^2}\Bigr)\bigl(1+O(L^{-7/2})\bigr).
+\]
+So $G_q(n)$ is a Weyl sum over those roots of $q\nu^2+1\equiv0$ modulo $D$
+that come from representations of $D\asymp q^2$ by the principal form
+$qc^2+d^2$, at frequencies $n$ up to $D^{3/8}$.  This reflects the fact that
+the vector $a$ of (F6) is essentially evaluation at the Heegner point
+$i/\sqrt q$.  For a fixed polynomial, the equidistribution of such roots is
+classical (Hooley; Duke, Friedlander and Iwaniec~\cite{DFI95};
+T\'oth~\cite{Toth}).  (LS) is a mean-square bound for these Weyl sums that is
+uniform in the coefficient $q$ up to $D^{1/2}$.
+
+\medskip
+\noindent\textbf{(F9) Moments of the zeta function.}  (F3) is the off-diagonal
+term of the fourth moment of $\zeta$ twisted by a Dirichlet polynomial with
+smooth coefficients of length $T^{\vartheta}$, with
+$\vartheta=\theta/(2-\theta)$:
+\[
+ \theta=\tfrac12\leftrightarrow\vartheta=\tfrac13,\qquad
+ \tfrac47\leftrightarrow\tfrac25,\qquad
+ \tfrac35\leftrightarrow\tfrac37,\qquad
+ \tfrac23\leftrightarrow\tfrac12 .
+\]
+The last is the sixth moment.  So (T) corresponds to an asymptotic formula
+for
+\[
+ \int_T^{2T}|\zeta(\tfrac12+it)|^4\Bigl|\sum_{m\asymp M}m^{-1/2-it}\Bigr|^2dt,
+ \qquad M=T^{2/5+\delta},
+\]
+strictly between the fourth and sixth moments.  For arbitrary coefficients
+the record is $\vartheta<1/4$ (Watt~\cite{Watt};
+Bettin, Bui, Li and Radziwi\l\l~\cite{BBLR}).
+
+\medskip
+\noindent\textbf{Other descriptions.}
+\begin{itemize}
+\item \emph{A determinant.}  $b\ell_1\ell_2-an_1n_2$ is the determinant of
+$\left(\begin{smallmatrix}b\ell_1&an_1\\ n_2&\ell_2\end{smallmatrix}\right)$,
+and $xyz+uvw$ is the determinant of the $3\times3$ matrix with rows
+$(x,u,0)$, $(0,y,v)$, $(w,0,z)$.  So (T) counts integer matrices of
+determinant $2$ in $\mathrm{GL}_3$ with three prescribed zero entries.
+\item \emph{Farey fractions.}  (T) counts pairs of fractions
+$b/(n_1n_2)$, $a/(\ell_1\ell_2)$ in a short arc that are adjacent in the
+sense of~\eqref{eq:T}, weighted by restricted divisor functions of the two
+denominators.
+\item \emph{Almost-primes.}  After every piece with a flexible factor is
+removed, what remains is the number of $n\le N$ such that $n$ and $n+2$ each
+have two prime factors in $[P,2P]$, $P\approx N^{2/7}$.  All lower mixed
+moments of the two counts are known.
+\end{itemize}
+
+\subsection{Why $4/7$}\label{sec:why47}
+Three methods of different nature stop at the same exponent.  Write the
+modulus as $q=rs$.
+\begin{itemize}
+\item \emph{Deshouillers--Iwaniec.}  The binding conditions are $H\le s$,
+$H\le\sqrt r$ and $H\le r/\sqrt s$.
+\item \emph{Polymath8a, Type~III}~\cite[\S8]{Polymath8a}.  Complete all three
+variables to obtain $\mathrm{Kl}_3(2h_1h_2h_3;q)$, apply Cauchy--Schwarz in
+$h$, and use Deligne's bounds for the correlation sums.  The factor $r$ must
+satisfy $N^{4\theta-2}\le r\le N^{2-3\theta}$.  We compared with the model
+computation of that paper, not with its final theorem.
+\item \emph{Bessel's inequality in} (F6).
+\end{itemize}
+
+\begin{lemma}\label{lem:tight}
+\leavevmode
+\begin{itemize}
+\item[(i)] At $r=s=L$ the three conditions of Deshouillers and Iwaniec all
+hold if and only if $H\le q^{1/4}$, that is, $\theta\le4/7$.
+\item[(ii)] The interval $[4\theta-2,\,2-3\theta]$ is nonempty if and only
+if $\theta\le4/7$.  At $\theta=4/7$ it is the single point $2/7=\theta/2$,
+the balanced factorization.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+Linear arithmetic in $\theta$.
+\end{proof}
+
+The second method is purely algebraic.  It uses neither the shape of the
+box nor the smooth averaging over $r$ and $s$.  The first discards the
+divisor structure of $d=n_1n_2$ and treats each level $ss'$ separately.
+The bound of Fouvry, Kowalski and Michel for $\sum_nd(n)K(n)$ uses only
+$(n_1,n_2)$ and saves $q^{1/16}$ for a single frequency and a prime modulus.
+We found no arrangement that combines two of these.
+
+\begin{claim}[A no-go count]\label{claim:nogo}
+Consider (F2) with $h$ of size $q^{\kappa}$ and $u,v,r,s$ of size
+$q^{1/2}$.  Allow the following steps: Cauchy--Schwarz with an inner set of
+variables $I$, then completion of the product of the outer dual variables to
+the modulus $M$ of the resulting correlation sum, with square-root
+cancellation assumed for every complete sum.  Then the saving is at most
+$q^{1/4}$.  A second Cauchy--Schwarz does not improve this.
+\end{claim}
+
+\emph{Derivation.}  In this model
+$\text{saving}^2=\min(|I|,\sigma)$ with
+$\sigma=\min(\sqrt M,N_O/\sqrt M)$, where $N_O\le q^{5/4}$ is the length of
+the outer dual product and $M$ is $q$ times the product of the inner
+modulus variables.  A saving beyond $q^{1/4}$ needs $|I|>q^{1/2}$ and
+$\sigma>q^{1/2}$.  The second forces $M<N_O^2/q\le q^{3/2}$, so $I$ contains
+at most one of $r,s$.  Then $|I|>q^{1/2}$ forces a dual variable into $I$,
+which gives $N_O\le q$ and $\sigma\le q/\sqrt M\le q^{1/4}$.  After a
+second Cauchy--Schwarz on the off-diagonal, $\sigma$ is replaced by
+$\sqrt{\min(|I_2|,\sigma_2)}$ with $\sigma_2\le\sqrt{N_O}\le q^{5/8}$, which
+is below $q^{1/2}$.
+
+\medskip
+So a proof past $4/7$ needs a step outside this list.  The following were
+examined and do not help.
+\begin{itemize}
+\item \emph{Shifting a smooth variable} (Burgess, $q$-van der Corput): no
+smooth variable is longer than a factor of the modulus it meets.
+\item \emph{Splitting each smooth variable} into a part with a divisor in
+the useful range and the rest.  The rest is a prime times a small number;
+expanding the prime by any exact identity returns the same smooth piece
+with coefficient~$1$, so the recursion does not contract.
+\item \emph{A variance over the long variable} $a$: the cross term is the
+original sum.
+\item \emph{Dirichlet characters}: a factor $\sqrt H$ is lost against the
+trivial bound.
+\item \emph{Positivity}: the known mixed moments of the two almost-prime
+counts do not determine the missing one.
+\item \emph{A divisor weight on the modulus through oldforms}: the family
+becomes all newforms of conductor up to $q$, of the same size as before.
+\item \emph{$\mathrm{GL}_3$.}  Sums of $\mathrm{Kl}_3$ over the modulus are
+one term of the Kuznetsov formula for $\mathrm{SL}_3(\Z)$, isolated by
+Buttcane~\cite{But}.  By the count given there, the trivial bound on the
+spectral side is worse than Deligne's bound on the Kloosterman side.  Also
+the modulus there is one smooth variable, which corresponds to
+$d_3\times d_2$; ours is $\ell_1\ell_2$.  The long-element Kloosterman sums
+factor into classical sums with first-power cross inverses, whereas ours
+have squared inverses.
+\item \emph{A third expression for the spectral sum in} (F6).  Poisson
+summation, reciprocity and a second application of Kuznetsov's formula each
+return the same sum, up to the Atkin--Lehner sign: at $\theta=4/7$ both
+sides of the formula have $\asymp q$ terms.
+\end{itemize}
+
+\subsection{Numerical experiments}\label{sec:numerics}
+\emph{Experiment 1: the variance in} (F4) (\texttt{notes/lab/var\_nu.c}).
+For $600$ random odd $d\asymp L^2$ and all odd $r\asymp L$ coprime to $d$,
+the program computes $\nu(d,r)$ of~\eqref{eq:nu} with $a\asymp L^{\alpha}$.
+Here $\alpha=2(1-\theta)/\theta$, so $\alpha=1.5$ is $\theta=4/7$ and
+smaller $\alpha$ is past the barrier.
+
+\medskip
+\begin{center}
+\begin{tabular}{rrrrrrr}
+$\alpha$ & $\theta$ & $L$ & $K$ & mean of $\nu$ & variance & variance/mean\\ \hline
+$1.5$ & $0.571$ & $32$ & $5.7$ & $1.15$ & $1.14$ & $1.02$\\
+$1.5$ & $0.571$ & $64$ & $8.0$ & $1.65$ & $1.68$ & $1.02$\\
+$1.5$ & $0.571$ & $128$ & $11.3$ & $2.31$ & $2.46$ & $1.07$\\
+$1.5$ & $0.571$ & $256$ & $16.0$ & $3.23$ & $3.52$ & $1.09$\\
+$1.4$ & $0.588$ & $256$ & $9.2$ & $1.85$ & $2.15$ & $1.15$\\
+$1.3$ & $0.606$ & $256$ & $5.3$ & $1.07$ & $1.29$ & $1.20$
+\end{tabular}
+\end{center}
+\medskip
+
+The variance is of the size of the mean, as for a Poisson variable, on both
+sides of the barrier.  The target is $K^{2-\delta}$.
+
+\emph{Experiment 2: the mean square in} (F5) (\texttt{notes/lab/rls.c}).
+For random coprime $s,s'\asymp L$ the program computes $G_q(n)$
+of~\eqref{eq:G} for $1\le n\le4HL$, with $P$ the number of terms
+in~\eqref{eq:G}.  Square-root cancellation is $|G_q(n)|^2\approx P$.  The
+entries are means of $|G_q(n)|^2/P$.
+
+\medskip
+\begin{center}
+\begin{tabular}{rrrrrr}
+$L$ & pairs & all $n$ & $(n,ss')=1$ & $n\in\mathcal N(s,s')$ &
+$n\in\mathcal N$, $(n,ss')=1$\\ \hline
+$16$ & $40$ & $0.98$ & $1.19$ & $0.99$ & $1.16$\\
+$32$ & $40$ & $0.96$ & $1.11$ & $0.91$ & $1.02$\\
+$64$ & $40$ & $0.99$ & $1.15$ & $1.03$ & $1.22$\\
+$128$ & $16$ & $0.99$ & $1.14$ & $1.03$ & $1.15$\\
+$256$ & $3$ & $0.98$ & $1.09$ & $0.99$ & $1.09$
+\end{tabular}
+\end{center}
+\medskip
+
+So $G_q(n)$ has square-root size for essentially every $n\ne0$ in the range,
+on the Bohr set and off it, and $S(q)\approx L^{9/2}$.  The signed sums over
+the Bohr set are also of square-root size.  Both targets are true with a
+wide margin, in the range computed.
+
+\subsection{Estimates examined that do not apply}\label{sec:notapply}
+\begin{itemize}
+\item \emph{Watt's mean value theorem}~\cite{Watt}, in the form used
+in~\cite{BBLR}: applied directly to (F1) it saves $H^{1/2}$; $H^{1+\delta}$
+is needed.
+\item \emph{The quadratic divisor theorem of}~\cite{BBLR}: its error term
+requires the product of the two coefficient ranges to be below $N^{1/2}$.
+The possible assignments give $N^{2-2\theta}$, $N^{\theta}$ and
+$N^{1-\theta/2}$, which is admissible only for $\theta<1/2$ or
+$\theta>3/4$.
+\item \emph{Levels of distribution of $d_3$}~\cite{HB86,FKM3,Sha}: below
+$4/7$, as listed in Section~\ref{sec:twosided}.  Aydemir and
+Boran~\cite{AB} reach $8/11$ on average over residue classes to a prime
+modulus; (T) has one class for each modulus.
+\item \emph{Convolution estimates of Maynard and Pascadi}~\cite{May2,Pas25},
+with every partition of $\{\ell_1,\ell_2\}$ into three groups, and Pascadi's
+triple-convolution estimate, which needs $D\ge EN^{\eps}$.
+\item \emph{Irving's Type~II bound}~\cite{Irv14}: $8/15$ at the balanced
+point.
+\item \emph{Grimmelt--Merikoski, determinant equations with a periodic
+weight}~\cite{GM24}.  The method expands a Poincar\'e series over the orbits
+of one congruence subgroup and applies Cauchy--Schwarz between a sum of
+Fourier coefficients and a sum of point evaluations.  For one pair of our
+moduli it gives the individual error $L^{7/4}$ of (F3).  Its gain needs many
+orbits of one fixed group.  A weight is invariant only if it is a condition
+modulo the level, so each of our two divisibility conditions forces its
+modulus into the level, which is at least $L^2$ in every arrangement.
+\item \emph{Grimmelt--Merikoski, roots of quadratic
+congruences}~\cite{GM25}.  Their Type~I estimate treats roots of
+$a\ell^2+h\equiv0$ modulo $k$, $k\equiv0$ modulo $d$, for a fixed $h$, on
+average over $d$.  The sum in (F8) is the case $d=h=q$: the matrix
+$\left(\begin{smallmatrix}(q\nu^2+1)/D&-q\nu\\-q\nu&qD\end{smallmatrix}\right)$
+has determinant $q$.  The hypotheses hold, but the bound is for the whole
+sum over $d\le L^2$ and exceeds the main term for a single $d$.  Their
+saving comes from averaging over $d$ with $h$ fixed; (F8) has one $d$ for
+each $h$ and an average over $h$.
+\item \emph{Lau}~\cite{Lau} treats $d_k\times d_2$, not $d_3\times d_3$.
+\end{itemize}
+
+\subsection{Open questions}\label{sec:open}
+\begin{enumerate}
+\item Prove (LS), or any bound $S(q)\ll L^{5-\delta}$ on average over $q$.
+\item Does the argument of~\cite{GM25}, with symmetric matrices of
+determinant $h$, admit an average over $h$ with $d=h$?
+\item On average over $q$, the pair correlation behind $S(q)$ becomes a sum
+of a restricted $d_3$ over the values $uu'+1$, with the side condition that
+$u/j$ has a convergent with denominator of size $L$.  Can the side condition
+be removed without recreating a level of size $L^2$?
+\item Check Claims~\ref{claim:conrey}--\ref{claim:conditional} in detail.
+The unconditional part of Claim~\ref{claim:conditional}, a level $3/5$ for
+twin correlations of well-factorable weights, would be a theorem beyond the
+bar of Claim~\ref{claim:conrey} for a restricted class of weights.
+\item Formalize Kuznetsov's formula and the large sieve
+of~\cite{DI82}, which would bring Claim~\ref{claim:conrey} within reach of
+machine checking.
+\end{enumerate}
+
 \section{Formalization}\label{sec:lean}
 
 The repository accompanying this paper contains a Lean~4 project
@@ -1389,7 +2080,37 @@ Lemmas~\ref{lem:poisson}, \ref{lem:separation} & \texttt{poissonAPDecay}, \textt
 \eqref{eq:PNTmu} & \texttt{pntMobius}\\
 Section~\ref{sec:LambdaR} & \texttt{lambdaR\_twin\_correlation}\\
 Lemmas~\ref{lem:HB}, \ref{lem:KC}, \ref{lem:energy-integers}, \ref{lem:energy-fractions} & \texttt{Core/}\\
-all exponent computations & \texttt{Exponents.lean}
+all exponent computations of Sections~\ref{sec:intro}--\ref{sec:LambdaR} & \texttt{Exponents.lean}\\
+Section~\ref{sec:barrier}: arithmetic and Lemmas & \texttt{Barrier.lean}
+\end{tabular}
+\end{center}
+\medskip
+
+\emph{Section~\ref{sec:barrier}.}  The file \texttt{Barrier.lean} checks the
+parts of Section~\ref{sec:barrier} that are arithmetic or elementary.  It
+does not formalize any of the analytic estimates quoted there, so each
+Claim remains unverified.  A statement such as \texttt{conrey\_error\_iff}
+says that an error term of the stated shape is a power saving exactly for
+$\theta<4/7$; it does not say that the error term has that shape.
+
+\medskip
+\begin{center}
+\begin{tabular}{ll}
+Section~\ref{sec:barrier} & \texttt{Barrier.lean} \\ \hline
+Lemma~\ref{lem:dictionary} and the table & \texttt{saving\_suffices\_iff}, \texttt{level\_table}\\
+Remark~\ref{rem:comparison} (Irving's region) & \texttt{irving\_diagonal\_iff}, \texttt{irving\_crossing}\\
+Claim~\ref{claim:conrey}, exponents only & \texttt{conrey\_error\_iff}\\
+Claim~\ref{claim:window}, the window & \texttt{window\_nonempty\_iff}, \texttt{window'\_nonempty\_iff}\\
+Lemma~\ref{lem:balanced-window} & \texttt{balanced\_mem\_window\_iff}, \texttt{balanced\_mem\_window'\_iff}\\
+units at $\theta=4/7$ & \texttt{dual\_length\_eq\_iff}, \texttt{mean\_eq\_iff}\\
+(F4), pairs of solutions & \texttt{pair\_of\_solutions}\\
+Claim~\ref{claim:LS}, exponents only & \texttt{ls\_to\_pairs}, \texttt{pairs\_to\_dual}, \texttt{ls\_sizes}\\
+Lemma~\ref{lem:roots} & \texttt{quadratic\_root}, \texttt{kloosterman\_fraction\_eq\_root}, \texttt{reciprocity}\\
+(F9), the dictionary & \texttt{moment\_table}, \texttt{momentLength\_inv}\\
+the two determinants & \texttt{det\_two}, \texttt{det\_three}\\
+Lemma~\ref{lem:tight} & \texttt{di\_conditions\_balanced\_iff}, \texttt{polymath\_window\_nonempty\_iff}\\
+Claim~\ref{claim:nogo}, the two inequalities & \texttt{nogo\_modulus\_bound}, \texttt{nogo\_saving\_bound}\\
+Section~\ref{sec:notapply}, sizes & \texttt{bblr\_range\_iff}, \texttt{gm\_sizes}, \texttt{level\_loss\_iff}
 \end{tabular}
 \end{center}
 \medskip
@@ -1443,7 +2164,8 @@ Section~\ref{sec:proof}.
 \emph{Trust.}  The Lean kernel guarantees that the formal theorems follow
 from the formal definitions.  A human reader should still check that the
 definitions in \texttt{Basic.lean} and \texttt{Determinant/Defs.lean} encode
-the objects of this paper.
+the objects of this paper.  For Section~\ref{sec:barrier} the kernel checks
+only the statements listed in the second table.
 
 \section{Remarks}\label{sec:remarks}
 
@@ -1459,7 +2181,9 @@ their bounded multiplicity, would be needed to go further.  Irving's Type~II
 estimate~\cite{Irv14} is one such treatment.  It inverts the Kloosterman
 fractions and applies Weil's bound to short Kloosterman sums.  For $E\asymp
 D$ and $H<D^{1/3}$ it is stronger than Proposition~\ref{prop:bilinear} at
-$U\asymp D^{1/3}$; see Remark~\ref{rem:comparison}.
+$U\asymp D^{1/3}$; see Remark~\ref{rem:comparison}.  The spectral method
+appears to go further still, to $T<D^{1/4}$ (Claim~\ref{claim:conrey}), and
+stops there for the reasons given in Section~\ref{sec:why47}.
 
 \subsection{Another view: correlations along dilations}
 Put $n=ad$, so that $n+\kappa=be$.  Then~\eqref{eq:S} becomes
@@ -1499,6 +2223,12 @@ Sections~\ref{sec:level} and~\ref{sec:LambdaR} are new in this manuscript:
 the correlation form, the parity and orientation reduction, the smoothing
 argument and the main-term evaluation.  These are among the points that
 most need independent verification.
+
+Section~\ref{sec:barrier} was written after a literature check showed that
+$9/17$ is not the best exponent available.  It records an AI-driven attempt
+to pass $4/7$, made on 15 November 2026 at the investigator's direction,
+including the routes that failed.  Nothing in it is used in the proofs of
+Theorems~\ref{thm:LambdaR}, \ref{thm:level} and~\ref{thm:main}.
 
 \appendix
 
@@ -1590,9 +2320,20 @@ computation.  Finite numerical checks supplement the proofs but are not
 part of them.  The checks covered the identity~\eqref{eq:pair-phase}, the
 gcd expansion of Lemma~\ref{lem:gcd}, the convolution identity in
 Lemma~\ref{lem:Sg}, and the convergence $M(R)\to\mathfrak S$.
+\item \emph{The barrier section.}  Section~\ref{sec:barrier}, the working
+notes and experiments in the repository (\texttt{notes/}), the file
+\texttt{Barrier.lean}, and the repositioning of this paper as a
+formalization and synthesis were produced on 15 November 2026 by Claude
+Fable 5.2 (Anthropic) running in Claude Code, at the investigator's
+direction.  This includes the two-sided reduction, the equivalent forms of
+the missing estimate, the no-go count, the two numerical experiments, and
+the reading of~\cite{BBLR,Polymath8a,FKM3,But,May2,Pas25,GM24,GM25,Lau} from
+their arXiv sources.  Every Claim in that section is an AI computation that
+no human has checked.
 \item \emph{Lean formalization.}  The Lean code of this project
 (Section~\ref{sec:lean}) was written by Claude Opus 5.5 instances on 15
-November 2026 and checked by the Lean kernel.  It imports Lean Pool and
+November 2026, and \texttt{Barrier.lean} by Claude Fable 5.2 on the same
+day; all of it is checked by the Lean kernel.  It imports Lean Pool and
 PNT+.  Lean Pool's Kloosterman--Weil development states that generative AI
 contributed substantially to it.  Machine checking guarantees that the
 formal theorem follows from the formal definitions.  It does not guarantee
@@ -1604,7 +2345,8 @@ Theorems~\ref{thm:LambdaR}, \ref{thm:level}, \ref{thm:main}
 and~\ref{thm:meanvalue} and Corollary~\ref{cor:diagonal}, but not the prose
 of this paper.  Not formalized are the comparison in
 Appendix~\ref{app:BC}, the comparisons with the literature in
-Section~\ref{sec:intro} and Remark~\ref{rem:comparison}, and the
+Section~\ref{sec:intro} and Remark~\ref{rem:comparison}, the Claims of
+Section~\ref{sec:barrier} (only their arithmetic is checked), and the
 correspondence between the Lean definitions and the paper's.
 \item \emph{Literature.}  The literature review of 15 November 2026 was
 carried out by a Claude Opus 5.5 research agent.  It read the arXiv sources
@@ -1616,17 +2358,32 @@ to Lemmas~\ref{lem:weil}, \ref{lem:mobius} and~\ref{lem:BM}, to the
 comparisons in Section~\ref{sec:intro} and Remark~\ref{rem:comparison}, and
 to Appendix~\ref{app:BC}.  They must be checked against the original sources
 before submission or citation.  The transposition of Irving's estimate to
-$\mu$ in Remark~\ref{rem:comparison} is an AI computation that has not been
-checked in detail.
+$\mu$ in Remark~\ref{rem:comparison} and the transposition of Conrey's
+method in Claim~\ref{claim:conrey} are AI computations that have not been
+checked in detail.  The bibliographic data of the references added for
+Section~\ref{sec:barrier} were taken from arXiv listings and from memory of
+the published versions, and need the same check.
 \end{itemize}
 
 \begin{thebibliography}{99}
+
+\bibitem{AB}
+M.~C.~Aydemir and M.~Boran,
+\emph{Improved averaged distribution of $d_3(n)$ in prime arithmetic
+progressions},
+arXiv:2601.12601.
 
 \bibitem{BCHB}
 R.~Balasubramanian, J.~B.~Conrey and D.~R.~Heath-Brown,
 \emph{Asymptotic mean square of the product of the Riemann zeta-function and
 a Dirichlet polynomial},
 J. Reine Angew. Math. \textbf{357} (1985), 161--181.
+
+\bibitem{BBLR}
+S.~Bettin, H.~M.~Bui, X.~Li and M.~Radziwi\l\l,
+\emph{A quadratic divisor problem and moments of the Riemann zeta-function},
+J. Eur. Math. Soc. \textbf{22} (2020), no.~12, 3953--3980.
+arXiv:1609.02539.
 
 \bibitem{BC}
 S.~Bettin and V.~Chandee,
@@ -1648,6 +2405,11 @@ Compos. Math. \textbf{158} (2022), no.~8, 1777--1798.  arXiv:2011.13266.
 E.~Bombieri, J.~B.~Friedlander and H.~Iwaniec,
 \emph{Primes in arithmetic progressions to large moduli},
 Acta Math. \textbf{156} (1986), no.~3--4, 203--251.
+
+\bibitem{But}
+J.~Buttcane,
+\emph{On sums of hyper-Kloosterman sums},
+arXiv:2205.14194.
 
 \bibitem{Con89}
 J.~B.~Conrey,
@@ -1672,10 +2434,21 @@ W.~Duke, J.~Friedlander and H.~Iwaniec,
 \emph{Bilinear forms with Kloosterman fractions},
 Invent. Math. \textbf{128} (1997), no.~1, 23--43.
 
+\bibitem{DFI95}
+W.~Duke, J.~B.~Friedlander and H.~Iwaniec,
+\emph{Equidistribution of roots of a quadratic congruence to prime moduli},
+Ann. of Math. (2) \textbf{141} (1995), no.~2, 423--441.
+
 \bibitem{Est}
 T.~Estermann,
 \emph{On Kloosterman's sum},
 Mathematika \textbf{8} (1961), no.~1, 83--86.
+
+\bibitem{FKM3}
+\'E.~Fouvry, E.~Kowalski and Ph.~Michel,
+\emph{On the exponent of distribution of the ternary divisor function},
+Mathematika \textbf{61} (2015), no.~1, 121--144.
+arXiv:1304.3199.
 
 \bibitem{FR22}
 \'E.~Fouvry and M.~Radziwi\l\l,
@@ -1687,6 +2460,18 @@ arXiv:1811.08672.
 \'E.~Fouvry and I.~E.~Shparlinski,
 \emph{On a ternary quadratic form over primes},
 Acta Arith. \textbf{150} (2011), no.~3, 285--314.
+
+\bibitem{GM24}
+L.~Grimmelt and J.~Merikoski,
+\emph{Twisted correlations of the divisor function via discrete averages of
+$\mathrm{SL}_2(\mathbb R)$ Poincar\'e series},
+arXiv:2404.08502.
+
+\bibitem{GM25}
+L.~Grimmelt and J.~Merikoski,
+\emph{On the greatest prime factor and uniform equidistribution of quadratic
+polynomials},
+arXiv:2505.00493.
 
 \bibitem{GPY}
 D.~A.~Goldston, J.~Pintz and C.~Y.~Y\i ld\i r\i m,
@@ -1709,6 +2494,11 @@ arXiv:2410.10856.
 D.~R.~Heath-Brown,
 \emph{Prime numbers in short intervals and a generalized Vaughan identity},
 Canad. J. Math. \textbf{34} (1982), no.~6, 1365--1377.
+
+\bibitem{HB86}
+D.~R.~Heath-Brown,
+\emph{The divisor function $d_3(n)$ in arithmetic progressions},
+Acta Arith. \textbf{47} (1986), no.~1, 29--56.
 
 \bibitem{Irv14}
 A.~J.~Irving,
@@ -1735,16 +2525,38 @@ M.~A.~Korolev and M.~E.~Changa,
 Mat. Zametki \textbf{108} (2020), no.~1, 94--101; English transl.,
 Math. Notes \textbf{108} (2020), no.~1--2, 87--93.
 
+\bibitem{Lau}
+C.~F.~Lau,
+\emph{Smoothed shifted convolutions of generalised divisor functions},
+arXiv:2509.07556.
+
 \bibitem{MRT15}
 K.~Matom\"aki, M.~Radziwi\l\l{} and T.~Tao,
 \emph{An averaged form of Chowla's conjecture},
 Algebra Number Theory \textbf{9} (2015), no.~9, 2167--2196.
+
+\bibitem{May2}
+J.~Maynard,
+\emph{Primes in arithmetic progressions to large moduli II: Well-factorable
+estimates},
+arXiv:2006.07088.
 
 \bibitem{MV}
 H.~L.~Montgomery and R.~C.~Vaughan,
 \emph{Multiplicative Number Theory I. Classical Theory},
 Cambridge Stud. Adv. Math. \textbf{97}, Cambridge Univ. Press, Cambridge,
 2007.
+
+\bibitem{Pas25}
+A.~Pascadi,
+\emph{On the exponents of distribution of primes and smooth numbers},
+arXiv:2505.00653.
+
+\bibitem{Polymath8a}
+D.~H.~J.~Polymath,
+\emph{New equidistribution estimates of Zhang type},
+Algebra Number Theory \textbf{8} (2014), no.~9, 2067--2199.
+arXiv:1402.0811.
 
 \bibitem{PR18}
 K.~Pratt and N.~Robles,
@@ -1753,17 +2565,34 @@ $\zeta$},
 Res. Number Theory \textbf{4} (2018), no.~1, Paper No.~9.
 arXiv:1706.04593.
 
+\bibitem{Sha}
+P.~Sharma,
+\emph{Bilinear sums with $GL(2)$ coefficients and the exponent of
+distribution of $d_3$},
+Proc. Lond. Math. Soc., to appear.
+arXiv:2303.06087.
+
 \bibitem{Tao16}
 T.~Tao,
 \emph{The logarithmically averaged Chowla and Elliott conjectures for
 two-point correlations},
 Forum Math. Pi \textbf{4} (2016), e8, 36~pp.
 
+\bibitem{Toth}
+\'A.~T\'oth,
+\emph{Roots of quadratic congruences},
+Internat. Math. Res. Notices \textbf{2000}, no.~14, 719--739.
+
 \bibitem{Walker}
 A.~Walker,
 \emph{Correlations of sieve weights and distributions of zeros},
 Int. J. Number Theory \textbf{19} (2023), no.~1, 139--167.
 arXiv:2101.04418.
+
+\bibitem{Watt}
+N.~Watt,
+\emph{Kloosterman sums and a mean value for Dirichlet polynomials},
+J. Number Theory \textbf{53} (1995), no.~1, 179--210.
 
 \bibitem{Weil}
 A.~Weil,

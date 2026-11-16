@@ -53,6 +53,26 @@ authors.
    Independent AI reviewer instances (Claude subagents) audited parts of the
    notebook and re-derived the central exponent computation.
 
+3. **The barrier programme and the repositioning (15 November 2026).**
+   Carried out by **Claude Fable 5.2 (Anthropic)** running in Claude Code,
+   at the investigator's request.  (The session changed model on
+   15 November; the work in item 2 is Opus 5.5, the work here is
+   Fable 5.2.)  This included:
+   * the two-sided decomposition and the reduction of the problem past
+     level 4/7 to one estimate (`notes/two-sided-structure.md`);
+   * the attempt to pass 4/7, its equivalent reformulations, the no-go
+     count, and the list of failed routes (`notes/programme-4-7.md`);
+   * two numerical experiments (`notes/lab/var_nu.c`, `notes/lab/rls.c`);
+   * reading, from arXiv sources, of Polymath8a, Fouvry–Kowalski–Michel,
+     Bettin–Bui–Li–Radziwiłł, Buttcane, Maynard, Pascadi,
+     Grimmelt–Merikoski (two papers) and Lau;
+   * Section 10 of the paper, which packages all of the above;
+   * `lean/MobiusDeterminant/Barrier.lean`, which checks the arithmetic and
+     elementary identities of Section 10;
+   * rewriting the abstract, introduction, README and roadmap so that the
+     paper presents itself as a formalization and synthesis.  The
+     investigator decided on that positioning.
+
 ## Verification status
 
 * **No human expert has verified the proof.**
@@ -71,11 +91,25 @@ authors.
   * the prose proofs in the paper.
 
   Appendix A and the comparisons with the literature are not formalized.
-* The novelty of the headline exponent 9/17 is in doubt; see `ROADMAP.md`
-  §0.
+* **Section 10 of the paper has a different status from the rest.**  Its
+  statements labelled *Claim* are exponent computations by AI, obtained by
+  inserting published estimates into reductions.  No human has checked
+  them, they are not formalized, and the hypotheses of the cited estimates
+  were not verified in detail.  This includes the statement that known
+  methods give level 4/7, which is the bar the paper measures itself
+  against.  `Barrier.lean` checks only arithmetic and elementary
+  identities.
+* The numerical experiments in Section 10 are finite computations (L up to
+  256) by programs that no one has reviewed.  They are not part of any
+  proof.
+* The exponent 9/17 is not claimed as a record.  The paper says so; see
+  `ROADMAP.md` §0.
 * Bibliographic data and every statement attributed to the literature were
   assembled with AI assistance.  They must be checked against the sources.
   In particular:
+  * the bibliographic data of the references added for Section 10, which
+    were taken from arXiv listings and from the model's memory of the
+    published versions;
   * the exact statement of Bloom–Maynard Theorem 2;
   * the Korolev–Changa citation;
   * the description of Walker's applications.
@@ -88,6 +122,8 @@ authors.
 * A human expert in analytic number theory should check every step,
   especially Sections 6–8 (the mean-value theorem, the determinant estimate,
   and the level of distribution).
+* A human expert should check the Claims of Section 10 before the paper's
+  comparison with the literature is relied on.
 * Fill in tool names in item 1 above and in the paper's disclosure section.
 * Add affiliation and contact details to `paper/main.tex`.
 * Keep the disclosure section in the paper, adapted to the target venue's

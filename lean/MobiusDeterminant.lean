@@ -11,6 +11,7 @@ import MobiusDeterminant.MainTerm.MobiusSumsSmooth
 import MobiusDeterminant.MainTerm.MobiusSums
 import MobiusDeterminant.Main
 import MobiusDeterminant.Exponents
+import MobiusDeterminant.Barrier
 import MobiusDeterminant.Core.CRT
 import MobiusDeterminant.Core.HeathBrown
 import MobiusDeterminant.Core.KorolevChanga

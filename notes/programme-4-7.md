@@ -1,7 +1,10 @@
 # Programme: past level 4/7 (started 2026-11-15)
 
 Status: research in progress; AI exploration, nothing here is checked by a
-human.  Background and dead ends: `two-sided-structure.md`.
+human.  Background and dead ends: `two-sided-structure.md`.  The content of
+both notes is packaged in Section 10 of the paper, and its arithmetic is
+checked in `lean/MobiusDeterminant/Barrier.lean`; these notes keep the
+working detail and the log.
 
 ## Chosen line
 

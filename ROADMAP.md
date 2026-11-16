@@ -1,37 +1,51 @@
 # Roadmap
 
-## 0. Novelty (blocking: resolve before circulating)
+## 0. Positioning (decided 2026-11-15)
 
-The literature check of 2026-11-15 (paper §1.1, §1.4, Remark 1.5) found
-that the headline exponent 9/17 is probably not the best one available.
+The literature check of 2026-11-15 found that 9/17 is not the best exponent
+available, and an attempt to pass the literature bar of 4/7 did not
+succeed.  The investigator's decision: the paper presents its primary
+contribution as **formalization and synthesis**.  The paper, README and
+disclosure now say so (paper abstract, §1.1 "Status of the exponent", §1.2,
+§10).
 
-- [ ] Check the transposition of Irving's estimate (Funct. Approx. 2014,
-  Theorem 1.3) from Λ to μ.  The bilinear lemmas take arbitrary coefficients
-  and the theorem uses only Vaughan's identity.  Inserted frequency by
-  frequency, it appears to give Theorems 1.1–1.2 for **θ < 8/15**, and
-  Theorem 1.3 on `11m + 4M > 7, 4m + 7M > 5`.  The latter is larger than Ω
-  on the diagonal and smaller near `M = 1/2`.
-- [ ] Check whether Conrey's mollifier method (Crelle 1989; see Pratt–Robles
-  2018) transposes to the fixed shift, which would give **θ < 4/7**.
-  Partly checked against the Pratt–Robles source (§3.2.6).  Their trilinear
-  form is `Σ_a ν(a) Σ_{u,v} (μ-type)(u) r(v) e(−a ū/v)`, with `ν, r`
-  arbitrary and `A ≍ UV/T`.  That is our form after Poisson summation, with
-  `H = DE/N`.  The Deshouillers–Iwaniec lemma used for Type II sums takes
-  arbitrary coefficients `c(a,n)` inside and absolute values over the
-  modulus.  Transposed, this gives Theorem 1.2 with error
-  `≪ N^ε(R^{7/4} + N^{1/2}R^{7/8})`, i.e. θ < 4/7.
+Still open under this heading:
+
+- [ ] Human check of the transposition of Irving's estimate (Funct. Approx.
+  2014, Theorem 1.3) from Λ to μ: θ < 8/15, and Theorem 1.3 on
+  `11m + 4M > 7, 4m + 7M > 5` (paper, Remark 1.5).
+- [ ] Human check of the transposition of Conrey's method (Crelle 1989;
+  Pratt–Robles 2018, §3.2.6) to a fixed shift: Theorem 1.2 with error
+  `≪ N^ε(R^{7/4} + N^{1/2}R^{7/8})`, i.e. θ < 4/7 (paper, Claim 10.2).
+  This is the bar the paper cites; it matters that it is right.
 - [ ] Find out how Balasubramanian–Conrey–Heath-Brown (Crelle 1985) reach
   9/17 for mollifier coefficients in the analogous problem.
-- [ ] Decide how to reposition the paper.  Options:
-  * restate at the best exponent and credit the method;
-  * centre the paper on what is new: the Bloom–Maynard / averaged
-    Korolev–Changa mechanism, the part of Ω near `M = 1/2`, and the
-    formalization;
-  * treat the work as a formalization paper.
+- [ ] Decide whether the title should keep "up to level 9/17".  A subtitle
+  ("a formalized proof and the barrier at 4/7") was added on 2026-11-15.
+
+## 0a. The barrier at 4/7 (paper §10)
+
+Everything in §10 labelled *Claim* is an AI exponent computation.
+
+- [ ] Human check of Claims 10.2, 10.3, 10.5, 10.6 and 10.9.
+- [ ] Check the two secondary uncovered pieces (the mixed d₃ × d₂ problem
+  and the quadratic divisor problem with coefficients N^{1/7}); the paper
+  says they have not been examined.
+- [ ] Claim 10.5, unconditional part: level 3/5 for twin correlations of
+  well-factorable weights.  If it survives a detailed check it is a result
+  beyond the 4/7 bar for a restricted class of weights, and would be the
+  most direct route to a statement that exceeds the literature.
+- [ ] Open questions 1–3 of paper §10.7 (the mean-square inequality (LS);
+  whether the Grimmelt–Merikoski symmetric-matrix argument admits an
+  average over h with d = h; the pair-correlation form on average over q).
+- [ ] Rerun the experiments at larger L or with independent code
+  (`notes/lab/`).
 
 ## 1. Verify the manuscript
 
-- [ ] First build of `paper/main.tex`; fix typesetting issues.
+- [ ] First build of `paper/main.tex`; fix typesetting issues.  Still not
+  compiled as of 2026-11-15 (no TeX distribution available); §10 was added
+  under the same structural check only.
 - [ ] Expert check of Theorem 6.1 (mean-value theorem):
   - [ ] gcd strata `g = (h, e)` and the `g^{-5/4}` decay (Step 1);
   - [ ] the Heath-Brown dichotomy and atom bookkeeping (Step 2);
@@ -72,7 +86,9 @@ that the headline exponent 9/17 is probably not the best one available.
 
 ## 3. Lean formalization
 
-Done.  `lambdaR_twin_correlation_unconditional` (Theorem 1.1) and
+Done for Theorems 1.1–1.3.  `Barrier.lean` (2026-11-15) adds the exponent
+arithmetic and elementary identities of paper §10; none of the analytic
+estimates quoted in §10 is formalized.  `lambdaR_twin_correlation_unconditional` (Theorem 1.1) and
 `Determinant.detSum_sub_zeroMode`, `zeroModeBound`, `detSum_cancellation`
 and `detSum_diagonal` (Theorem 1.3, Corollary 1.4) have no hypotheses.  They
 use only the standard axioms, and there is no `sorry`.  Remaining items:
@@ -80,6 +96,9 @@ use only the standard axioms, and there is no `sorry`.  Remaining items:
 - [ ] Human review that `lean/MobiusDeterminant/Basic.lean` and
   `lean/MobiusDeterminant/Determinant/Defs.lean` match the paper's
   definitions of Λ_R, 𝔖, S_κ, S_κ⁰, Ω and σ.
+- [ ] Long term: formalize Kuznetsov's formula and the
+  Deshouillers–Iwaniec large sieve.  That would bring the 4/7 bar itself
+  (Claim 10.2) within reach of machine checking.
 - [ ] Optional: upstream the new general-purpose pieces:
   * the prime number theorem for μ with classical error term (to PNT+);
   * Bloom–Maynard's energy bound;

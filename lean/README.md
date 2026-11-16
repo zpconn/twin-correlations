@@ -36,7 +36,34 @@ All are in `Determinant/Main.lean`.  `#print axioms` reports only the three
 standard axioms for every theorem above and for the Theorem 1.1 result,
 over the whole dependency cone with external libraries included.  No
 `sorry`, `axiom` or `native_decide` appears in this project, which is about
-19.5k lines.
+19.9k lines.
+
+## Section 10 of the paper: `Barrier.lean`
+
+`Barrier.lean` checks the arithmetic and the elementary identities of the
+paper's section on the barrier at level 4/7.  It formalizes **none** of the
+analytic estimates quoted there (Deshouillers–Iwaniec, Irving, Polymath8a,
+Maynard, Pascadi), so every *Claim* of that section remains unverified.  For
+example `conrey_error_iff` says that an error term
+`N^ε (R^{7/4} + N^{1/2} R^{7/8})` is a power saving exactly for `θ < 4/7`;
+it does not say that the error term has that shape.
+
+| Paper §10 | Lean (`MobiusDeterminant.Barrier`) |
+|---|---|
+| Lemma 10.1 and the table of levels | `saving_suffices_iff`, `level_table`, `level_chain` |
+| Remark 1.5, Irving's region | `irving_diagonal_iff`, `irving_level`, `irving_at_half`, `irving_crossing` |
+| Claim 10.2, exponents only | `conrey_error_iff` |
+| Claim 10.3, the window | `window_nonempty_iff`, `window'_nonempty_iff`, `window_at_four_sevenths`, `window_third_condition` |
+| Lemma 10.4 | `balanced_mem_window_iff`, `balanced_mem_window'_iff` |
+| The box and the units at θ = 4/7 | `box_sum`, `box_at_four_sevenths`, `dual_length_eq_iff`, `mean_eq_iff` |
+| (F4), pairs of solutions | `pair_of_solutions`, `positivity_gap` |
+| Claim 10.6, exponents only | `ls_to_pairs`, `pairs_to_dual`, `ls_sizes` |
+| Lemma 10.7 (quadratic roots, reciprocity) | `quadratic_root`, `coprime_modulus`, `kloosterman_fraction_eq_root`, `reciprocity` |
+| (F9), moments of ζ | `moment_table`, `momentLength_inv` |
+| The two determinants | `det_two`, `det_three` |
+| Lemma 10.8 | `binding_condition_iff`, `di_conditions_balanced_iff`, `polymath_window_nonempty_iff`, `polymath_window_at_four_sevenths` |
+| Claim 10.9, the two inequalities | `nogo_modulus_bound`, `nogo_saving_bound` |
+| §10.6, sizes | `bblr_range_iff`, `watt_short`, `level_loss_iff`, `gm_sizes` |
 
 ## Components
 
