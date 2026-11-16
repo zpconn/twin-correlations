@@ -32,6 +32,13 @@ Both figures were checked against the authors' arXiv sources.  This result
 reaches `9/17 = 1/2 + 1/34` by exploiting the arithmetic of μ.  The parity
 problem remains, and nothing here bears on the twin-prime conjecture itself.
 
+> **Novelty caveat (2026-11-15).**  A literature check found that methods
+> already in print probably give more.  Irving's 2014 bound for Kloosterman
+> sums over primes, transposed to μ, appears to give θ < 8/15.  Conrey's 1989
+> mollifier method may give θ < 4/7.  In the analogous twisted-moment
+> problem, Balasubramanian–Conrey–Heath-Brown reached 9/17 in 1985.  See
+> [`ROADMAP.md`](ROADMAP.md) §0; this must be resolved before circulation.
+
 ## Structure of the proof
 
 1. **Theorem 1.3 (determinant sums).**  This is cancellation in
@@ -53,13 +60,21 @@ problem remains, and nothing here bears on the twin-prime conjecture itself.
 
 ## Lean formalization (`lean/`)
 
-Theorem 1.1 is formalized in Lean 4 with Mathlib, **with no hypotheses**:
-`MobiusDeterminant.lambdaR_twin_correlation_unconditional`.  `#print
-axioms` reports only Lean's three standard axioms, and there is no `sorry`
-anywhere.  The project is about 15.5k lines.
+Theorems 1.1 and 1.3 and Corollary 1.4 are formalized in Lean 4 with
+Mathlib, **with no hypotheses**:
+
+* `MobiusDeterminant.lambdaR_twin_correlation_unconditional` (Theorem 1.1);
+* `MobiusDeterminant.Determinant.detSum_sub_zeroMode`, `zeroModeBound` and
+  `detSum_cancellation` (Theorem 1.3);
+* `MobiusDeterminant.Determinant.detSum_diagonal` (Corollary 1.4).
+
+`#print axioms` reports only Lean's three standard axioms, and there is no
+`sorry` anywhere.  The project is about 19.5k lines.
 
 It covers:
 
+* the determinant sums (Theorem 1.3), with the exact saving
+  `(8m + 9M − 8)/12`;
 * the level of distribution (Theorem 1.2);
 * the mean-value theorem (Theorem 6.1);
 * Bloom–Maynard's energy bound;

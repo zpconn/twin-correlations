@@ -40,7 +40,14 @@ authors.
      and checked by the Lean kernel.  It reuses Lean Pool and PNT+; Lean Pool's
      Kloosterman–Weil development itself records substantial generative-AI
      contribution;
-   * the literature search and bibliography;
+   * the literature search and bibliography.  On 15 November 2026 a
+     Claude Opus 5.5 research agent ran a second literature check.  It read
+     the arXiv sources of Walker, Irving, Bettin–Chandee–Radziwiłł,
+     Pratt–Robles and Fouvry–Radziwiłł, and checked the bibliography against
+     Crossref and MathSciNet reference matching.  It found the prior work now
+     discussed in §1.1 and Remark 1.5 of the paper.  The transposition of
+     Irving's estimate to μ is an AI computation and has not been checked by
+     a human;
    * this repository's README, roadmap, and this disclosure.
 
    Independent AI reviewer instances (Claude subagents) audited parts of the
@@ -55,12 +62,17 @@ authors.
   They are not part of the proof.
 * The LaTeX source has passed a structural check but has **not been
   compiled**.
-* The Lean kernel checks Theorem 1.1 with no hypotheses.  The proof covers
-  Theorems 1.2 and 6.1, Bloom–Maynard, and the prime number theorem for μ.
-  Only the standard axioms are used.  The kernel does **not** check that the
-  definitions in `lean/MobiusDeterminant/Basic.lean` match the mathematics.
-  It also does not check the prose proofs in the paper; the determinant form
-  (Theorem 1.3) and Appendix A are not formalized.
+* The Lean kernel checks Theorems 1.1 and 1.3 and Corollary 1.4 with no
+  hypotheses.  The proofs cover Theorems 1.2 and 6.1, Bloom–Maynard, and the
+  prime number theorem for μ, and use only the standard axioms.  The kernel
+  does **not** check two things:
+  * that the definitions in `lean/MobiusDeterminant/Basic.lean` and
+    `lean/MobiusDeterminant/Determinant/Defs.lean` match the mathematics;
+  * the prose proofs in the paper.
+
+  Appendix A and the comparisons with the literature are not formalized.
+* The novelty of the headline exponent 9/17 is in doubt; see `ROADMAP.md`
+  §0.
 * Bibliographic data and every statement attributed to the literature were
   assembled with AI assistance.  They must be checked against the sources.
   In particular:

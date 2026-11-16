@@ -12,3 +12,7 @@ paper/main.pdf
 
 # Lean (future)
 .lake/
+
+# Compiled experiments
+notes/lab/var_nu
+notes/lab/rls

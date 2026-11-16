@@ -18,10 +18,25 @@ theorem MobiusDeterminant.lambdaR_twin_correlation_unconditional
 ```
 
 This is Theorem 1.1 of the paper, with no hypotheses.
-`#print axioms` reports only `propext`, `Classical.choice` and `Quot.sound`,
-for the whole dependency cone, external libraries included.  No `sorry`,
-`axiom` or `native_decide` appears in this project.  The project is about
-15.5k lines.
+
+## Theorem 1.3 and Corollary 1.4 (unconditional)
+
+The definitions are in `Determinant/Defs.lean` and the statements in
+`Determinant/Statement.lean`.  The definitions are `detSum` (S_κ, paper
+(1.3)), `zeroMode` (S_κ⁰, paper (7.3)), `Omega` and `sigmaExp`.
+
+| Paper | Lean theorem | Statement |
+|---|---|---|
+| Thm 1.3, (1.4) | `Determinant.detSum_sub_zeroMode` | `DetPowerSaving`: `‖S_κ − S_κ⁰‖ ≤ C X^{1−σ(x,y)+ε}` on compact `K ⊂ Ω` |
+| Thm 1.3, bound for S_κ⁰ | `Determinant.zeroModeBound` | `ZeroModeBound`: `‖S_κ⁰‖ ≤ C X exp(−c√log X)` |
+| Thm 1.3, (1.5) | `Determinant.detSum_cancellation` | `DetCancellation`: `‖S_κ‖ ≤ C X exp(−c√log X)` on compact `K ⊂ Ω` |
+| Cor 1.4 | `Determinant.detSum_diagonal` | `DetDiagonal` |
+
+All are in `Determinant/Main.lean`.  `#print axioms` reports only the three
+standard axioms for every theorem above and for the Theorem 1.1 result,
+over the whole dependency cone with external libraries included.  No
+`sorry`, `axiom` or `native_decide` appears in this project, which is about
+19.5k lines.
 
 ## Components
 
@@ -40,6 +55,11 @@ The interfaces are fixed as `Prop`s in `Unconditional/Interfaces.lean`;
 | Lemmas 2.2, 2.7 | `poissonAPDecay`, `mellinSeparation` | `Unconditional/Toolkit.lean` | 382 |
 | Lemmas 2.6, 3.1, 4.1, 4.3 | Heath-Brown, Korolev–Changa, energies | `Core/` | |
 | Exponent computations | many | `Exponents.lean` | |
+| Thm 1.3, Cor 1.4 (assembly on compact `K ⊂ Ω`) | `detPowerSaving_of`, `detCancellation_of`, `detDiagonal_of` | `Determinant/Assembly.lean` | 185 |
+| §7: S_κ − S_κ⁰ as a superposition of product-weight sums | `detErrorBound_of`, `zeroModeBound_of` | `Determinant/Reduction*.lean` | 1834 |
+| §7: error term for product weights, unbalanced range | `detTensorBound` | `Determinant/Tensor*.lean` | 918 |
+| §7.3: main term for product weights | `oddMainBound` | `Determinant/OddMain*.lean` | 638 |
+| Four-variable Mellin separation of `W` | `mellinSep4` | `Determinant/Mellin4.lean` | 120 |
 
 ## External formalizations reused (not re-proved)
 
@@ -69,12 +89,18 @@ bound, and the prime number theorem for μ with error `x exp(−c√log x)`.
    coupled weight depends only on `h/(d'e')`.
 4. **PNT for μ.** It uses a bound `1/ζ ≪ (1+|t|)^{1/2}` in the zero-free
    region, obtained by Grönwall's inequality.
-5. **Theorem 1.3.** The determinant form is not formalized separately; the
-   formal route goes through the correlation form, Theorem 1.2.
+5. **Theorem 1.3.** Instead of Poisson summation in `a` modulo `2e`, the
+   formal proof writes `n = ad` and expands `W` by a four-variable Mellin
+   transform, via Schwartz-space Fourier inversion.  Each product-weight
+   piece is a smooth odd divisor-pair sum.  These are handled by the §8
+   machinery, generalized to unbalanced `D, E` with the exact three-term
+   saving.  The zero frequency is matched with the main term by the
+   substitution `n/X = α d/D`, and `κ = −2` reduces exactly to `κ = 2` by
+   swapping `(a,d) ↔ (b,e)`.
 
 ## Trust boundary
 
-The kernel checks that the theorem follows from the definitions in
-`Basic.lean`.  Whether those definitions faithfully encode the paper's
-`Λ_R` and `𝔖` needs human review.  The file is short and documented for
-this purpose.
+The kernel checks that the theorems follow from the definitions in
+`Basic.lean` and `Determinant/Defs.lean`.  Whether those definitions
+faithfully encode the paper's `Λ_R`, `𝔖`, `S_κ`, `S_κ⁰`, `Ω` and `σ` needs
+human review.  Both files are short and documented for this purpose.

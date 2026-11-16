@@ -82,9 +82,9 @@ $\sum_{d\le K,\,e\le L}\mu(d)\mu(e)\bigl(\#\{n\le N: d\mid n,\ e\mid n+2\}
 prove it by exploiting the arithmetic of $\mu$: the Heath-Brown identity, a
 Korolev--Changa bilinear inequality averaged over moduli, and the
 Bloom--Maynard bound for the additive energy of rationals with bounded
-denominators.  Theorem~\ref{thm:LambdaR} is formalized in Lean~4 with
-Mathlib.  The formal proof has no hypotheses and depends only on Lean's
-standard axioms.  This manuscript was prepared with substantial AI assistance and has
+denominators.  Theorems~\ref{thm:LambdaR} and~\ref{thm:main} are formalized
+in Lean~4 with Mathlib.  The formal proofs have no hypotheses and depend
+only on Lean's standard axioms.  This manuscript was prepared with substantial AI assistance and has
 not yet been verified by a human expert; see the disclosure at the end.
 \end{abstract}
 
@@ -115,10 +115,12 @@ pair of divisors $d,e\le R$ involved has $de\le N$.  The Chinese remainder
 theorem then gives $\mathcal C(N,R)\sim\mathfrak SN$; see, e.g.,~\cite{GY}.
 Truncated correlations of this kind are basic objects in the work of
 Goldston and Y\i ld\i r\i m and in the Goldston--Pintz--Y\i ld\i r\i m
-method~\cite{GY,GPY}.  Correlations of sieve weights beyond the square-root
-range have been used as inputs to conditional results on the variance of
-primes in short intervals and on the pair correlation of zeros of the
-Riemann zeta function~\cite{Walker}.
+method~\cite{GY,GPY}.  For the Selberg sieve weights $\lambda_z$, Walker
+proved a fixed-shift asymptotic for $\sum_n\lambda_z(n)\lambda_z(n+k)$ that is
+nontrivial for $z\le X^{27/53-\eps}$~\cite{Walker}.  He obtained it from the
+Bettin--Chandee bound with the frequency held fixed.  He then applied it to
+conditional results on the variance of primes in short intervals and on the
+pair correlation of zeros of the Riemann zeta function.
 
 Past $\theta=1/2$ one meets pairs with $de>N$, and the problem becomes one
 about sums of Kloosterman fractions.  It is a binary analogue of passing
@@ -136,6 +138,28 @@ $\theta<17/33=1/2+1/66$ in the critical range (Appendix~\ref{app:BC}).
 Both arguments treat the coefficients $\mu(d)\log(R/d)$ as an arbitrary
 bounded sequence.  Our main result exploits their arithmetic structure.
 
+The same sums of Kloosterman fractions occur in the off-diagonal terms of the
+twisted second moment of the Riemann zeta function with a mollifier of
+length $T^\theta$.  There the coefficients have the shape
+$\mu(d)P(\log(R/d)/\log R)$.
+\begin{itemize}
+\item Balasubramanian, Conrey and Heath-Brown~\cite{BCHB} reached
+$\theta<9/17$ for mollifier coefficients.
+\item Conrey~\cite{Con89} reached $\theta<4/7$, using the Heath-Brown
+identity for $\mu$, Weil's bound and the estimates of Deshouillers and
+Iwaniec~\cite{DI82}; see also~\cite{PR18}.
+\item For arbitrary coefficients, Bettin, Chandee and
+Radziwi\l\l~\cite{BCR} obtain $17/33$ from~\cite{BC} and $48/95$
+from~\cite{DFI}, the same pair of exponents as above.
+\end{itemize}
+In a related direction, Fouvry and Shparlinski~\cite{FS11} and
+Irving~\cite{Irv14} bound Kloosterman sums over primes on average over the
+modulus, using a combinatorial decomposition of $\Lambda$.  See
+Remark~\ref{rem:comparison}.  Fouvry and Radziwi\l\l~\cite{FR22} prove a
+level of distribution $17/33$ for unbalanced convolutions, which covers
+sieve weights to very large moduli; it does not apply directly to a fixed
+shift.
+
 \begin{theorem}\label{thm:LambdaR}
 Let $0<\theta<9/17$.  There are an absolute constant $c>0$ and a constant
 $C_\theta$ such that, for all $N\ge2$ and $2\le R\le N^\theta$,
@@ -145,9 +169,16 @@ $C_\theta$ such that, for all $N\ge2$ and $2\le R\le N^\theta$,
 \]
 \end{theorem}
 
-Thus the dial moves from $1/2+1/190$ to $9/17=1/2+1/34$.  The excess over
-the square-root barrier is roughly twice what the Bettin--Chandee estimate
-gives and more than five times what Duke--Friedlander--Iwaniec gives.
+This improves the exponents previously recorded for this fixed-shift
+problem: $48/95=1/2+1/190$ for $\Lambda_R$~\cite{CL} and $27/53$ for Selberg
+weights~\cite{Walker}.
+
+\emph{(Draft note: see Remark~\ref{rem:comparison}.  Irving's
+estimate~\cite[Theorem~1.3]{Irv14}, transposed from $\Lambda$ to $\mu$,
+appears to give Theorems~\ref{thm:LambdaR} and~\ref{thm:level} for
+$\theta<8/15$.  Conrey's method~\cite{Con89} may give $\theta<4/7$.  If
+either is confirmed, $9/17$ is not the best exponent available, and the
+paper must be repositioned before circulation.)}
 
 \subsection{M\"obius-weighted divisor pairs}
 For $d,e\ge1$ let
@@ -185,7 +216,8 @@ and $E=X/B$, and let $\kappa\in\{2,-2\}$.  Define
  W\!\left(\frac aA,\frac bB,\frac dD,\frac eE\right).
 \end{equation}
 Since $a,b,d,e$ are odd, every common divisor of $d$ and $e$ divides
-$\kappa$, so $(d,e)=1$.  Write
+$\kappa$, so $(d,e)=1$.  (For the prime analogue $p_1d-p_2b=r$ see
+Guria~\cite{Gur}.)  Write
 \begin{equation}\label{eq:xy}
  A=X^{x},\qquad B=X^{y},\qquad m=\min(x,y),\qquad M=\max(x,y).
 \end{equation}
@@ -241,21 +273,41 @@ region $\Omega$ strictly contains it, because
 and $\tfrac{43}{177}\cdot 13+\tfrac{56}{177}\cdot16=\tfrac{1455}{177}>8$.
 The boundary of $\Omega$ inside the ordered half-square is the segment from
 $(7/16,1/2)$ to $(8/17,8/17)$.
+
+Irving~\cite[Theorem~1.3]{Irv14} bounds
+$\sum_{q\sim Q}|\sum_{p\sim x}e(a\bar p/q)|$ for a fixed frequency $a$.  His
+proof uses no property of the primes beyond Vaughan's identity, which has
+the same Type~I/II shape for $\mu$.  Transposed to $\mu$, and inserted
+frequency by frequency in place of Theorem~\ref{thm:meanvalue}, it bounds
+the nonzero frequencies by $X^{\eps}(E^{1/2}D^{11/8}+E^{7/6}D^{2/3})$.  This
+gives cancellation when
+\[
+ 11m+4M>7,\qquad 4m+7M>5 .
+\]
+On the diagonal this is $x>7/15$, which is better than $\Omega$; at
+$M=1/2$ it is $m>5/11$, which is worse than $m>7/16$.  The two boundaries
+cross at $(31/67,32/67)$.  In the correlation problem of
+Theorem~\ref{thm:level} the same input would give $\theta<8/15$.
+\emph{(Draft note: this transposition has not yet been checked in detail.)}
 \end{remark}
 
 \subsection{Why this matters}\label{sec:significance}
 Theorem~\ref{thm:LambdaR} moves the dial on the best-studied model of the
 twin-prime correlation substantially further past the square-root barrier
 than general-coefficient methods do.  The point is that the M\"obius function
-is not an arbitrary sequence, and its structure can be used.  The mechanism
-has three steps:
+is not an arbitrary sequence, and its structure can be used, as in the
+mollifier problem~\cite{BCHB,Con89}.  Our mechanism has three steps:
 \begin{itemize}
 \item factor $\mu(d)$ by the Heath-Brown identity;
 \item join the Poisson frequency to the shorter factor;
 \item control the resulting fractions by the Bloom--Maynard energy bound,
 after averaging a Korolev--Changa inequality over the modulus.
 \end{itemize}
-As far as we know, this mechanism is new.  It is isolated in a mean-value
+Combining a combinatorial decomposition of $\mu$ with Kloosterman-fraction
+estimates averaged over the modulus is classical~\cite{Con89,FS11,Irv14,PR18}.
+What appears to be new is the use of the Bloom--Maynard energy bound for the
+fractions $h/u$, together with a two-sided Korolev--Changa inequality
+averaged over the modulus.  The mechanism is isolated in a mean-value
 theorem, Theorem~\ref{thm:meanvalue}, which is uniform in the frequency
 coefficients and may apply to other problems with M\"obius-type
 coefficients.
@@ -263,9 +315,12 @@ coefficients.
 The limits should be stated equally clearly.  Methods of this kind are
 subject to the parity problem.  The dial moves from $0.5$ to about $0.53$,
 and the twin-prime case $\theta=1$ is no closer in any qualitative sense.
-\emph{(Draft note: the claim that earlier fixed-shift results past
-$\theta=1/2$ use only general-coefficient bounds reflects our literature
-search and should be confirmed.)}
+\emph{(Draft note: a literature check found no earlier fixed-shift result for
+$\Lambda_R$ past $48/95$.  The fixed-shift results we know of~\cite{CL,Walker}
+use general-coefficient bounds.  Bounds that exploit the structure of the
+coefficients exist for the same sums in the mollifier
+problem~\cite{BCHB,Con89,PR18}, and Irving's estimate~\cite{Irv14} appears to
+give a larger exponent here; see Remark~\ref{rem:comparison}.)}
 
 \subsection{Method}
 Suppose $x\le y$, so that $D\ge E$.  Poisson summation in $a$ modulo $2e$
@@ -303,9 +358,12 @@ by Abel summation and an evaluation of the main term
 (Section~\ref{sec:LambdaR}).
 
 \subsection{Formal verification}
-Theorem~\ref{thm:LambdaR} has been formalized in Lean~4 with Mathlib, with
-no hypotheses; see Section~\ref{sec:lean}.  The formal proof covers:
+Theorems~\ref{thm:LambdaR} and~\ref{thm:main} and
+Corollary~\ref{cor:diagonal} have been formalized in Lean~4 with Mathlib,
+with no hypotheses; see Section~\ref{sec:lean}.  The formal proofs cover:
 \begin{itemize}
+\item the determinant sums (Theorem~\ref{thm:main}), with the exact saving
+$\sigma(x,y)$;
 \item the level of distribution (Theorem~\ref{thm:level});
 \item the mean-value theorem (Theorem~\ref{thm:meanvalue});
 \item the Bloom--Maynard energy bound;
@@ -475,8 +533,9 @@ complex coefficients on them.  Then
 \]
 \end{lemma}
 
-This is the case $k=s=2$ of~\cite[Lemma~1]{KC}, stated there for interval
-supports.  The proof uses the supports only to name the energies, and we
+This is the case $k=s=2$ of~\cite[Lemma~1]{KC}, whose proof is given
+in~\cite{Kor18}.  There it is stated for interval supports, with the norms
+$\|\gamma\|_{k/(k-1)}$ and $\|\beta\|_{s/(s-1)}$.  The proof uses the supports only to name the energies, and we
 include it for completeness.
 
 \begin{proof}
@@ -516,6 +575,9 @@ modulo $q$.  Then for every $\eps>0$,
  \sum_{Q<q\le2Q}I_{\mathcal I}(q)\ll_{C,\eps}(QN^2+N^4)(QN)^{\eps}.
 \]
 \end{lemma}
+
+This is the case $k=2$ of~\cite[Lemma~2.3]{Irv14}, which generalizes
+Fouvry and Shparlinski~\cite[Lemma~3]{FS11}.  We include the proof.
 
 \begin{proof}
 Clearing denominators, a counted quadruple satisfies $q\mid\Delta$, where
@@ -828,9 +890,17 @@ The term $h=0$ is
  \cS_\kappa^0=\sum_{e\ \mathrm{odd}}\mu(e)\frac A{2e}
  \sum_{(d,2e)=1}\mu(d)\,\Phi\Bigl(0;\frac dD,\frac eE\Bigr).
 \end{equation}
-For each $e\le2E\le2X$, Lemma~\ref{lem:mobius} with $q=2e$ and
+Here $x\le y\le1/2$, so $\sqrt X\le E\le D$.  For each odd $e\le2E$,
+Lemma~\ref{lem:mobius} with $N=D$, $q=2e$ and
 $G(\delta)=\Phi(0;\delta,e/E)$ bounds the inner sum by
-$D\exp(-c\sqrt{\log D})$.  Summing over $e\in[E,2E]$ gives
+$D\exp(-c\sqrt{\log D})$.
+\begin{itemize}
+\item The lemma applies because $q\le4E\le4D\le D^{100}$.
+\item Its implied constant depends only on bounds for $G$ and $G'$ on a
+fixed compact set.  By~\eqref{eq:Phi-decay}, these are uniform in $e$ and
+$X$.
+\end{itemize}
+Summing over $e\in[E,2E]$ gives
 $\cS_\kappa^0\ll AD\exp(-c\sqrt{\log D})\ll X\exp(-c'\sqrt{\log X})$,
 since $D\ge\sqrt X$.
 
@@ -1272,21 +1342,33 @@ $N^{-\delta}(\log R)^2\le R^{-\delta/\theta}(\log R)^2\ll_\theta
 \section{Formalization}\label{sec:lean}
 
 The repository accompanying this paper contains a Lean~4 project
-(\texttt{lean/}, Lean v4.35.0, Mathlib commit \texttt{56a00585}).  In it,
-Theorem~\ref{thm:LambdaR} is proved with no hypotheses:
-\begin{center}
-\texttt{MobiusDeterminant.lambdaR\_twin\_correlation\_unconditional}.
-\end{center}
+(\texttt{lean/}, Lean v4.35.0, Mathlib commit \texttt{56a00585}).  In it the
+following are proved with no hypotheses:
+\begin{itemize}
+\item Theorem~\ref{thm:LambdaR}:
+\texttt{MobiusDeterminant.lambdaR\_twin\_correlation\_unconditional};
+\item Theorem~\ref{thm:main}, \eqref{eq:main-power} and the bound for
+$\cS^0_\kappa$: \texttt{Determinant.detSum\_sub\_zeroMode},
+\texttt{Determinant.zeroModeBound};
+\item Theorem~\ref{thm:main}, \eqref{eq:main-log}:
+\texttt{Determinant.detSum\_cancellation};
+\item Corollary~\ref{cor:diagonal}: \texttt{Determinant.detSum\_diagonal}.
+\end{itemize}
 The command \texttt{\#print axioms} reports only Lean's standard axioms
-(\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}) for this
-theorem and its entire dependency cone, including the external libraries
+(\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}) for these
+theorems and their entire dependency cones, including the external libraries
 below.  No \texttt{sorry} appears anywhere.
 
 \emph{Definitions.}  The file \texttt{Basic.lean} defines the objects of
 Section~\ref{sec:LambdaR} directly: $\Lambda_R$, $\varrho(d,e)$, $r_N(d,e)$,
 $M(R)$ and $S_g(y)$.  It defines the twin-prime constant as the Euler
 product $\prod_p\mathfrak S_p$, with $\mathfrak S_2=2$ and
-$\mathfrak S_p=1-(p-1)^{-2}$ for odd $p$.
+$\mathfrak S_p=1-(p-1)^{-2}$ for odd $p$.  The file
+\texttt{Determinant/Defs.lean} defines $\cS_\kappa$ by~\eqref{eq:S}, with $W$
+smooth and supported in $[1,2]^4$.  It also defines $\cS^0_\kappa$
+by~\eqref{eq:zero-mode}, and $\Omega$ and $\sigma$ as in
+Section~\ref{sec:intro}.  The statements are in
+\texttt{Determinant/Statement.lean}.
 
 \emph{Structure.}  The proof is split into components with fixed formal
 interfaces (\texttt{Unconditional/Interfaces.lean}):
@@ -1296,6 +1378,9 @@ interfaces (\texttt{Unconditional/Interfaces.lean}):
 \begin{tabular}{ll}
 Paper & Lean \\ \hline
 Theorem~\ref{thm:LambdaR} & \texttt{lambdaR\_twin\_correlation\_unconditional}\\
+Theorem~\ref{thm:main} & \texttt{detSum\_sub\_zeroMode}, \texttt{detSum\_cancellation}\\
+Corollary~\ref{cor:diagonal} & \texttt{detSum\_diagonal}\\
+Section~\ref{sec:proof}, product weights & \texttt{detTensorBound}, \texttt{oddMainBound}\\
 Theorem~\ref{thm:level} ($\theta<9/17$) & \texttt{mobiusPairLevel}\\
 Theorem~\ref{thm:meanvalue} & \texttt{meanValueThm}\\
 Proposition~\ref{prop:bilinear} and Steps~1, 3 & \texttt{balancedBoxBound\_of\_BM}\\
@@ -1341,14 +1426,24 @@ therefore suffices.
 $1/\zeta(\sigma+it)\ll(1+|t|)^{1/2}$ in the zero-free region, obtained by
 integrating $\zeta'/\zeta$ (Gr\"onwall).  This is weaker than the classical
 $(\log|t|)^A$ but suffices.
-\item The determinant-form Theorem~\ref{thm:main} is not formalized
-separately.  The formal route goes through the correlation form,
-Theorem~\ref{thm:level}, which is what Theorem~\ref{thm:LambdaR} needs.
+\item For Theorem~\ref{thm:main}, the formal proof does not use Poisson
+summation in $a$ modulo $2e$.  Instead it writes $n=ad$, so that
+$\cS_\kappa$ becomes a smooth sum over odd $n$ with $d\mid n$ and
+$e\mid n+\kappa$.  It then expands $W$ by a four-variable Mellin transform
+(through Fourier inversion for Schwartz functions).  This gives a superposition of
+product weights in $(n,d,e)$, and each one is treated by Poisson summation
+in $n$ and Theorem~\ref{thm:meanvalue}, as in
+Section~\ref{sec:level} but in the unbalanced range.  The exponents are those
+of Section~\ref{sec:proof}.  The zero frequency~\eqref{eq:zero-mode} is
+identified with the main term by the substitution $n/X=\alpha\,d/D$.  The
+case $\kappa=-2$ is reduced exactly to $\kappa=2$ by the symmetry of
+Section~\ref{sec:proof}.
 \end{enumerate}
 
-\emph{Trust.}  The Lean kernel guarantees that the formal theorem follows
+\emph{Trust.}  The Lean kernel guarantees that the formal theorems follow
 from the formal definitions.  A human reader should still check that the
-definitions in \texttt{Basic.lean} encode the objects of this paper.
+definitions in \texttt{Basic.lean} and \texttt{Determinant/Defs.lean} encode
+the objects of this paper.
 
 \section{Remarks}\label{sec:remarks}
 
@@ -1360,7 +1455,11 @@ precisely when $T<D^{1/9}$.  The bottleneck is case~1 of Step~3, at
 $U\asymp D^{1/3}$, the shortest factor that the Heath-Brown decomposition
 can force on the balanced side.  A finer treatment of factors near
 $D^{1/3}$, or cancellation among the nonzero frequencies $h$ rather than
-their bounded multiplicity, would be needed to go further.
+their bounded multiplicity, would be needed to go further.  Irving's Type~II
+estimate~\cite{Irv14} is one such treatment.  It inverts the Kloosterman
+fractions and applies Weil's bound to short Kloosterman sums.  For $E\asymp
+D$ and $H<D^{1/3}$ it is stronger than Proposition~\ref{prop:bilinear} at
+$U\asymp D^{1/3}$; see Remark~\ref{rem:comparison}.
 
 \subsection{Another view: correlations along dilations}
 Put $n=ad$, so that $n+\kappa=be$.  Then~\eqref{eq:S} becomes
@@ -1455,8 +1554,9 @@ This gives the region of Remark~\ref{rem:comparison}; on the diagonal it is
 $x>16/33$.  The argument uses no property of $\mu$ beyond $|\mu|\le1$.  It
 is therefore what the general-coefficient trilinear estimate gives for
 these sums.  The same pair of exponents, $17/33$ from~\eqref{eq:BC} against
-$48/95$ from Duke--Friedlander--Iwaniec, appears in Bettin and Chandee's own
-application to the twisted second moment of the zeta function~\cite{BC}.
+$48/95$ from Duke--Friedlander--Iwaniec, appears in the application of
+Bettin, Chandee and Radziwi\l\l{} to the twisted second moment of the zeta
+function~\cite{BCR}.
 
 \section*{AI usage disclosure}
 
@@ -1500,65 +1600,121 @@ that those definitions match the mathematics; that correspondence still
 requires human review.
 \item \emph{Verification status.}  As of this draft, \textbf{no human
 expert has verified the proof}.  The formalization covers
-Theorems~\ref{thm:LambdaR}, \ref{thm:level} and~\ref{thm:meanvalue}, but
-not the prose of this paper.  Not formalized are the determinant-form
-Theorem~\ref{thm:main}, the comparison in Appendix~\ref{app:BC}, and the
-correspondence between the Lean definitions and the paper's.  All
-bibliographic details and all statements
-attributed to the literature were assembled with AI assistance, especially
-Lemmas~\ref{lem:weil}, \ref{lem:mobius} and~\ref{lem:BM},
-Remark~\ref{rem:comparison} and Appendix~\ref{app:BC}.  They must be checked
-against the original sources before submission or citation.
+Theorems~\ref{thm:LambdaR}, \ref{thm:level}, \ref{thm:main}
+and~\ref{thm:meanvalue} and Corollary~\ref{cor:diagonal}, but not the prose
+of this paper.  Not formalized are the comparison in
+Appendix~\ref{app:BC}, the comparisons with the literature in
+Section~\ref{sec:intro} and Remark~\ref{rem:comparison}, and the
+correspondence between the Lean definitions and the paper's.
+\item \emph{Literature.}  The literature review of 15 November 2026 was
+carried out by a Claude Opus 5.5 research agent.  It read the arXiv sources
+of~\cite{Walker,Irv14,BCR,PR18,FR22} and checked the bibliographic data
+against Crossref and MathSciNet reference matching.  The investigator has not
+yet checked it.  All bibliographic details and all statements attributed to
+the literature were assembled with AI assistance.  This applies especially
+to Lemmas~\ref{lem:weil}, \ref{lem:mobius} and~\ref{lem:BM}, to the
+comparisons in Section~\ref{sec:intro} and Remark~\ref{rem:comparison}, and
+to Appendix~\ref{app:BC}.  They must be checked against the original sources
+before submission or citation.  The transposition of Irving's estimate to
+$\mu$ in Remark~\ref{rem:comparison} is an AI computation that has not been
+checked in detail.
 \end{itemize}
 
 \begin{thebibliography}{99}
 
+\bibitem{BCHB}
+R.~Balasubramanian, J.~B.~Conrey and D.~R.~Heath-Brown,
+\emph{Asymptotic mean square of the product of the Riemann zeta-function and
+a Dirichlet polynomial},
+J. Reine Angew. Math. \textbf{357} (1985), 161--181.
+
 \bibitem{BC}
 S.~Bettin and V.~Chandee,
 \emph{Trilinear forms with Kloosterman fractions},
-Adv. Math. \textbf{328} (2018).  arXiv:1502.00769.
+Adv. Math. \textbf{328} (2018), 1234--1262.  arXiv:1502.00769.
+
+\bibitem{BCR}
+S.~Bettin, V.~Chandee and M.~Radziwi\l\l,
+\emph{The mean square of the product of the Riemann zeta-function with
+Dirichlet polynomials},
+J. Reine Angew. Math. \textbf{729} (2017), 51--79.  arXiv:1411.7764.
 
 \bibitem{BM}
 T.~F.~Bloom and J.~Maynard,
 \emph{A new upper bound for sets with no square differences},
-Compos. Math. \textbf{158} (2022).  arXiv:2011.13266.
+Compos. Math. \textbf{158} (2022), no.~8, 1777--1798.  arXiv:2011.13266.
 
 \bibitem{BFI}
 E.~Bombieri, J.~B.~Friedlander and H.~Iwaniec,
 \emph{Primes in arithmetic progressions to large moduli},
-Acta Math. \textbf{156} (1986), 203--251.
+Acta Math. \textbf{156} (1986), no.~3--4, 203--251.
+
+\bibitem{Con89}
+J.~B.~Conrey,
+\emph{More than two fifths of the zeros of the Riemann zeta function are on
+the critical line},
+J. Reine Angew. Math. \textbf{399} (1989), 1--26.
 
 \bibitem{CL}
 G.~Coppola and M.~Laporta,
 \emph{On the correlations, Selberg integral and symmetry of sieve functions
 in short intervals, III},
-Mosc. J. Comb. Number Theory \textbf{6} (2016), 3--24.  arXiv:1003.0302.
+Mosc. J. Comb. Number Theory \textbf{6} (2016), no.~1, 3--24.
+arXiv:1003.0302.
+
+\bibitem{DI82}
+J.-M.~Deshouillers and H.~Iwaniec,
+\emph{Kloosterman sums and Fourier coefficients of cusp forms},
+Invent. Math. \textbf{70} (1982/83), no.~2, 219--288.
 
 \bibitem{DFI}
 W.~Duke, J.~Friedlander and H.~Iwaniec,
 \emph{Bilinear forms with Kloosterman fractions},
-Invent. Math. \textbf{128} (1997), 23--43.
+Invent. Math. \textbf{128} (1997), no.~1, 23--43.
 
 \bibitem{Est}
 T.~Estermann,
 \emph{On Kloosterman's sum},
-Mathematika \textbf{8} (1961), 83--86.
+Mathematika \textbf{8} (1961), no.~1, 83--86.
+
+\bibitem{FR22}
+\'E.~Fouvry and M.~Radziwi\l\l,
+\emph{Level of distribution of unbalanced convolutions},
+Ann. Sci. \'Ec. Norm. Sup\'er. (4) \textbf{55} (2022), no.~2, 537--568.
+arXiv:1811.08672.
+
+\bibitem{FS11}
+\'E.~Fouvry and I.~E.~Shparlinski,
+\emph{On a ternary quadratic form over primes},
+Acta Arith. \textbf{150} (2011), no.~3, 285--314.
 
 \bibitem{GPY}
 D.~A.~Goldston, J.~Pintz and C.~Y.~Y\i ld\i r\i m,
 \emph{Primes in tuples I},
-Ann. of Math. (2) \textbf{170} (2009), 819--862.
+Ann. of Math. (2) \textbf{170} (2009), no.~2, 819--862.
 
 \bibitem{GY}
 D.~A.~Goldston and C.~Y.~Y\i ld\i r\i m,
 \emph{Higher correlations of divisor sums related to primes I: triple
 correlations},
-Integers \textbf{3} (2003), Paper A5.
+Integers \textbf{3} (2003), Paper A5, 66~pp.
+
+\bibitem{Gur}
+R.~Guria,
+\emph{Prime solutions to a binary additive equation and mixed moments of
+character sums},
+arXiv:2410.10856.
 
 \bibitem{HB82}
 D.~R.~Heath-Brown,
 \emph{Prime numbers in short intervals and a generalized Vaughan identity},
-Canad. J. Math. \textbf{34} (1982), 1365--1377.
+Canad. J. Math. \textbf{34} (1982), no.~6, 1365--1377.
+
+\bibitem{Irv14}
+A.~J.~Irving,
+\emph{Average bounds for Kloosterman sums over primes},
+Funct. Approx. Comment. Math. \textbf{51} (2014), no.~2, 221--235.
+arXiv:1301.6372.
 
 \bibitem{IK}
 H.~Iwaniec and E.~Kowalski,
@@ -1566,36 +1722,53 @@ H.~Iwaniec and E.~Kowalski,
 Amer. Math. Soc. Colloq. Publ. \textbf{53}, Amer. Math. Soc., Providence,
 RI, 2004.
 
+\bibitem{Kor18}
+M.~A.~Korolev,
+\emph{New estimate for a Kloosterman sum with primes for a composite
+modulus},
+Mat. Sb. \textbf{209} (2018), no.~5, 54--61; English transl.,
+Sb. Math. \textbf{209} (2018), no.~5, 652--659.
+
 \bibitem{KC}
 M.~A.~Korolev and M.~E.~Changa,
 \emph{New estimate for Kloosterman sums with primes},
-Math. Notes \textbf{108} (2020).
+Mat. Zametki \textbf{108} (2020), no.~1, 94--101; English transl.,
+Math. Notes \textbf{108} (2020), no.~1--2, 87--93.
 
 \bibitem{MRT15}
 K.~Matom\"aki, M.~Radziwi\l\l{} and T.~Tao,
 \emph{An averaged form of Chowla's conjecture},
-Algebra Number Theory \textbf{9} (2015).
+Algebra Number Theory \textbf{9} (2015), no.~9, 2167--2196.
 
 \bibitem{MV}
 H.~L.~Montgomery and R.~C.~Vaughan,
 \emph{Multiplicative Number Theory I. Classical Theory},
-Cambridge Univ. Press, Cambridge, 2007.
+Cambridge Stud. Adv. Math. \textbf{97}, Cambridge Univ. Press, Cambridge,
+2007.
+
+\bibitem{PR18}
+K.~Pratt and N.~Robles,
+\emph{Perturbed moments and a longer mollifier for critical zeros of
+$\zeta$},
+Res. Number Theory \textbf{4} (2018), no.~1, Paper No.~9.
+arXiv:1706.04593.
 
 \bibitem{Tao16}
 T.~Tao,
 \emph{The logarithmically averaged Chowla and Elliott conjectures for
 two-point correlations},
-Forum Math. Pi \textbf{4} (2016).
+Forum Math. Pi \textbf{4} (2016), e8, 36~pp.
 
 \bibitem{Walker}
 A.~Walker,
 \emph{Correlations of sieve weights and distributions of zeros},
+Int. J. Number Theory \textbf{19} (2023), no.~1, 139--167.
 arXiv:2101.04418.
 
 \bibitem{Weil}
 A.~Weil,
 \emph{On some exponential sums},
-Proc. Nat. Acad. Sci. U.S.A. \textbf{34} (1948), 204--207.
+Proc. Nat. Acad. Sci. U.S.A. \textbf{34} (1948), no.~5, 204--207.
 
 \end{thebibliography}
 
