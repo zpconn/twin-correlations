@@ -318,6 +318,47 @@ theorem reciprocity {k m x y : ℤ} (hcop : IsCoprime k m)
   · obtain ⟨j, hj⟩ := hx
     exact ⟨y + j, by linear_combination hj⟩
 
+/-- Pairs of Kloosterman fractions.  Let `(x, z; cq, k)` and
+`(x', z'; c'q, k')` have determinant `1`, and put `J = xc' - x'c`,
+`j = zk' - z'k`.  Then `J/(cc'q)` and `j/(kk')` are the difference of the
+fractions `inv(k)/(cq)`, `inv(k')/(c'q)` before and after reciprocity, and
+`(-u, -j; qJ, u')` with `u = c'qz - x'k`, `u' = xk' - cqz'` has
+determinant `1`. -/
+theorem fraction_pair {x k z c q x' k' z' c' : ℤ}
+    (h : x * k - c * q * z = 1) (h' : x' * k' - c' * q * z' = 1) :
+    (x * c' - x' * c) * k * k' - (z * k' - z' * k) * c * c' * q = k' * c' - k * c ∧
+    (c' * q * z - x' * k) * (x * k' - c * q * z') + 1
+      = (x * c' - x' * c) * (z * k' - z' * k) * q := by
+  constructor
+  · linear_combination (c' * k') * h - (c * k) * h'
+  · linear_combination (-(x' * k' - c' * q * z')) * h - h'
+
+/-- The class of a row in `P¹(Z/q)`.  If `c̄c' - d'e' = 1` and `D` inverts `d'`
+modulo `q`, then `c'·(c̄·D) ≡ D + e' (mod q)`: the class `c̄/d'` of the row
+`(c̄, d')` is `inv(c')·(inv(d') + e')`. -/
+theorem coset_class {q c' d' cbar e' D : ℤ} (h : cbar * c' - d' * e' = 1)
+    (hD : q ∣ d' * D - 1) : q ∣ c' * (cbar * D) - (D + e') := by
+  obtain ⟨k, hk⟩ := hD
+  exact ⟨e' * k, by linear_combination D * h + e' * hk⟩
+
+/-- One step of `q`-van der Corput in the frequency (exponents of `L`):
+length `3/2`, modulus factors `q₁ = 1`, `q₂ = 2`.  The bound
+`N^{1/2}(q₁^{1/2} + q₂^{1/4})` has exponent `5/4`, a saving of `1/4`
+against the `1/2` that is needed. -/
+theorem vdc_frequency :
+    ((3 / 2 : ℝ) / 2 + max ((1 : ℝ) / 2) (2 / 4)) = 5 / 4 ∧
+    ((3 / 2 : ℝ) - 5 / 4) = 1 / 4 ∧ (1 / 4 : ℝ) < 1 / 2 := by
+  refine ⟨?_, by norm_num, by norm_num⟩
+  rw [max_eq_left (by norm_num)]; norm_num
+
+/-- The moment dictionary is about sizes only: at `ϑ = 2/5` the restricted
+factorization gives the box `(3/7, 2/7, 2/7)` and the balanced one gives
+`(2/7, 5/14, 5/14)` (exponents of `N = MT`, `M = T^{2/5}`). -/
+theorem moment_boxes :
+    ((2 / 5 : ℝ) / (1 + 2 / 5)) = 2 / 7 ∧ ((1 - 2 / 5 : ℝ) / (1 + 2 / 5)) = 3 / 7 ∧
+    ((1 / 2 : ℝ) / (1 + 2 / 5)) = 5 / 14 ∧ (2 / 7 : ℝ) + 5 / 14 + 5 / 14 = 1 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> norm_num
+
 /-! ## B9. Sizes in the literature checks -/
 
 /-- The third regular-spectrum condition `s ≤ 3p - ϑ` of the window, with
@@ -364,6 +405,73 @@ theorem gm_sizes :
 the variance over all classes loses `L^{1/2}` (exponents of `L`:
 `(d/|R|)·K = 1 + 1/2` against the required `K² = 1`). -/
 theorem positivity_gap : ((1 : ℝ) + 1 / 2) - 2 * (1 / 2) = 1 / 2 := by norm_num
+
+/-! ## B9. The Kloosterman block (Experiment 5, statements (OP), (OP₁)) -/
+
+/-- The conic behind the correlation lemma (`lem:corr`).  Over a field, put
+`t = h c c' X + c'²` and `Y = -c/(h c') + c c'/(h t)`.  Then `(X, Y)` lies on
+`c'²/X + c²/Y = -h c c'`, and `X + Y` is a Kloosterman phase in `t` plus the
+constant `-(c² + c'²)/(h c c')`.  This is the computation modulo `q` that
+turns `∑ₙ S(1,n;cq) S(1,n;c'q) e(hn/k)` into `S(1, h̄²; q)`. -/
+theorem conic_param {K : Type*} [Field K] {h c c' X t : K} (hh : h ≠ 0) (hc : c ≠ 0)
+    (hc' : c' ≠ 0) (hX : X ≠ 0) (ht : t ≠ 0) (htX : t = h * c * c' * X + c' ^ 2) :
+    c' ^ 2 / X + c ^ 2 / (-c / (h * c') + c * c' / (h * t)) = -(h * c * c') ∧
+    X + (-c / (h * c') + c * c' / (h * t))
+      = t / (h * c * c') + c * c' / (h * t) - (c ^ 2 + c' ^ 2) / (h * c * c') := by
+  have hY : -c / (h * c') + c * c' / (h * t) = -(c ^ 2 * X) / t := by
+    field_simp
+    rw [htX]; ring
+  have hX' : X = (t - c' ^ 2) / (h * c * c') := by
+    rw [htX]; field_simp; ring
+  refine ⟨?_, ?_⟩
+  · rw [hY]
+    have : c ^ 2 / (-(c ^ 2 * X) / t) = -t / X := by field_simp
+    rw [this, htX]; field_simp; ring
+  · rw [hX']; field_simp; ring
+
+/-- The same computation for general rows `m, m'` (the general form of
+`lem:corr`): `m X + m' Y` is a Kloosterman phase in `t` with product of
+coefficients `m m' / h²`, independent of `c, c'`, plus the constant
+`-(m c'² + m' c²)/(h c c')`. -/
+theorem conic_param_rows {K : Type*} [Field K] {h c c' X t m m' : K} (hh : h ≠ 0)
+    (hc : c ≠ 0) (hc' : c' ≠ 0) (ht : t ≠ 0) (htX : t = h * c * c' * X + c' ^ 2) :
+    m * X + m' * (-c / (h * c') + c * c' / (h * t))
+      = m * t / (h * c * c') + m' * c * c' / (h * t)
+        - (m * c' ^ 2 + m' * c ^ 2) / (h * c * c') ∧
+    (m / (h * c * c')) * (m' * c * c' / h) = m * m' / h ^ 2 := by
+  have hX' : X = (t - c' ^ 2) / (h * c * c') := by
+    rw [htX]; field_simp; ring
+  refine ⟨?_, ?_⟩
+  · rw [hX']; field_simp; ring
+  · field_simp
+
+/-- The excluded point of the conic: `X = 0` exactly when `t = c'²`, and there
+the phase `t/(hcc') + cc'/(ht) - (c² + c'²)/(hcc')` vanishes.  This is the
+term `-1` in the correlation lemma. -/
+theorem conic_excluded {K : Type*} [Field K] {h c c' : K} (hh : h ≠ 0) (hc : c ≠ 0)
+    (hc' : c' ≠ 0) :
+    c' ^ 2 / (h * c * c') + c * c' / (h * c' ^ 2) - (c ^ 2 + c' ^ 2) / (h * c * c') = 0 := by
+  field_simp; ring
+
+/-- Sizes for (OP) (exponents of `q`): rows `M = 1/2`, columns `N = 3/4`,
+entries of mean square `-1`.  Frobenius norm `1/8`, independent-entry norm
+`-1/8`, and the ratio of the Bessel bound `0` to the mean eigenvalue `N - 1`
+is `1/4`. -/
+theorem op_sizes :
+    ((1 / 2 : ℝ) + 3 / 4 - 1) / 2 = 1 / 8 ∧
+    (max (1 / 2 : ℝ) (3 / 4) - 1) / 2 = -1 / 8 ∧
+    (0 : ℝ) - (3 / 4 - 1) = 1 / 4 := by
+  refine ⟨by norm_num, ?_, by norm_num⟩
+  rw [max_eq_right (by norm_num)]; norm_num
+
+/-- Why the third moment could suffice and the second cannot (exponents of
+`q`, in units of the mean eigenvalue): from `tr (KKᵀ)^k ≤ q^{1/2 + η}` one
+gets top eigenvalue `≤ q^{(1/2 + η)/k}`, which beats Bessel's `1/4` iff
+`η < k/4 - 1/2`; for `k = 2` this needs `η < 0`, for `k = 3` it allows
+`η < 1/4`. -/
+theorem moment_room {η : ℝ} (k : ℝ) (hk : 0 < k) :
+    (1 / 2 + η) / k < 1 / 4 ↔ η < k / 4 - 1 / 2 := by
+  rw [div_lt_iff₀ hk]; constructor <;> intro h <;> linarith
 
 end Barrier
 

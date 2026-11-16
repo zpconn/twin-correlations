@@ -58,12 +58,17 @@ it does not say that the error term has that shape.
 | The box and the units at θ = 4/7 | `box_sum`, `box_at_four_sevenths`, `dual_length_eq_iff`, `mean_eq_iff` |
 | (F4), pairs of solutions | `pair_of_solutions`, `positivity_gap` |
 | Claim 10.6, exponents only | `ls_to_pairs`, `pairs_to_dual`, `ls_sizes` |
+| (F5), pairs of fractions ↔ an element of Γ₀(q) | `fraction_pair` |
 | Lemma 10.7 (quadratic roots, reciprocity) | `quadratic_root`, `coprime_modulus`, `kloosterman_fraction_eq_root`, `reciprocity` |
-| (F9), moments of ζ | `moment_table`, `momentLength_inv` |
+| (F9), moments of ζ (sizes only) | `moment_table`, `momentLength_inv`, `moment_boxes` |
 | The two determinants | `det_two`, `det_three` |
 | Lemma 10.8 | `binding_condition_iff`, `di_conditions_balanced_iff`, `polymath_window_nonempty_iff`, `polymath_window_at_four_sevenths` |
 | Claim 10.9, the two inequalities | `nogo_modulus_bound`, `nogo_saving_bound` |
+| §10.4, van der Corput in the frequency | `vdc_frequency` |
 | §10.6, sizes | `bblr_range_iff`, `watt_short`, `level_loss_iff`, `gm_sizes` |
+| The class of a row in P¹(Z/q) (notes, round 7) | `coset_class` |
+| Lemma 10.10 (correlation of two Kloosterman sums), the conic modulo q | `conic_param`, `conic_param_rows`, `conic_excluded` |
+| (OP), sizes; second and third moments | `op_sizes`, `moment_room` |
 
 ## Components
 

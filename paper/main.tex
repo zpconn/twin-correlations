@@ -46,7 +46,7 @@
 {Twin correlations of truncated von Mangoldt functions\\ up to level $9/17$:\\
 a formalized proof and the barrier at $4/7$}
 
-\author{Zach Conn}
+\author[Zach Conn]{Investigator: Zach Conn}
 \thanks{Zach Conn is the investigator responsible for this work.  The
 mathematical content was generated with extensive assistance from
 generative AI systems; see the AI usage disclosure at the end of the
@@ -1700,7 +1700,21 @@ exceptional spectrum has not been rechecked in this form.
 The point of (F5) is that the structure of the Bohr set is not needed.  The
 loss in the method of Deshouillers and Iwaniec is not the passage from the
 sparse set to all frequencies; it is already present in the bound for
-$S(q)$.
+$S(q)$.  By the same positivity the modulus need not be a product: a bound
+$\sum_qS(q)\ll L^{7-\delta}$ over all integers $q\asymp L^2$ implies (LS)
+for most $q=ss'$.
+
+The mean square $S(q)$ is a count of close pairs of the fractions
+in~\eqref{eq:G}.  If $xk-cqz=1$ and $x'k'-c'qz'=1$, and $J=xc'-x'c$,
+$\tilde\jmath=zk'-z'k$, then
+\[
+ Jkk'-\tilde\jmath\,cc'q=k'c'-kc,\qquad
+ uu'+1=J\tilde\jmath\,q\quad(u=c'qz-x'k,\ u'=xk'-cqz').
+\]
+Here $J/(cc'q)$ is the difference of the fractions $\inv k/(cq)$ and
+$\inv{k'}/(c'q)$, and $S(q)$ counts the solutions with $|J|\le L^{5/2}$.
+These are the entries of an element of $\Gamma_0(q)$, so this is the usual
+unfolding and leads back to Kuznetsov's formula.
 
 \medskip
 \noindent\textbf{(F6) Bessel's inequality for one vector.}  Let $g$ run over
@@ -1798,24 +1812,29 @@ T\'oth~\cite{Toth}).  (LS) is a mean-square bound for these Weyl sums that is
 uniform in the coefficient $q$ up to $D^{1/2}$.
 
 \medskip
-\noindent\textbf{(F9) Moments of the zeta function.}  (F3) is the off-diagonal
-term of the fourth moment of $\zeta$ twisted by a Dirichlet polynomial with
-smooth coefficients of length $T^{\vartheta}$, with
-$\vartheta=\theta/(2-\theta)$:
+\noindent\textbf{(F9) Moments of the zeta function.}  (F3) is one dyadic
+piece of the off-diagonal term of the fourth moment of $\zeta$ twisted by a
+Dirichlet polynomial with smooth coefficients of length $T^{\vartheta}$,
+with $\vartheta=\theta/(2-\theta)$:
 \[
  \theta=\tfrac12\leftrightarrow\vartheta=\tfrac13,\qquad
  \tfrac47\leftrightarrow\tfrac25,\qquad
  \tfrac35\leftrightarrow\tfrac37,\qquad
  \tfrac23\leftrightarrow\tfrac12 .
 \]
-The last is the sixth moment.  So (T) corresponds to an asymptotic formula
-for
+The last is the sixth moment.  The integral in question is
 \[
  \int_T^{2T}|\zeta(\tfrac12+it)|^4\Bigl|\sum_{m\asymp M}m^{-1/2-it}\Bigr|^2dt,
  \qquad M=T^{2/5+\delta},
 \]
-strictly between the fourth and sixth moments.  For arbitrary coefficients
-the record is $\vartheta<1/4$ (Watt~\cite{Watt};
+strictly between the fourth and sixth moments.  The correspondence is one
+of sizes only.  (T) is the piece of this integral in which each divisor
+function is restricted to factorizations of shape $(T/M)\cdot M$.  The
+integral also contains the balanced factorizations
+$\sqrt T\cdot\sqrt T$, which give the box $(2/7,5/14,5/14)$; that box is
+closer to the cube and is not covered by the method.  So (T) does not
+amount to an asymptotic formula for the integral.  For arbitrary
+coefficients the record is $\vartheta<1/4$ (Watt~\cite{Watt};
 Bettin, Bui, Li and Radziwi\l\l~\cite{BBLR}).
 
 \medskip
@@ -1896,8 +1915,12 @@ is below $q^{1/2}$.
 So a proof past $4/7$ needs a step outside this list.  The following were
 examined and do not help.
 \begin{itemize}
-\item \emph{Shifting a smooth variable} (Burgess, $q$-van der Corput): no
-smooth variable is longer than a factor of the modulus it meets.
+\item \emph{Shifting a smooth variable} (Burgess, $q$-van der Corput).  In
+(F1) and (F2) no smooth variable is longer than a factor of the modulus it
+meets.  In (F5) the frequency $n$ is, once the sum is extended to all
+$n\le L^{3/2}$.  One differencing step then saves $L^{1/4}$ on the terms
+of $S(q)$ with equal modulus variables $r=r'$, where $L^{1/2+\delta}$ is
+needed, and nothing on the terms with $r\ne r'$.
 \item \emph{Splitting each smooth variable} into a part with a divisor in
 the useful range and the rest.  The rest is a prime times a small number;
 expanding the prime by any exact identity returns the same smooth piece
@@ -1973,6 +1996,333 @@ on the Bohr set and off it, and $S(q)\approx L^{9/2}$.  The signed sums over
 the Bohr set are also of square-root size.  Both targets are true with a
 wide margin, in the range computed.
 
+\emph{Experiment 3: the level, and the two parts of $S(q)$}
+(\texttt{notes/lab/levelscan.c}).  Write $G_q=\sum_rG_r$ with
+$G_r(n)=\sum_de(2n\inv d/(rq))$.  Then
+$S(q)=\sum_r\|G_r\|^2+\sum_{r\ne r'}\langle G_r,G_{r'}\rangle$, a diagonal
+part and a cross part.  The entries are divided by the number of
+frequencies times $P$, so square-root cancellation is $1$.
+
+\medskip
+\begin{center}
+\begin{tabular}{rrrrr}
+$L$ & $q$ & total & $r=r'$ & $r\ne r'$\\ \hline
+$64$ & $1$ & $25.82$ & $51.62$ & $-25.80$\\
+$64$ & $7$ & $6.92$ & $6.90$ & $0.03$\\
+$64$ & $65$ & $1.17$ & $0.66$ & $0.51$\\
+$64$ & $513$ & $0.88$ & $0.90$ & $-0.03$\\
+$64$ & $4097$ & $1.09$ & $0.99$ & $0.10$\\
+$64$ & $8191$ & $1.00$ & $1.00$ & $0.01$
+\end{tabular}
+\end{center}
+\medskip
+
+For $q\gtrsim L$ the sum $S(q)$ is essentially its trivial diagonal, the
+terms with the same $r$ and the same $d$.  At level $q=1$ there is no
+square-root cancellation, and the cross part is $-\tfrac12$ of the diagonal
+part.  So the diagonal part is not bounded by $S(q)$, and (LS) contains two
+separate problems: a bound $L^{5-\delta}$ for the diagonal part, and the
+same bound for the cross part.
+\begin{itemize}
+\item The diagonal part is a statement about one modulus $M=rq$:
+$\sum_{n\le M^{1/2}}|\sum_{d\asymp M^{2/3}}e(n\inv d/M)|^2\ll M^{4/3-\delta}$
+on average.  Weil's bound gives $M^{3/2}$, one van der Corput step
+$M^{17/12}$, and the observed size is $M^{7/6}$.  Equivalently, the number
+of $(d,d',j)$ with $\inv d-\inv{d'}\equiv j$ modulo $M$ and
+$|j|\le M^{1/2}$ is asymptotic to its expected value with a power saving.
+The spectral method says nothing about this part alone.
+\item The cross part is where the cancellation over $r$ given by
+Kuznetsov's formula is indispensable.
+\end{itemize}
+
+\emph{Experiment 4: the variance at all scales}
+(\texttt{notes/lab/arcs.c}).  Let $N(x,\ell)$ be the number of points
+$2\inv d/(rq)$ of~\eqref{eq:G} in the arc $[x,x+\ell)$.  By Parseval,
+$\operatorname{Var}_xN(x,\ell)\approx\ell^2\sum_{0<|n|\lesssim1/\ell}|G_q(n)|^2$,
+so the dual large sieve gives
+\[
+ \operatorname{Var}_xN(x,K/q)\ll q^{\eps}K\cdot\text{mean}\qquad(1\le K\le q).
+\]
+At $K=1$ this is a variance of Poisson order, and it is sharp.  For larger
+$K$ it is what the case $K=1$ gives if the counts in the $K$ sub-arcs are
+fully correlated.  (LS) is the statement
+$\operatorname{Var}\ll K^{1-\delta}\cdot\text{mean}$ at $K=q^{1/4}$.  So the
+barrier at $4/7$ is the absence of any information on the correlation
+between neighbouring arcs of length $1/q$.  The table gives the ratio of
+variance to mean for arcs of length $K/q$, and the largest correlation
+coefficient between arcs at lags $1$ to $8$.
+
+\medskip
+\begin{center}
+\begin{tabular}{rrrrrrrr}
+$L$ & $q$ & $K=1$ & $K=4$ & $K=16$ & $K=64$ & $K=256$ & lags $1$--$8$\\ \hline
+$64$ & $4097$ & $1.07$ & $1.10$ & $1.06$ & $1.10$ & $1.06$ & $0.025$\\
+$64$ & $8191$ & $1.02$ & $0.98$ & $1.00$ & $0.85$ & $0.94$ & $0.015$\\
+$128$ & $16385$ & $0.97$ & $0.93$ & $0.88$ & $1.01$ & $1.18$ & $0.013$
+\end{tabular}
+\end{center}
+\medskip
+
+The variance equals the mean at every scale, and neighbouring arcs are
+uncorrelated to within the noise.
+
+\emph{Experiment 5: the Kloosterman block as an operator}
+(\texttt{notes/lab/kscan.c}, \texttt{kscan2.c}, \texttt{krow.c}).  Poisson
+summation over $d$ in~\eqref{eq:G} gives
+$G_q(n)=\sum_m\sum_cW(m,c)\,S(m,2n;cq)/(cq)$ with a smooth weight $W$
+supported on $|m|\lesssim L$, $c\asymp L$; the term $m=0$ is a sum of
+Ramanujan sums.  The experiment concerns the kernel with the weight removed,
+\begin{equation}\label{eq:block}
+ K(m,n)=\sum_{c\asymp\sqrt q}\frac{S(m,n;cq)}{cq},\qquad
+ m\asymp\sqrt q,\quad 1\le n\le N=q^{3/4}.
+\end{equation}
+If $\Gamma_0(q)$ has no exceptional eigenvalues, Kuznetsov's formula and
+Bessel's inequality for the forms of level $q$ (the large sieve
+of~\cite{DI82}, both ranges being below the level) give
+$\|KK^{T}\|\ll q^{\eps}$; the bound $S(q)\ll L^{5+\eps}$ is the corresponding
+statement for one smooth vector, and for that vector it is elementary.  In
+mean square the entries of $K$ have the size $q^{-1/2}$, so the mean
+eigenvalue of $KK^{T}$ is $\asymp N/q$, smaller than the bound for the norm
+by the factor $q/N=q^{1/4}$.  (LS) says that the smooth vector is not near
+the top of the spectrum.  The table gives the
+largest eigenvalue of $KK^{T}$ divided by the mean eigenvalue, for all prime
+levels in four ranges ($c,m\in[\sqrt q,2\sqrt q)$, sharp cut-offs).
+
+\medskip
+\begin{center}
+\begin{tabular}{lrrrr}
+prime levels near & $280$ & $1000$ & $4100$ & $16000$\\ \hline
+number of levels & $16$ & $30$ & $51$ & $29$\\
+median of top/mean & $2.78$ & $3.09$ & $3.50$ & $3.24$\\
+maximum of top/mean & $4.14$ & $5.03$ & $4.68$ & $3.72$\\
+edge for independent entries, $(1+\sqrt{M/N})^2$ & $2.23$ & $2.00$ & $1.83$ & $1.69$\\
+Bessel, $1+q^{1/4}$ & $5.1$ & $6.6$ & $9.0$ & $12.2$
+\end{tabular}
+\end{center}
+\medskip
+
+The spectrum is that of a matrix with independent entries, with one or two
+eigenvalues above the edge, and the largest eigenvalue does not grow with
+$q$.  Composite levels behave in the same way (products of two primes near
+$\sqrt q$: $2.1$ to $3.7$; squares: $3.2$ to $3.5$; smooth levels: $2.2$ to
+$2.5$, for $q$ between $960$ and $1770$).  For single rows,
+$\sum_{n\le N}K(m,n)^2$ divided by its generic value
+$N\sum_c\varphi(cq)/(cq)^2$ lies between $0.88$ and $1.17$ for
+$m=1,\dots,8$ at $q=1009$, $4001$, $4003$, $16001$, $64007$, where the ratio
+of Bessel's bound to the generic value is $5.6$, $8$, $8$, $11.3$, $15.9$.
+So in the range computed the missing estimate holds for every vector, and
+not only for the smooth one.  We record the corresponding statements.
+
+\medskip\noindent\textbf{(OP).}  \emph{There is $\delta>0$ such that for
+all complex $a_m$ and $b_n$, and $g$ smooth and supported on
+$c\asymp\sqrt q$,
+\[
+ \sum_{m\asymp\sqrt q}\ \sum_{n\le q^{3/4}}a_mb_n\sum_{c}g(c)
+ \frac{S(m,n;cq)}{cq}\ll q^{-\delta}\|a\|\,\|b\|.
+\]}
+
+\noindent\textbf{(OP$_1$).}  \emph{There is $\delta>0$ such that
+$\displaystyle\sum_{n\le q^{3/4}}\Bigl|\sum_cg(c)\frac{S(1,n;cq)}{cq}
+\Bigr|^2\ll q^{-\delta}$.}
+
+\medskip
+For (OP) the method of~\cite{DI82} gives $q^{\eps}\|a\|\|b\|$ if there are
+no exceptional eigenvalues, and a larger power of $q$ otherwise; Weil's
+bound gives $q^{3/8}\|a\|\|b\|$; and a bound $q^{-1/2+\eps}$ for every entry,
+which is the conjecture of Linnik and Selberg in the level aspect, gives
+only $q^{1/8+\eps}\|a\|\|b\|$.  The expected size is $q^{-1/8}$.  The
+analogue of (OP) for each dyadic range $m\asymp M\le\sqrt q$ would give
+(LS) once the variables $m$ and $c$ are separated in the weight $W$; we
+have not written out the details.  (OP$_1$) is the case of a single row:
+Bessel's inequality gives $O(1)$ on the same hypothesis, Weil's bound
+$q^{1/4}$, and the expected size is $q^{-1/4}$.  It is the smallest instance of the barrier
+that we know.  Its off-diagonal part has the following closed form.
+
+\begin{lemma}\label{lem:corr}
+Let $q$ be prime, $c,c'\ge1$ with $(c,c')=(cc',q)=1$, $k=cc'q$,
+$(h,k)=1$, and let $m,m'$ be integers prime to $q$.  Then
+\[
+ \sum_{n\bmod k}S(m,n;cq)\,S(m',n;c'q)\,\e\Bigl(\frac{hn}{k}\Bigr)
+ =k\,\Bigl[\e\Bigl(-\frac{A\,\inv h}{k}\Bigr)S(1,mm'\inv h^{\,2};q)
+ -\e\Bigl(-\frac{A\,\inv{hq}}{cc'}\Bigr)\Bigr],\qquad A=mc'^2+m'c^2,
+\]
+where $\inv h$ is an inverse of $h$ modulo $k$ and $\inv{hq}$ an inverse
+of $hq$ modulo $cc'$.
+\end{lemma}
+
+\begin{proof}
+Opening both sums, the left-hand side is $k$ times the sum of
+$\e(mx/(cq)+m'y/(c'q))$ over reduced $x\bmod cq$, $y\bmod c'q$ with
+$c'\inv x+c\inv y+h\equiv0\pmod k$.  Modulo $c$ and $c'$ the condition
+determines $x\equiv-c'\inv h$ and $y\equiv-c\inv h$, which gives the factor
+$\e(-A\,\inv{hq}/(cc'))$.  Modulo $q$, put $X=x\inv c$, $Y=y\inv{c'}$
+and $t=hcc'X+c'^2$; the condition is $Y=-c\inv{hc'}+cc'\inv h\,\inv t$, and
+$X\not\equiv0$, $Y\not\equiv0$ hold exactly when
+$t\not\equiv0,c'^2$.  Since $mX+m'Y=m\inv{hcc'}\,t+m'cc'\inv h\,\inv t
+-A\,\inv{hcc'}$, the sum over $t\not\equiv0$ is
+$\e(-A\,\inv{hcc'}/q)\,S(1,mm'\inv h^{\,2};q)$, and the term
+$t\equiv c'^2$, which must be removed, equals $1$.  The two factors
+combine by the Chinese remainder theorem.
+\end{proof}
+
+The identity was also checked numerically (to $10^{-9}$, for eleven choices
+of $(c,c',q,m,m')$ and all $h$).  It is notable that the Kloosterman sum on
+the right does not depend on $c$ and $c'$.  By Poisson summation, the part
+of the sum in (OP$_1$) (the case $m=m'=1$) with $c\ne c'$ coprime is
+therefore, up to a term of lower order and the terms with $(h,k)>1$,
+\[
+ \frac N{q^2}\sum_{h\ll q^{5/4}}S(1,\inv h^{\,2};q)\sum_{c\ne c'}
+ \frac{g(c)g(c')}{cc'}\,\widehat w\Bigl(\frac{hN}{cc'q}\Bigr)\,
+ \e\Bigl(\inv q\,\frac{c\inv{c'}+\inv cc'}{h}\Bigr)
+ \e\Bigl(-\frac{c^2+c'^2}{hcc'q}\Bigr),
+\]
+with inverses modulo $h$ in the last exponential but one.  The trivial bound
+for this is $q^{1/2}$, Bessel's inequality corresponds to $O(1)$, and
+(OP$_1$) to $q^{-1/4-\delta}$.  Since
+$S(\inv q,\inv q;h)\,S(\inv h,\inv h;q)=S(1,1;hq)$, the sum over $c,c'$
+and the Kloosterman sum combine into the sum $S(1,1;hq)$ with its variable
+of summation restricted, modulo $h$, to the ratios $c/c'$ of two integers of
+size $\sqrt q$; these are the residues $\rho$ for which $\rho/h$ lies within
+$O(1/h)$ of a fraction with denominator of size $\sqrt q$, a set of density
+about $q^{-1/4}$.
+
+\emph{Experiment 6: the block modulus by modulus}
+(\texttt{notes/lab/kmod.c}).  Write $K=\sum_cK_c$ with
+$K_c(m,n)=S(m,n;cq)/(cq)$.  The table gives largest eigenvalues divided by
+the mean eigenvalue of $KK^{T}$ (in the last column, of $K_cK_c^{T}$).
+
+\medskip
+\begin{center}
+\begin{tabular}{rrrrr}
+$q$ & $KK^{T}$ & $\sum_cK_cK_c^{T}$ & $\sum_c\|K_c\|^2$ &
+$\max_c$ for $K_cK_c^{T}$\\ \hline
+$1009$ & $3.36$ & $1.11$ & $1.82$ & $2.15$\\
+$4001$ & $3.46$ & $1.15$ & $1.88$ & $2.01$\\
+$16001$ & $2.58$ & $1.07$ & $1.69$ & $1.97$
+\end{tabular}
+\end{center}
+\medskip
+
+Each single modulus has the spectrum of a matrix with independent entries,
+with no eigenvalue above the edge; the part of $KK^{T}$ that is diagonal in
+$c$ is close to a multiple of the identity; and the eigenvalues above the
+edge come from the terms $c\ne c'$, which Lemma~\ref{lem:corr} evaluates.
+So (OP) is the sum of two statements, neither of which is known: a bound
+$\|(S(m,n;k))_{m\le k^{1/3},\,n\le k^{1/2}}\|\ll k^{5/6-\delta}$ for the
+single modulus $k=cq$ (Weil's bound gives $k^{11/12}$, the expected size is
+$k^{3/4}$, and a fourth moment of singular values with an exact count would
+give $k^{5/6}$), and the bound $q^{-\delta}$ for the norm of the terms
+$c\ne c'$.
+
+\emph{The same statement in $\mathrm{SL}_2(\Z/q\Z)$.}  Let a matrix
+$\gamma=\bigl(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\bigr)$ act on
+functions on $\Z/q\Z$ through $x\mapsto(ax+b)/(cx+d)$, and let
+$\psi_m(x)=\e(mx/q)$.  For $q\nmid c$,
+\[
+ \langle\psi_n,\rho(\gamma)\psi_m\rangle
+ =\frac1q\,\e\Bigl(\frac{(ma+nd)\inv c}{q}\Bigr)S(mn\inv c^{\,2},1;q).
+\]
+Summing over the $\varphi(c)$ matrices $\gamma_{c,d}\in\mathrm{SL}_2(\Z)$
+with lower left entry $c$ and $0<a,d<c$, and using
+$\inv c/q+\inv q/c\equiv1/(cq)$, one finds
+$\sum_d\langle\psi_n,\rho(\gamma_{c,d})\psi_m\rangle
+=q^{-1}S(m,n;cq)\,(1+O((|m|+|n|)/q))$.  So, up to this factor,
+\[
+ K=P_{q^{3/4}}\;\rho\Bigl(\sum_{c\asymp\sqrt q}\frac1c\sum_d\gamma_{c,d}\Bigr)
+ \;P_{\sqrt q},
+\]
+where $P_V$ is the projection onto the span of the $\psi_m$ with
+$|m|\le V$, which is an average over the unipotent elements
+$\bigl(\begin{smallmatrix}1&h\\0&1\end{smallmatrix}\bigr)$ with
+$|h|\le q/V$.  The sum in the middle runs over the $\asymp q$ elements of
+$\mathrm{SL}_2(\Z)$ of norm $\asymp\sqrt q$, with total weight
+$\asymp\sqrt q$.  The triangle inequality gives $\|K\|\ll\sqrt q$; the
+bound $\|K\|\ll q^{\eps}$ is the statement that this ball of
+$\mathrm{SL}_2(\Z)$ acts on the nontrivial part of $L^2(\mathbb
+P^1(\Z/q\Z))$ with square-root cancellation, which is where the spectral
+gap enters; and (OP) asks for a further saving from the two band limits.
+In~\cite{Pas25b} the ball is replaced by the single element
+$\bigl(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\bigr)$, the saving
+comes from the band limits alone, and the proof counts closed words in the
+group; that count is elementary because the words do not fill the group.
+Here a closed word of the $2k$-th moment has $q^{11k/4}$ choices against
+$|\mathrm{SL}_2(\Z/q\Z)|\asymp q^3$, so that only $k=1$, the
+Hilbert--Schmidt norm $q^{1/8}$, is in that regime.
+
+\emph{Experiment 7: a model without the ball}
+(\texttt{notes/lab/kmodel.c}).  By twisted multiplicativity
+$S(m,n;cq)=S(m\inv q,n\inv q;c)\,S(1,mn\inv c^{\,2};q)$.  Dropping the first
+factor leaves, for $q$ prime and $\mathrm{Kl}(t)=q^{-1/2}S(1,t;q)$,
+\[
+ K_0(m,n)=\sum_{c\asymp\sqrt q}\mathrm{Kl}(mn\inv c^{\,2}),\qquad
+ m\asymp\sqrt q,\quad n\le N=q^{3/4}.
+\]
+Here nothing is summed over $\mathrm{SL}_2(\Z)$: $K_0$ is the restriction to
+two intervals of a convolution operator on the cyclic group
+$(\Z/q\Z)^{\times}$, whose multiplier at a character $\chi$ is
+$q^{-1/2}\tau(\chi)^2\sum_c\chi^2(c)$.  Completing the variable $m\inv c^{\,2}$
+and using the orthogonality of $u\mapsto\mathrm{Kl}(un)$ gives
+$\|K_0\|\ll q^{3/4+\eps}$, which is the analogue of Bessel's inequality; the
+expected size is $q^{5/8}$, apart from the quadratic character $\eta$, the
+one character for which $\sum_c\chi^2(c)$ does not cancel, which contributes
+$\pm\eta(m)\eta(n)$.  The table gives the three largest eigenvalues of
+$K_0K_0^{T}$ over the mean eigenvalue, before and after removing that term.
+
+\medskip
+\begin{center}
+\begin{tabular}{rrrrrr}
+$q$ & before & coefficient of $\eta\otimes\eta$ & after & edge & $q/N$\\ \hline
+$1009$ & $2.26,\ 1.74,\ 1.68$ & $0.973$ & $1.82,\ 1.74,\ 1.69$ & $2.01$ & $5.6$\\
+$4001$ & $2.18,\ 1.79,\ 1.72$ & $0.943$ & $1.83,\ 1.77,\ 1.72$ & $1.83$ & $8.0$\\
+$16001$ & $2.28,\ 1.70,\ 1.63$ & $1.054$ & $1.72,\ 1.64,\ 1.60$ & $1.68$ & $11.3$\\
+$64007$ & $2.16,\ 1.60,\ 1.58$ & $-1.011$ & $1.61,\ 1.59,\ 1.56$ & $1.56$ & $15.9$
+\end{tabular}
+\end{center}
+\medskip
+
+So the model has the spectrum of a matrix with independent entries, to
+within a few per cent, and the bound known for it is larger by the same
+factor $q/N=q^{1/4}$ as for $K$.
+
+\medskip\noindent\textbf{(MP).}  \emph{For $q$ prime and all $a$, $b$,
+\[
+ \sum_{m\asymp\sqrt q}\ \sum_{n\le q^{3/4}}\ \sum_{c\asymp\sqrt q}
+ a_mb_n\,\mathrm{Kl}(mn\inv c^{\,2})
+ =\pm\Bigl(\sum_ma_m\eta(m)\Bigr)\Bigl(\sum_nb_n\eta(n)\Bigr)
+ +O\bigl(q^{3/4-\delta}\|a\|\,\|b\|\bigr).
+\]}
+
+\medskip
+We could not prove (MP).  H\"older's inequality on the side of the
+characters, with the fourth moments of the two character sums of length
+$\sqrt q$ (which are known exactly), gives $q^{3/4}$ again; a shift
+$c\mapsto c+rs$ followed by H\"older's inequality and complete sums of
+products of Kloosterman sums gives $q$; and writing the excess as a sum over
+$q^{5/4}$ twists of the square matrix
+$(\mathrm{Kl}(mm'\xi))_{m,m'\asymp\sqrt q}$ of~\cite{KMS,Pas25b}, even the
+best possible bound for each twist loses $q^{1/4}$ to (MP).  The conclusion
+we draw is that the obstruction at $4/7$ is not the need to combine the
+spectral gap with a property of finite groups: the model has no spectral
+gap in it and is stuck at the same place.
+
+For a smooth vector $a$ the model takes a concrete form.  The functional
+equation of the smooth character sum over $m$ absorbs one Gauss sum, the
+row sums become the Fourier transform of the $q$ points
+$\inv{xc^2}\in\Z/q\Z$ with $x,c\asymp\sqrt q$, and the analogue of (LS) is
+the statement that, on average over $0<|t|\le q^{1/4}$,
+\[
+ \#\bigl\{(x,c,x',c'):\ (1-txc^2)(1+tx'c'^2)\equiv1\pmod q\bigr\}
+ =q\,\bigl(1+O(q^{-\delta})\bigr),
+\]
+all four variables being of size $\sqrt q$.  By positivity the left-hand
+side is at most its value at $t=0$, the number of solutions of
+$xc^2\equiv x'c'^2$, which is $\asymp q$ in the range computed; this is the
+analogue of Bessel's inequality and is all that we can prove.  In that
+range (\texttt{notes/lab/mcorr.c}, $q$ up to $10^7$) the left-hand side is
+$q$ to within the statistical noise for every $t\ne0$.  So the missing estimate is any
+power saving in an asymptotic count for one polynomial congruence in four
+variables in a box of side exactly $\sqrt q$.
+
 \subsection{Estimates examined that do not apply}\label{sec:notapply}
 \begin{itemize}
 \item \emph{Watt's mean value theorem}~\cite{Watt}, in the form used
@@ -2010,11 +2360,39 @@ sum over $d\le L^2$ and exceeds the main term for a single $d$.  Their
 saving comes from averaging over $d$ with $h$ fixed; (F8) has one $d$ for
 each $h$ and an average over $h$.
 \item \emph{Lau}~\cite{Lau} treats $d_k\times d_2$, not $d_3\times d_3$.
+\item \emph{Bilinear forms with Kloosterman sums to composite moduli}
+(Pascadi~\cite{Pas25b}; see also~\cite{KMS} for prime moduli).  These are
+bounds of the same kind as (OP), for arbitrary coefficients and lengths up
+to the square root of the modulus.  Corollary~1.4 of~\cite{Pas25b} is a
+version summed over the moduli divisible by a level $q$ with a factorization
+$q=de$, which is our situation with $d=s$, $e=s'$.  With moduli of size
+$q^{3/2}$ it gives $q^{5/12+\eps}\|a\|\|b\|$ for the sum in (OP), against
+$q^{\eps}\|a\|\|b\|$ from the large sieve: the bound is taken modulus by
+modulus, and no bound of that form can reach (OP), since the best possible
+one, $\sqrt{(M+N)cq}$ for each modulus $cq$, gives $q^{1/8}\|a\|\|b\|$.
+What (OP) needs is such orthogonality together with the cancellation over
+$c$ that Kuznetsov's formula supplies.  The method of~\cite{Pas25b} bounds a
+sixth moment of singular values and uses the multiplicities of the
+representations of $\mathrm{SL}_2(\Z/c\Z)$; whether it has an analogue on
+the spectral side is open.
 \end{itemize}
 
 \subsection{Open questions}\label{sec:open}
 \begin{enumerate}
 \item Prove (LS), or any bound $S(q)\ll L^{5-\delta}$ on average over $q$.
+\item Prove (MP), the model of Experiment~7, in which only finite fields
+occur.
+\item Let $\nu$ be the counting function of the points of the model on
+$\Z/q\Z$ and $C(\lambda)=\sum_x\nu(x)\nu(x+\lambda)$.  By the
+Cauchy--Schwarz inequality over all shifts, the analogue of (LS) follows from
+$\sum_{\lambda\ne0}(C(\lambda)-q)^2\ll q^{9/4-\delta}$, a bound for the
+additive energy of the point set, equivalently for the fourth moment of its
+Fourier transform over all frequencies.  No short range occurs in this
+statement.  Numerically the left-hand side is $\approx q^2$
+(\texttt{notes/lab/e4.c}).  Can it be proved?
+\item Prove (OP$_1$), or disprove (OP).  Is there a level $q$ for which the
+largest eigenvalue of the block~\eqref{eq:block} exceeds the mean eigenvalue
+by a power of $q$?
 \item Does the argument of~\cite{GM25}, with symmetric matrices of
 determinant $h$, admit an average over $h$ with $d=h$?
 \item On average over $q$, the pair correlation behind $S(q)$ becomes a sum
@@ -2105,11 +2483,13 @@ Lemma~\ref{lem:balanced-window} & \texttt{balanced\_mem\_window\_iff}, \texttt{b
 units at $\theta=4/7$ & \texttt{dual\_length\_eq\_iff}, \texttt{mean\_eq\_iff}\\
 (F4), pairs of solutions & \texttt{pair\_of\_solutions}\\
 Claim~\ref{claim:LS}, exponents only & \texttt{ls\_to\_pairs}, \texttt{pairs\_to\_dual}, \texttt{ls\_sizes}\\
+(F5), pairs of fractions & \texttt{fraction\_pair}\\
 Lemma~\ref{lem:roots} & \texttt{quadratic\_root}, \texttt{kloosterman\_fraction\_eq\_root}, \texttt{reciprocity}\\
-(F9), the dictionary & \texttt{moment\_table}, \texttt{momentLength\_inv}\\
+(F9), the dictionary and the two boxes & \texttt{moment\_table}, \texttt{momentLength\_inv}, \texttt{moment\_boxes}\\
 the two determinants & \texttt{det\_two}, \texttt{det\_three}\\
 Lemma~\ref{lem:tight} & \texttt{di\_conditions\_balanced\_iff}, \texttt{polymath\_window\_nonempty\_iff}\\
 Claim~\ref{claim:nogo}, the two inequalities & \texttt{nogo\_modulus\_bound}, \texttt{nogo\_saving\_bound}\\
+Section~\ref{sec:why47}, van der Corput in the frequency & \texttt{vdc\_frequency}\\
 Section~\ref{sec:notapply}, sizes & \texttt{bblr\_range\_iff}, \texttt{gm\_sizes}, \texttt{level\_loss\_iff}
 \end{tabular}
 \end{center}
@@ -2525,6 +2905,11 @@ M.~A.~Korolev and M.~E.~Changa,
 Mat. Zametki \textbf{108} (2020), no.~1, 94--101; English transl.,
 Math. Notes \textbf{108} (2020), no.~1--2, 87--93.
 
+\bibitem{KMS}
+E.~Kowalski, Ph.~Michel and W.~Sawin,
+Bilinear forms with Kloosterman sums and applications,
+\emph{Ann. of Math.} (2) \textbf{186} (2017), 413--500.
+
 \bibitem{Lau}
 C.~F.~Lau,
 \emph{Smoothed shifted convolutions of generalised divisor functions},
@@ -2551,6 +2936,11 @@ Cambridge Stud. Adv. Math. \textbf{97}, Cambridge Univ. Press, Cambridge,
 A.~Pascadi,
 \emph{On the exponents of distribution of primes and smooth numbers},
 arXiv:2505.00653.
+
+\bibitem{Pas25b}
+A.~Pascadi,
+Non-abelian amplification and bilinear forms with Kloosterman sums,
+preprint, arXiv:2511.08445.
 
 \bibitem{Polymath8a}
 D.~H.~J.~Polymath,
